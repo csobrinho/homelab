@@ -13,7 +13,7 @@ spec:
   source:
     path: infra/apps/cyberchef
     repoURL: https://github.com/csobrinho/homelab.git
-    targetRevision: master
+    targetRevision: main
     kustomize:
   syncPolicy: 
     automated:
