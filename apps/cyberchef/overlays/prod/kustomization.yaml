@@ -14,6 +14,6 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       podOptions:
-        hostUsers: false # Fix argo sync.
+        hostUsers: null # Fix argo sync.
         nodeSelector:
           kubernetes.io/arch: "arm64"
