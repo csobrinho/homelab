@@ -6,7 +6,7 @@ resources:
 
 helmCharts:
   - name: cyberchef
-    repo: oci://tccr.io/truecharts/cyberchef
+    repo: oci://tccr.io/truecharts
     releaseName: cyberchef
     namespace: cyberchef
     version: 11.1.4
