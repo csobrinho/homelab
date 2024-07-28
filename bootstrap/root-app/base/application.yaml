@@ -29,11 +29,10 @@ spec:
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
   ignoreDifferences:
-    spec:
-      kind: Deployment
+    - kind: Deployment
       name: cyberchef
-      jqPathExpressions: 
-        - '.spec.template.spec.webhook.hostUsers'
+      jsonPointers: 
+        - /spec/template/spec/webhook/hostUsers
 
 info:
   - name: Ingress
