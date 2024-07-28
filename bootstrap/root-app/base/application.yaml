@@ -33,4 +33,4 @@ spec:
       kind: Deployment
       name: cyberchef
       jqPathExpressions: 
-        - 'spec.template.spec.webhook.hostUsers'
+        - '.spec.template.spec.webhook.hostUsers'
