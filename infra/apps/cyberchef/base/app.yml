@@ -15,9 +15,9 @@ spec:
     repoURL: https://github.com/csobrinho/homelab.git
     targetRevision: main
     kustomize:
-  syncPolicy: 
+  syncPolicy:
     automated:
       prune: true
       selfHeal: false
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
