@@ -31,8 +31,8 @@ spec:
   ignoreDifferences:
     - kind: Deployment
       name: cyberchef
-      jsonPointers: 
-        - /spec/template/spec/hostUsers
+      jqPathExpressions: 
+        - '.spec.template.spec.hostUsers'
 
 info:
   - name: Ingress
