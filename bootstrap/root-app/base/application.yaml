@@ -35,7 +35,7 @@ spec:
       jqPathExpressions: 
         - '.spec.template.spec.webhook.hostUsers'
 
-resource.links: |
-    - url: https://mycompany.splunk.com?search={{.resource.metadata.name}}&env={{.project.metadata.labels.env}}
-      title: Splunk
-      if: resource.kind == "Pod" || resource.kind == "Deployment"
+info:
+  - name: Ingress
+    value: >-
+      https://cyberchef.sobrinho.pt
