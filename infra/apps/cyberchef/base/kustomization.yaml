@@ -7,6 +7,8 @@ helmCharts:
   releaseName: cyberchef
   namespace: cyberchef
   version: 11.1.4
+  includeCRDs: true
 
 resources:
+- namespace.yml
 - ingress-route.yml
