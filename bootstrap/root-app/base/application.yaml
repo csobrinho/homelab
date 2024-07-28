@@ -28,3 +28,9 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
+  ignoreDifferences:
+    spec:
+      kind: Deployment
+      name: cyberchef
+      jqPathExpressions: 
+        - 'spec.template.spec.webhook.hostUsers'
