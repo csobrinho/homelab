@@ -12,12 +12,12 @@ spec:
       kind: Rule
       priority: 10
       services:
-        - name: argo-cd-argocd-server
+        - name: argocd-server
           port: http
     - match: Host(`argocd.sobrinho.pt`) && Header(`Content-Type`, `application/grpc`)
       kind: Rule
       priority: 11
       services:
-        - name: argo-cd-argocd-server
+        - name: argocd-server
           port: http
           scheme: h2c
