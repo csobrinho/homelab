@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - apps/argocd-app.yaml
+  - apps/cert-manager-app.yaml
   - apps/pihole-app.yaml
   - apps/cyberchef-app.yaml

@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: letsencrypt-staging-crt
+  namespace: traefik
+spec:
+  secretName: letsencrypt-staging-crt
+  dnsNames:
+    - "sobrinho.pt"
+    - "*.sobrinho.pt"
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: letsencrypt-prod-crt
+  namespace: traefik
+spec:
+  secretName: letsencrypt-prod-crt
+  dnsNames:
+    - "sobrinho.pt"
+    - "*.sobrinho.pt"
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
