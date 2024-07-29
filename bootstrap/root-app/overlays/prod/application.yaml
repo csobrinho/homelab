@@ -8,3 +8,7 @@ spec:
     path: bootstrap/apps/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
     targetRevision: main
+info:
+  - name: Ingress
+    value: >-
+      https://cyberchef.sobrinho.pt

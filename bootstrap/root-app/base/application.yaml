@@ -28,8 +28,3 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
-
-info:
-  - name: Ingress
-    value: >-
-      https://cyberchef.sobrinho.pt
