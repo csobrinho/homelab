@@ -6,12 +6,11 @@ resources:
   - ingress-route.yaml
 
 helmCharts:
-  - name: argo
+  - name: argo-cd
     repo: https://argoproj.github.io/argo-helm
-    # repo: oci://ghcr.io/argoproj/argo-helm
     releaseName: argocd
     namespace: argocd
-    # version: 7.3.11
+    version: 7.3.11
     includeCRDs: true
     valuesInline:
       global:
