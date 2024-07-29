@@ -19,13 +19,13 @@ helmCharts:
 
 patches:
   # Fix argo sync.
-  - patch: |-
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: cyberchef
-        namespace: cyberchef
-      spec:  
-        template:
-          spec:
-            hostUsers: null
+  # - patch: |-
+  #     apiVersion: apps/v1
+  #     kind: Deployment
+  #     metadata:
+  #       name: cyberchef
+  #       namespace: cyberchef
+  #     spec:  
+  #       template:
+  #         spec:
+  #           hostUsers: null

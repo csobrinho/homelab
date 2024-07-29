@@ -29,10 +29,10 @@ spec:
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
   ignoreDifferences:
-    - kind: Deployment
-      name: cyberchef
-      jqPathExpressions: 
-        - '.spec.template.spec.hostUsers'
+    - group: apps/v1
+      kind: Deployment
+      jsonPointers: 
+        - '/spec/template/spec/hostUsers'
 
 info:
   - name: Ingress
