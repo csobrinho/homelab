@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: argo
+    repo: https://argoproj.github.io/argo-helm
+    # repo: oci://ghcr.io/argoproj/argo-helm
+    releaseName: argo-cd
+    namespace: argocd
+    # version: 7.3.11
+    includeCRDs: true
+    valuesInline:
+      global:
+        domain: argocd.sobrinho.pt
+      configs:
+        params:
+          server.insecure: true
+
+# patches:
+  # Fix argo sync.
+  # - patch: |-
+  #     apiVersion: v1
+  #     kind: ConfigMap
+  #     name: argocd-cm
+  #     data:
+  #       - op: add
+  #         resource.customizations.ignoreDifferences.apps_Deployment: |
+  #           jsonPointers:
+  #           - /spec/template/spec/hostUsers
