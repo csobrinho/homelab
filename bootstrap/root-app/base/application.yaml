@@ -29,7 +29,7 @@ spec:
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
   ignoreDifferences:
-    - group: apps/v1
+    - group: apps
       kind: Deployment
       jsonPointers: 
         - '/spec/template/spec/hostUsers'
