@@ -18,7 +18,7 @@ helmCharts:
       hostname: "pihole"
       hostNetwork: true
       DNS1: 10.10.1.1
-      DNS2:
+      DNS2: ""
       persistentVolumeClaim:
         enabled: true
         storageClass: longhorn
