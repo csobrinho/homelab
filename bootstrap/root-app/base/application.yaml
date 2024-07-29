@@ -28,11 +28,6 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers: 
-        - '/spec/template/spec/hostUsers'
 
 info:
   - name: Ingress
