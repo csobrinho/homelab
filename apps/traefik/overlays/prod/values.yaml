@@ -11,13 +11,6 @@ logs:
   access:
     enabled: true
 
-# Fix the wrong X-Forwarded-For.
-hostNetwork: true
-updateStrategy:
-  rollingUpdate:
-    maxSurge: 0
-    maxUnavailable: 1
-
 deployment:
   kind: DaemonSet
 
