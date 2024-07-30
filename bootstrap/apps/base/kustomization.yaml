@@ -6,3 +6,4 @@ resources:
   - apps/cert-manager-app.yaml
   - apps/pihole-app.yaml
   - apps/cyberchef-app.yaml
+  - apps/nginx-app.yaml
