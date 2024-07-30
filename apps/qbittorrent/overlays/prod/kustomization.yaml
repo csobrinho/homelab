@@ -9,7 +9,7 @@ helmCharts:
   - name: qbittorrent
     repo: oci://tccr.io/truecharts
     releaseName: qbittorrent
-    namespace: qbittorrent
+    namespace: media
     version: 21.1.3
     includeCRDs: true
     valuesInline:
