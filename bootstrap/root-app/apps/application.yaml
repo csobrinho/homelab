@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster
+  name: apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    path: bootstrap/root-app/apps
+    path: bootstrap/apps
     repoURL: https://github.com/csobrinho/homelab
     targetRevision: main
   destination:
