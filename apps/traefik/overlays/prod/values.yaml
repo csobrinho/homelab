@@ -15,7 +15,7 @@ logs:
 hostNetwork: true
 updateStrategy:
   rollingUpdate:
-    maxSurge: null
+    maxSurge: 0
     maxUnavailable: 1
 
 deployment:
