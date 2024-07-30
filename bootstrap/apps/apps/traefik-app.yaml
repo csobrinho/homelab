@@ -12,17 +12,17 @@ spec:
     path: apps/traefik/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
     targetRevision: main
-  # syncPolicy:
-  #   automated:
-  #     prune: true
-  #     selfHeal: true
-  #   retry:
-  #     limit: 10
-  #     backoff:
-  #       duration: 1m
-  #       maxDuration: 16m
-  #       factor: 2
-  #   syncOptions:
-  #     - CreateNamespace=true
-  #     - ServerSideApply=true
-  #     - ApplyOutOfSyncOnly=true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 1m
+        maxDuration: 16m
+        factor: 2
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - ApplyOutOfSyncOnly=true
