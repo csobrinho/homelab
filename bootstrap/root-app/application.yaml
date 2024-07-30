@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    path: bootstrap/apps
+    path: bootstrap/apps/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
     targetRevision: main
   destination:
