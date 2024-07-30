@@ -15,7 +15,7 @@ logs:
 hostNetwork: true
 updateStrategy:
   rollingUpdate:
-    maxUnavailable: 2
+    maxUnavailable: 1
 
 deployment:
   kind: DaemonSet
