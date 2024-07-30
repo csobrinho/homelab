@@ -1,0 +1,53 @@
+globalArguments:
+  - "--global.sendanonymoususage=false"
+  - "--global.checknewversion=false"
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+
+logs:
+  general:
+    level: DEBUG
+  access:
+    enabled: true
+
+deployment:
+  kind: DaemonSet
+
+ports:
+  web:
+    redirectTo:
+      port: websecure
+      priority: 10
+      permanent: true
+  websecure:
+    tls:
+      enabled: true
+    middlewares:
+      - traefik-basic-auth@kubernetescrd
+
+service:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: infra
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik.sobrinho.pt`)
+    services:
+      - name: api@internal
+        kind: TraefikService
+    entryPoints:
+      - websecure
+
+providers:
+  kubernetesCRD:
+    allowExternalNameServices: true
+    allowCrossNamespace: true
+  kubernetesIngress:
+    allowExternalNameServices: true
+
+tlsStore:
+  default:
+    defaultCertificate:
+      secretName: letsencrypt-prod-crt
