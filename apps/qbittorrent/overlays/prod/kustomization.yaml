@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: qbittorrent
+    repo: oci://tccr.io/truecharts
+    releaseName: qbittorrent
+    namespace: qbittorrent
+    version: 21.1.3
+    includeCRDs: true
+    valuesInline:
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "longhorn"
+          accessMode: ReadWriteOnce
+          size: 1Gi
+        downloads:
+          enabled: false
+          mountPath: /downloads
+          storageClass: "longhorn"
+          accessMode: ReadWriteOnce
+          size: 10Gi
+        media:
+          enabled: false
+          mountPath: /media
+          storageClass: "longhorn"
+          accessMode: ReadWriteOnce
+          size: 10Gi
