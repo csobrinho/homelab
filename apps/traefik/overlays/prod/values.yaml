@@ -28,7 +28,8 @@ ports:
 
 service:
   annotations:
-    metallb.universe.tf/allow-shared-ip: infra
+    metallb.universe.tf/allow-shared-ip: infra-tls
+    metallb.universe.tf/loadBalancerIPs: 10.10.1.8
 
 ingressRoute:
   dashboard:

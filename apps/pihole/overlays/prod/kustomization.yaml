@@ -26,7 +26,8 @@ helmCharts:
         annotations:
       serviceDns:
         annotations:
-          metallb.universe.tf/allow-shared-ip: infra
+          metallb.universe.tf/allow-shared-ip: infra-dns
+          metallb.universe.tf/loadBalancerIPs: 10.10.1.9
         type: LoadBalancer
         externalTrafficPolicy: Cluster
       serviceDhcp:
