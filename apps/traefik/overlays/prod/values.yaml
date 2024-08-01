@@ -11,6 +11,12 @@ logs:
   access:
     enabled: true
 
+# Fix the wrong X-Forwarded-For.
+hostNetwork: true
+updateStrategy:
+  rollingUpdate:
+    maxUnavailable: 1
+
 deployment:
   kind: DaemonSet
 
@@ -28,8 +34,8 @@ ports:
 
 service:
   annotations:
-    metallb.universe.tf/allow-shared-ip: infra-tls
-    metallb.universe.tf/loadBalancerIPs: 10.10.1.8
+    metallb.universe.tf/allow-shared-ip: infra-bgp
+    metallb.universe.tf/loadBalancerIPs: 10.10.1.7
 
 ingressRoute:
   dashboard:
