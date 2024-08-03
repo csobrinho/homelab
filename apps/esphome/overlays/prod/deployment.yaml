@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome
+  namespace: esphome
+
+spec:
+  selector:
+    matchLabels:
+      app: esphome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: esphome
+    spec:
+      containers:
+        - name: esphome
+          image: esphome/esphome:stable
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+          ports:
+            - name: http
+              containerPort: 6052
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /config
+              name: config-volume
+            - mountPath: /cache
+              name: cache-volume
+      volumes:
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: config-pvc
+        - name: cache-volume
+          emptyDir:
+            sizeLimit: 5Gi

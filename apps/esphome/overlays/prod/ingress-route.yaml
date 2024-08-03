@@ -1,0 +1,15 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: esphome-ingress
+  namespace: esphome
+
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`esphome.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: esphome
+          port: http
