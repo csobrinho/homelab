@@ -13,22 +13,23 @@ helmCharts:
     version: 21.3.2
     includeCRDs: true
     valuesInline:
-      global:
-        traefik:
-          enableFixedMiddlewares: false
+      TZ: America/Los_Angeles
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+        hostNetwork: true
       persistence:
         config:
           enabled: true
           retain: true
+          mountPath: /config
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
           size: 256Mi
         platformio:
           enabled: true
           retain: false
+          mountPath: /cache
           storageClass: "longhorn-rc1"
           accessMode: ReadWriteOnce
           size: 4Gi
