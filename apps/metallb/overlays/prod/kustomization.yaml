@@ -5,7 +5,7 @@ resources:
   - ../../base
   - ip-address-poll.yaml
   - l2-advertisement.yaml
-  - bgp.yaml
+  # - bgp.yaml -- Disabled since BGP does not keep the Client IP address.
 
 helmCharts:
   - name: metallb
