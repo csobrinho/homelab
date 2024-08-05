@@ -12,4 +12,4 @@ spec:
       kind: Rule
       services:
         - name: esphome
-          port: http
+          port: main

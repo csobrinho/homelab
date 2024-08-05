@@ -3,19 +3,32 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - persistent_volume_claim.yaml 
-  - deployment.yaml
-  - service.yaml
   - ingress-route.yaml
 
-# helmCharts:
-#   - name: esphome
-#     repo: oci://tccr.io/truecharts
-#     releaseName: esphome
-#     namespace: esphome
-#     version: 11.1.4
-#     includeCRDs: true
-#     valuesInline:
-#       podOptions:
-#         nodeSelector:
-#           kubernetes.io/arch: "arm64"
+helmCharts:
+  - name: esphome
+    repo: oci://tccr.io/truecharts
+    releaseName: esphome
+    namespace: esphome
+    version: 21.3.2
+    includeCRDs: true
+    valuesInline:
+      global:
+        traefik:
+          enableFixedMiddlewares: false
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 256Mi
+        platformio:
+          enabled: true
+          retain: false
+          storageClass: "longhorn-rc1"
+          accessMode: ReadWriteOnce
+          size: 4Gi
