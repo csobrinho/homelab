@@ -5,7 +5,6 @@ resources:
   - ../../base
   - basic-auth-middleware.yaml
   - basic-auth-secret.yaml
-  - ipallow-list-middleware.yaml
 
 helmCharts:
   - name: traefik

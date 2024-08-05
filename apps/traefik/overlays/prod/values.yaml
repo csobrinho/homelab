@@ -31,7 +31,6 @@ ports:
     tls:
       enabled: true
     middlewares:
-      - traefik-local-ipallowlist@kubernetescrd
       - traefik-basic-auth@kubernetescrd
 
 service:
