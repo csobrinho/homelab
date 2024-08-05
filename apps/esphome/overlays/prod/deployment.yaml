@@ -15,6 +15,7 @@ spec:
       labels:
         app: esphome
     spec:
+      hostNetwork: true
       containers:
         - name: esphome
           image: esphome/esphome:stable
@@ -22,6 +23,8 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
+            - name: ESPHOME_BUILD_PATH
+              value: /cache
           ports:
             - name: http
               containerPort: 6052
@@ -36,5 +39,5 @@ spec:
           persistentVolumeClaim:
             claimName: config-pvc
         - name: cache-volume
-          emptyDir:
-            sizeLimit: 5Gi
+          persistentVolumeClaim:
+            claimName: cache-pvc

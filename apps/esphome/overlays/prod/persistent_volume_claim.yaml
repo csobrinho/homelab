@@ -7,7 +7,21 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
+  storageClassName: longhorn-retain
   resources:
     requests:
-      storage: 64Mi
+      storage: 256Mi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cache-pvc
+  namespace: esphome
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn-rc1
+  resources:
+    requests:
+      storage: 4Gi
