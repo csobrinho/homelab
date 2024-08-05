@@ -5,6 +5,7 @@ resources:
   - ../../base
   - ip-address-poll.yaml
   - l2-advertisement.yaml
+  - bgp.yaml
 
 helmCharts:
   - name: metallb
