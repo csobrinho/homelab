@@ -15,6 +15,9 @@ helmCharts:
     valuesInline:
       global:
         domain: argocd.sobrinho.pt
+        env:
+          - name: TZ
+            value: America/Los_Angeles
       configs:
         params:
           server.insecure: true
