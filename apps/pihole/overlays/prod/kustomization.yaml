@@ -20,8 +20,7 @@ helmCharts:
       DNS1: 10.10.1.1
       DNS2: ""
       extraEnvVars:
-        - name: TZ
-          value: America/Los_Angeles
+        TZ: America/Los_Angeles
       persistentVolumeClaim:
         enabled: true
         storageClass: longhorn
