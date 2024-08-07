@@ -25,7 +25,7 @@ helmCharts:
           mountPath: /config
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
-          size: 256Mi
+          size: 1Gi
         platformio:
           enabled: true
           retain: false
