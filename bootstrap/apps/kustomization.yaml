@@ -6,7 +6,6 @@ resources:
   - apps/cert-manager-app.yaml
   - apps/cyberchef-app.yaml
   - apps/esphome-app.yaml
-  - apps/metallb-app.yaml
   - apps/pihole-app.yaml
   - apps/qbittorrent-app.yaml
   - apps/traefik-app.yaml
