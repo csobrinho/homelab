@@ -33,6 +33,9 @@ helmCharts:
         service:
           type: ClusterIP
       singleuser:
+        defaultUrl: /tree/
+        extraEnv:
+          JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"        
         storage:
           dynamic:
             storageClass: "longhorn-retain"
