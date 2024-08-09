@@ -11,5 +11,5 @@ spec:
     - match: Host(`jupyter.sobrinho.pt`)
       kind: Rule
       services:
-        - name: jupyter
-          port: main
+        - name: proxy-public
+          port: http

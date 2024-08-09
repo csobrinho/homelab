@@ -6,22 +6,23 @@ resources:
   - ingress-route.yaml
 
 helmCharts:
-  - name: jupyter
-    repo: oci://tccr.io/truecharts
+  - name: jupyterhub
+    repo: https://hub.jupyter.org/helm-chart/
     releaseName: jupyter
     namespace: jupyter
-    version: 10.1.3
+    version: 3.3.8
     includeCRDs: true
     valuesInline:
-      TZ: America/Los_Angeles
-      podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "arm64"
-      persistence:
-        data:
-          enabled: true
-          retain: true
-          mountPath: /work
-          storageClass: "longhorn-retain"
-          accessMode: ReadWriteOnce
-          size: 1Gi
+      hub:
+        extraEnv:
+          TZ: America/Los_Angeles
+        db:
+          pvc:
+            storageClassName: "longhorn-retain"
+      proxy:
+        service:
+          type: ClusterIP
+      singleuser:
+        storage:
+          dynamic:
+            storageClass: "longhorn-retain"
