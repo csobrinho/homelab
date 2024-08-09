@@ -22,16 +22,13 @@ helmCharts:
         config:
           Authenticator:
             admin_users:
-              - admin
-            allowed_users:
               - sobrinho
           DummyAuthenticator:
             password: admin
           JupyterHub:
             authenticator_class: dummy
-        extraConfig:
-          ignoreXHRToken.py: |
-            c.IdentityProvider.token = ''
+          IdentityProvider:
+            token: ""
       proxy:
         service:
           type: ClusterIP
