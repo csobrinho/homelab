@@ -29,6 +29,9 @@ helmCharts:
             password: admin
           JupyterHub:
             authenticator_class: dummy
+        extraConfig:
+          ignoreXHRToken.py: |
+            c.IdentityProvider.token = ''
       proxy:
         service:
           type: ClusterIP
