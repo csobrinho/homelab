@@ -29,6 +29,11 @@ helmCharts:
             authenticator_class: dummy
           IdentityProvider:
             token: ""
+      prePuller:
+        continuous:
+          enabled: false
+        hook:
+          enabled: false
       proxy:
         service:
           type: ClusterIP
