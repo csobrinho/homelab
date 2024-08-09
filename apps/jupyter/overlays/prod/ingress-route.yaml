@@ -1,0 +1,15 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: jupyter-ingress
+  namespace: jupyter
+
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`jupyter.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: jupyter
+          port: main
