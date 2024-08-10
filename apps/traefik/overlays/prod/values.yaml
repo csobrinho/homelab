@@ -1,3 +1,4 @@
+# From https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 globalArguments:
   - "--global.sendanonymoususage=false"
   - "--global.checknewversion=false"
@@ -5,11 +6,13 @@ globalArguments:
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
 
+env:
+  - name: TZ
+    value: America/Los_Angeles
+
 logs:
   general:
-    level: DEBUG
-  access:
-    enabled: true
+    level: INFO
 
 # Fix the wrong X-Forwarded-For.
 hostNetwork: true
@@ -20,6 +23,7 @@ updateStrategy:
 
 deployment:
   kind: DaemonSet
+  dnsPolicy: ClusterFirstWithHostNet
 
 ports:
   web:
@@ -31,11 +35,13 @@ ports:
     tls:
       enabled: true
     middlewares:
-      - traefik-basic-auth@kubernetescrd
+      - traefik-traefik-forward-auth@kubernetescrd
 
 service:
   annotations:
     kube-vip.io/loadbalancerIPs: 10.10.1.8
+  spec:
+    externalTrafficPolicy: Local
 
 ingressRoute:
   dashboard:

@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik-forward-auth
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: traefik-forward-auth
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - image: thomseddon/traefik-forward-auth:2-arm64
+          name: traefik-forward-auth
+          resources:
+            limits:
+              cpu: 100m
+              memory: 10Mi
+          ports:
+            - containerPort: 4181
+              protocol: TCP
+          env:
+            - name: CONFIG
+              value: /config
+            - name: COOKIE_DOMAIN
+              value: sobrinho.pt
+            - name: AUTH_HOST
+              value: auth.sobrinho.pt
+            - name: INSECURE_COOKIE
+              value: "false"
+            - name: LOG_LEVEL
+              value: trace
+            - name: LOG_FORMAT
+              value: pretty
+            - name: PROVIDERS_GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: traefik-forward-auth-secrets
+                  key: google-client-id
+            - name: PROVIDERS_GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: traefik-forward-auth-secrets
+                  key: google-client-secret
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: traefik-forward-auth-secrets
+                  key: secret
+            - name: WHITELIST
+              valueFrom:
+                secretKeyRef:
+                  name: traefik-forward-auth-secrets
+                  key: whitelist
+          volumeMounts:
+            - name: traefik-forward-auth-config
+              mountPath: /config
+              subPath: traefik-forward-auth.ini
+      volumes:
+        - name: traefik-forward-auth-config
+          configMap:
+            name: traefik-forward-auth-config
+        - name: traefik-forward-auth-secrets
+          secret:
+            secretName: traefik-forward-auth-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  type: ClusterIP
+  ports:
+    - name: auth-http
+      port: 4181
+      targetPort: 4181
+  selector:
+    app: traefik-forward-auth
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`auth.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: traefik-forward-auth
+          port: 4181
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth:4181
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Forwarded-User

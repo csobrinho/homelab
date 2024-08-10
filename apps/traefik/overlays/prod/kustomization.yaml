@@ -3,8 +3,13 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - basic-auth-middleware.yaml
-  - basic-auth-secret.yaml
+  - traefik-forward-auth.yaml
+
+configMapGenerator:
+  - name: traefik-forward-auth-config
+    namespace: traefik
+    files:
+      - rules/traefik-forward-auth.ini
 
 helmCharts:
   - name: traefik
