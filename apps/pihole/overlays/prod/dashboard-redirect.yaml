@@ -6,5 +6,5 @@ metadata:
 
 spec:
   redirectRegex:
-    regex: /admin/$
-    replacement: /
+    regex: ^https:\/\/([^\/]+)\/?$
+    replacement: https://$1/admin/

@@ -11,7 +11,6 @@ spec:
     - match: Host(`pihole.sobrinho.pt`)
       middlewares:
         - name: dashboard-redirect
-        - name: dashboard-prefix
       kind: Rule
       services:
         - name: pihole-web
