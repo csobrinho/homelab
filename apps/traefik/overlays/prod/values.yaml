@@ -14,24 +14,38 @@ logs:
   general:
     level: INFO
 
-# Fix the wrong X-Forwarded-For.
-hostNetwork: true
-updateStrategy:
-  rollingUpdate:
-    maxUnavailable: 1
-    maxSurge: null
-
 deployment:
   kind: DaemonSet
-  dnsPolicy: ClusterFirstWithHostNet
 
 ports:
   web:
+    port: 8000
+    expose:
+      default: true
+    exposedPort: 80
     redirectTo:
       port: websecure
       priority: 10
       permanent: true
   websecure:
+    port: 8443
+    expose:
+      default: true
+    exposedPort: 443
+    tls:
+      enabled: true
+  web-ext:
+    port: 9080
+    expose: false
+    exposedPort: 9080
+    redirectTo:
+      port: websecure-ext
+      priority: 10
+      permanent: true
+  websecure-ext:
+    port: 9443
+    expose: false
+    exposedPort: 9443
     tls:
       enabled: true
     middlewares:
@@ -39,9 +53,7 @@ ports:
 
 service:
   annotations:
-    kube-vip.io/loadbalancerIPs: 10.10.1.8
-  spec:
-    externalTrafficPolicy: Local
+    kube-vip.io/loadbalancerIPs: 10.10.1.7
 
 ingressRoute:
   dashboard:
@@ -52,6 +64,7 @@ ingressRoute:
         kind: TraefikService
     entryPoints:
       - websecure
+      - websecure-ext
 
 providers:
   kubernetesCRD:

@@ -93,6 +93,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
   routes:
     - match: Host(`auth.sobrinho.pt`)
       kind: Rule

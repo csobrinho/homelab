@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - traefik-forward-auth.yaml
+  - websecure-ext.yaml
 
 configMapGenerator:
   - name: traefik-forward-auth-config

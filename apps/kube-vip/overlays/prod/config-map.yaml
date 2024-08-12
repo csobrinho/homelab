@@ -5,4 +5,4 @@ metadata:
   name: kubevip
   namespace: kube-system
 data:
-  range-global: 10.10.1.8-10.10.1.9
+  range-global: 10.10.1.7-10.10.1.9
