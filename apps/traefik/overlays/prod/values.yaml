@@ -37,7 +37,7 @@ ports:
   web-ext:
     port: 9080
     expose: false
-    exposedPort: 9080
+    exposedPort: 80
     redirectTo:
       port: websecure-ext
       priority: 10
@@ -45,7 +45,7 @@ ports:
   websecure-ext:
     port: 9443
     expose: false
-    exposedPort: 9443
+    exposedPort: 443
     tls:
       enabled: true
     middlewares:
