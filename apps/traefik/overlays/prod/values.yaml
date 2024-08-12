@@ -42,6 +42,8 @@ ports:
       port: websecure-ext
       priority: 10
       permanent: true
+    middlewares:
+      - traefik-traefik-forward-auth@kubernetescrd
   websecure-ext:
     port: 9443
     expose: false
