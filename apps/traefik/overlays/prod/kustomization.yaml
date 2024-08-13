@@ -5,6 +5,7 @@ resources:
   - ../../base
   - traefik-forward-auth.yaml
   - websecure-ext.yaml
+  - tls-option.yaml
 
 configMapGenerator:
   - name: traefik-forward-auth-config
