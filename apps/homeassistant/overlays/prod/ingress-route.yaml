@@ -14,7 +14,3 @@ spec:
       services:
         - name: homeassistant
           port: 8123
-  tls:
-    options:
-      name: mtls
-      namespace: traefik
