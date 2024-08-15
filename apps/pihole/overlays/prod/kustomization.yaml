@@ -23,6 +23,7 @@ helmCharts:
       persistentVolumeClaim:
         enabled: true
         storageClass: longhorn-retain
+        size: 1Gi
       serviceWeb:
         annotations:
       serviceDns:
