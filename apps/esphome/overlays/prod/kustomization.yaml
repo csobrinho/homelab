@@ -1,3 +1,4 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/esphome/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -27,6 +28,13 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 256Mi
         platformio:
+          enabled: true
+          retain: false
+          mountPath: /config/.esphome
+          storageClass: "longhorn-rc1"
+          accessMode: ReadWriteOnce
+          size: 3Gi
+        build:
           enabled: true
           retain: false
           mountPath: /build

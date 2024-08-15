@@ -15,7 +15,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: cache-pvc
+  name: platformio-pvc
   namespace: esphome
 
 spec:
@@ -24,4 +24,18 @@ spec:
   storageClassName: longhorn-rc1
   resources:
     requests:
-      storage: 4Gi
+      storage: 3Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: build-pvc
+  namespace: esphome
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn-rc1
+  resources:
+    requests:
+      storage: 6Gi
