@@ -22,7 +22,7 @@ helmCharts:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
         enabled: true
-        storageClass: longhorn
+        storageClass: longhorn-retain
       serviceWeb:
         annotations:
       serviceDns:
