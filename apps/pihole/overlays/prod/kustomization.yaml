@@ -30,7 +30,6 @@ helmCharts:
         annotations:
           kube-vip.io/loadbalancerIPs: 10.10.1.9
         type: LoadBalancer
-        externalTrafficPolicy: Cluster
       serviceDhcp:
         enabled: false
       podDnsConfig:
