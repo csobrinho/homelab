@@ -44,3 +44,4 @@ helmCharts:
         storage:
           dynamic:
             storageClass: "longhorn-retain"
+          capacity: 2Gi
