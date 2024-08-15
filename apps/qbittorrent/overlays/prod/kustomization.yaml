@@ -16,23 +16,23 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         nodeSelector:
-          kubernetes.io/arch: "arm64"
+          kubernetes.io/arch: arm64
       persistence:
         config:
           enabled: true
           retain: true
-          storageClass: "longhorn"
+          storageClass: longhorn-retain
           accessMode: ReadWriteOnce
           size: 1Gi
         downloads:
-          enabled: false
+          enabled: true
           mountPath: /downloads
-          storageClass: "longhorn"
+          storageClass: longhorn-rc1
           accessMode: ReadWriteOnce
           size: 10Gi
         media:
-          enabled: false
+          enabled: true
           mountPath: /media
-          storageClass: "longhorn"
+          storageClass: longhorn-rc1
           accessMode: ReadWriteOnce
           size: 10Gi
