@@ -21,15 +21,3 @@ helmCharts:
       configs:
         params:
           server.insecure: true
-
-# patches:
-  # Fix argo sync.
-  # - patch: |-
-  #     apiVersion: v1
-  #     kind: ConfigMap
-  #     name: argocd-cm
-  #     data:
-  #       - op: add
-  #         resource.customizations.ignoreDifferences.apps_Deployment: |
-  #           jsonPointers:
-  #           - /spec/template/spec/hostUsers
