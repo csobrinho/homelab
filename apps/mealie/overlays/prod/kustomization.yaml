@@ -1,0 +1,38 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/mealie/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: mealie
+    repo: https://jvalskis.github.io/mealie-helm/
+    releaseName: mealie
+    namespace: mealie
+    version: 2.0.0
+    includeCRDs: true
+    valuesInline:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                repository: ghcr.io/mealie-recipes/mealie
+                tag: latest
+              env:
+                TZ: America/Los_Angeles
+                BASE_URL: mealie.sobrinho.pt
+      persistence:
+        data:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          advancedMounts:
+            main: # the controller with the "main" identifier
+              main: # the container with the "main" identifier
+                - path: /app/data/
+                  readOnly: false
