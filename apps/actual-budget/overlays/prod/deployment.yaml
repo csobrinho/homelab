@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actual-budget
+  namespace: actual-budget
+spec:
+  selector:
+    matchLabels:
+      app: actual-budget
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: actual-budget
+    spec:
+      containers:
+        - name: actual-budget
+          image: ghcr.io/actualbudget/actual-server:edge-alpine
+          resources:
+            limits:
+              memory: 384Mi
+              cpu: 50m
+          ports:
+            - containerPort: 5006
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: ACTUAL_TRUSTED_PROXIES
+              value: "10.0.0.0/8"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: actual-budget-data
