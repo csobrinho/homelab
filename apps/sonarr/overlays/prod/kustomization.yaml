@@ -25,6 +25,12 @@ helmCharts:
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
           size: 5Gi
+        data:
+          enabled: true
+          type: nfs
+          path: /media/media
+          server: infra1
+          mountPath: /data/media
       metrics:
         main:
           enabled: false
