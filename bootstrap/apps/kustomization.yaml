@@ -15,4 +15,5 @@ resources:
   - apps/node-red-app.yaml
   - apps/pihole-app.yaml
   - apps/qbittorrent-app.yaml
+  - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
