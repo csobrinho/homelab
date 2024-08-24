@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: node-red-ingress
+  namespace: node-red
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`node-red.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: node-red
+          port: main
