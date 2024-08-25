@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: prowlarr-ingress
+  namespace: media
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`prowlarr.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: prowlarr
+          port: main
