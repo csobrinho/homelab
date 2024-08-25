@@ -28,9 +28,9 @@ helmCharts:
         data:
           enabled: true
           type: nfs
-          path: /media/media
+          path: /media
           server: infra1
-          mountPath: /data/media
+          mountPath: /data
       metrics:
         main:
           enabled: false
