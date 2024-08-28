@@ -1,0 +1,38 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/mosquitto/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: mosquitto
+    repo: oci://tccr.io/truecharts
+    releaseName: mosquitto
+    namespace: mosquitto
+    version: 16.1.6
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      service:
+        websockets:
+          enabled: false
+      auth:
+        enabled: true
+      persistence:
+        data:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 2Gi
+        configinc:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 256Mi

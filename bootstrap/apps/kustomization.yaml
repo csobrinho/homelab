@@ -12,6 +12,7 @@ resources:
   - apps/kube-vip-app.yaml
   - apps/longhorn-app.yaml
   - apps/mealie-app.yaml
+  - apps/mosquitto-app.yaml
   - apps/node-red-app.yaml
   - apps/pihole-app.yaml
   - apps/plex-app.yaml
