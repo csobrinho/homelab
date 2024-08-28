@@ -1,4 +1,4 @@
-kind: IngressRoute
+kind: IngressRouteTCP
 apiVersion: traefik.io/v1alpha1
 metadata:
   name: mosquitto-ingress
@@ -9,8 +9,9 @@ spec:
     - websecure
     - websecure-ext
   routes:
-    - match: Host(`mosquitto.sobrinho.pt`)
-      kind: Rule
+    - match: HostSNI(`mqtt.sobrinho.pt`)
       services:
         - name: mosquitto
           port: main
+  tls:
+    passthrough: false
