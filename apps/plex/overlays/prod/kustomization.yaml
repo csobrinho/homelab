@@ -1,0 +1,8 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/plex/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - service.yaml
+  - ingress-route.yaml

@@ -14,6 +14,7 @@ resources:
   - apps/mealie-app.yaml
   - apps/node-red-app.yaml
   - apps/pihole-app.yaml
+  - apps/plex-app.yaml
   - apps/prowlarr-app.yaml
   - apps/qbittorrent-app.yaml
   - apps/sonarr-app.yaml
