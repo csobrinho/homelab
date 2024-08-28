@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
   - traefik-forward-auth.yaml
-  - websecure-ext.yaml
-  - mqtt.yaml
+  - traefik-external.yaml
+  - traefik-mqtt.yaml
   - tls-option.yaml
 
 configMapGenerator:
