@@ -7,4 +7,4 @@ spec:
   type: ExternalName
   externalName: infra1
   ports:
-    - port: 8123
+    - port: 32400
