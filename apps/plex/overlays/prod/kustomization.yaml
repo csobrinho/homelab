@@ -4,5 +4,30 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - service.yaml
   - ingress-route.yaml
+
+helmCharts:
+  - name: plex
+    repo: oci://tccr.io/truecharts
+    releaseName: plex
+    namespace: media
+    version: 19.1.7
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+          kubernetes.io/hostname: "infra1"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 4Gi
+      plex:
+        additionalAdvertiseURL: "https://plex.sobrinho.pt"
+      portal:
+        open:
+          enabled: false
