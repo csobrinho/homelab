@@ -37,3 +37,10 @@ helmCharts:
       portal:
         open:
           enabled: false
+      resources:
+        limits:
+          cpu: 4000m
+          memory: 8Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
