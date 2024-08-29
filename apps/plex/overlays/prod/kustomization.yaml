@@ -26,6 +26,12 @@ helmCharts:
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
           size: 4Gi
+        media:
+          enabled: true
+          type: hostPath
+          mountPath: /data
+          hostPath: /media
+          hostPathType: Directory
       plex:
         additionalAdvertiseURL: "https://plex.sobrinho.pt"
       portal:
