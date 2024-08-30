@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: radarr-ingress
+  namespace: media
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`radarr.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: radarr
+          port: main
