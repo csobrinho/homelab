@@ -1,0 +1,39 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/readarr/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: readarr
+    repo: oci://tccr.io/truecharts
+    releaseName: readarr
+    namespace: media
+    version: 23.1.5
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 5Gi
+        data:
+          enabled: true
+          type: nfs
+          path: /media
+          server: infra1
+          mountPath: /data
+      metrics:
+        main:
+          enabled: false
+      portal:
+        open:
+          enabled: false

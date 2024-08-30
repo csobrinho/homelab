@@ -19,5 +19,6 @@ resources:
   - apps/prowlarr-app.yaml
   - apps/qbittorrent-app.yaml
   - apps/radarr-app.yaml
+  - apps/readarr-app.yaml
   - apps/sonarr-app.yaml
   - apps/traefik-app.yaml

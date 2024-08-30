@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: readarr-ingress
+  namespace: media
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`readarr.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: readarr
+          port: main
