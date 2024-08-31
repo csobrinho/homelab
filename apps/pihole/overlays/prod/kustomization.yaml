@@ -28,7 +28,7 @@ helmCharts:
         annotations:
       serviceDns:
         annotations:
-          kube-vip.io/loadbalancerIPs: 10.10.1.9
+          kube-vip.io/loadbalancerIPs: 10.10.1.8
         type: LoadBalancer
       serviceDhcp:
         enabled: false
