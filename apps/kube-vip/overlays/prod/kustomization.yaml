@@ -5,3 +5,4 @@ resources:
   - ../../base
   - config-map.yaml
   - daemon-set.yaml
+  - cloud-provider.yaml
