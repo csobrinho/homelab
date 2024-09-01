@@ -32,6 +32,8 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
+            - name: vip_loglevel #            Debug log level.
+              value: "5"
             - name: vip_arp #                 Enables ARP broadcasts from Leader
               value: "true"
             - name: port
@@ -55,7 +57,8 @@ spec:
             - name: svc_leasename
               value: plndr-svcs-lock
             - name: svc_election #            Enables a leadership Election for each Service, allowing them to be distributed
-              value: "true"
+              # value: "true"
+              value: "false"
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
               value: "true"
             - name: vip_leasename
@@ -68,8 +71,8 @@ spec:
               value: "1"
             - name: address #                 VIP config: <IP Address> or <DNS name>.
               value: 10.10.1.10
-            - name: enable_node_labeling
-              value: "true"
+            # - name: enable_node_labeling
+            #   value: "true"
             - name: prometheus_server
               value: :2112
           image: ghcr.io/kube-vip/kube-vip:v0.8.2
