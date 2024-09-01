@@ -19,7 +19,7 @@ helmCharts:
       DNS1: 10.10.1.1
       DNS2: ""
       nodeSelector:
-        kubernetes.io/hostname: "infra4" # Pin it until kube-vip works again.
+        kubernetes.io/hostname: "infra2" # Pin it until kube-vip works again.
       extraEnvVars:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
