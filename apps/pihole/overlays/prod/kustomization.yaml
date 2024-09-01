@@ -18,6 +18,8 @@ helmCharts:
       hostNetwork: true
       DNS1: 10.10.1.1
       DNS2: ""
+      nodeSelector:
+        kubernetes.io/hostname: "infra1" # Pin it until kube-vip works again.
       extraEnvVars:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
@@ -28,7 +30,7 @@ helmCharts:
         annotations:
       serviceDns:
         annotations:
-          kube-vip.io/loadbalancerIPs: 10.10.1.8
+          kube-vip.io/loadbalancerIPs: 10.10.1.9
         type: LoadBalancer
       serviceDhcp:
         enabled: false
