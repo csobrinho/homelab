@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  creationTimestamp: null
   labels:
     app.kubernetes.io/name: kube-vip-ds
-    app.kubernetes.io/version: v0.8.2
+    app.kubernetes.io/version: v0.8.1
   name: kube-vip-ds
   namespace: kube-system
 spec:
@@ -12,9 +13,10 @@ spec:
       app.kubernetes.io/name: kube-vip-ds
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app.kubernetes.io/name: kube-vip-ds
-        app.kubernetes.io/version: v0.8.2
+        app.kubernetes.io/version: v0.8.1
     spec:
       affinity:
         nodeAffinity:
@@ -30,11 +32,7 @@ spec:
         - args:
             - manager
           env:
-            - name: TZ
-              value: America/Los_Angeles
-            - name: vip_loglevel #            Debug log level.
-              value: "5"
-            - name: vip_arp #                 Enables ARP broadcasts from Leader
+            - name: vip_arp
               value: "true"
             - name: port
               value: "6443"
@@ -54,11 +52,8 @@ spec:
               value: kube-system
             - name: svc_enable #              Enables kube-vip to watch Services of type LoadBalancer
               value: "true"
-            - name: svc_leasename
-              value: plndr-svcs-lock
             - name: svc_election #            Enables a leadership Election for each Service, allowing them to be distributed
-              # value: "true"
-              value: "false"
+              value: "true"
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
               value: "true"
             - name: vip_leasename
@@ -69,13 +64,11 @@ spec:
               value: "3"
             - name: vip_retryperiod #         Number of times the leader will hold the lease for
               value: "1"
-            - name: address #                 VIP config: <IP Address> or <DNS name>.
+            - name: address #                 VIP config: <IP Address> or <DNS name>. 
               value: 10.10.1.10
-            # - name: enable_node_labeling
-            #   value: "true"
             - name: prometheus_server
               value: :2112
-          image: ghcr.io/kube-vip/kube-vip:v0.8.2
+          image: ghcr.io/kube-vip/kube-vip:v0.8.1
           imagePullPolicy: IfNotPresent
           name: kube-vip
           resources: {}
