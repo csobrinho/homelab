@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kube-vip-ds
-    app.kubernetes.io/version: v0.8.1
+    app.kubernetes.io/version: v0.8.2
   name: kube-vip-ds
   namespace: kube-system
 spec:
@@ -16,7 +16,7 @@ spec:
       creationTimestamp: null
       labels:
         app.kubernetes.io/name: kube-vip-ds
-        app.kubernetes.io/version: v0.8.1
+        app.kubernetes.io/version: v0.8.2
     spec:
       affinity:
         nodeAffinity:
@@ -52,8 +52,8 @@ spec:
               value: kube-system
             - name: svc_enable #              Enables kube-vip to watch Services of type LoadBalancer
               value: "true"
-            - name: svc_election #            Enables a leadership Election for each Service, allowing them to be distributed
-              value: "true"
+            - name: svc_leasename
+              value: plndr-svcs-lock
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
               value: "true"
             - name: vip_leasename
@@ -68,7 +68,7 @@ spec:
               value: 10.10.1.10
             - name: prometheus_server
               value: :2112
-          image: ghcr.io/kube-vip/kube-vip:v0.8.1
+          image: ghcr.io/kube-vip/kube-vip:v0.8.2
           imagePullPolicy: IfNotPresent
           name: kube-vip
           resources: {}

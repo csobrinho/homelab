@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - rbac.yaml
   - config-map.yaml
   - daemon-set.yaml
   - cloud-provider.yaml
