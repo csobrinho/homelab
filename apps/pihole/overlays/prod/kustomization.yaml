@@ -1,3 +1,4 @@
+# From https://github.com/MoJo2600/pihole-kubernetes/blob/main/charts/pihole/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -18,8 +19,19 @@ helmCharts:
       hostNetwork: true
       DNS1: 10.10.1.1
       DNS2: ""
-      # nodeSelector:
-      #   kubernetes.io/hostname: "infra1" # Pin it until kube-vip works again.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - infra1
+                      - infra2
+                      - infra3
+      admin:
+        enabled: false
       extraEnvVars:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
