@@ -14,7 +14,7 @@ spec:
       services:
         - name: home-assistant
           port: http
-    - match: Host(`cs.homeassistant.sobrinho.pt`)
+    - match: Host(`homeassistant.cs.sobrinho.pt`)
       kind: Rule
       services:
         - name: home-assistant-codeserver

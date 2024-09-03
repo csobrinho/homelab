@@ -8,6 +8,7 @@ spec:
   dnsNames:
     - "sobrinho.pt"
     - "*.sobrinho.pt"
+    - "*.cs.sobrinho.pt"
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-staging
@@ -22,6 +23,7 @@ spec:
   dnsNames:
     - "sobrinho.pt"
     - "*.sobrinho.pt"
+    - "*.cs.sobrinho.pt"
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
