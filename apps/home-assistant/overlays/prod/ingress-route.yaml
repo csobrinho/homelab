@@ -1,0 +1,21 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: home-assistant-ingress
+  namespace: home-assistant
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`homeassistant.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: home-assistant
+          port: http
+    - match: Host(`cs.homeassistant.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: home-assistant-codeserver
+          port: codeserver

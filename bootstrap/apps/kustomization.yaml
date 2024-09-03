@@ -7,7 +7,7 @@ resources:
   - apps/cert-manager-app.yaml
   - apps/cyberchef-app.yaml
   - apps/esphome-app.yaml
-  - apps/homeassistant-app.yaml
+  - apps/home-assistant-app.yaml
   - apps/jupyter-app.yaml
   - apps/kube-vip-app.yaml
   - apps/longhorn-app.yaml

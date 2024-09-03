@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homeassistant
+  name: home-assistant
   namespace: argocd
 spec:
   destination:
-    namespace: homeassistant
+    namespace: home-assistant
     name: in-cluster
   project: default
   source:
-    path: apps/homeassistant/overlays/prod
+    path: apps/home-assistant/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
     targetRevision: main
   syncPolicy:

@@ -1,0 +1,43 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/home-assistant/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: home-assistant
+    repo: http://pajikos.github.io/home-assistant-helm-chart/
+    releaseName: home-assistant
+    namespace: home-assistant
+    version: 0.2.75
+    includeCRDs: true
+    valuesInline:
+      env:
+        - name: TZ
+          value: America/Los_Angeles
+      hostPort:
+        enabled: true
+        port: 8123
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      persistence:
+        enabled: true
+        retain: true
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        storageClass: "longhorn-retain"
+      # additionalVolumes:
+      #   - hostPath:
+      #       path: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+      #       type: CharDevice
+      #     name: sonoff-usb
+      # additionalMounts:
+      #   - mountPath: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+      #     name: sonoff-usb
+      homeassistant:
+        trusted_proxies: ["10.10.1.0/24", "10.42.0.0/16"]
+      addons:
+        codeserver:
+          enabled: true
