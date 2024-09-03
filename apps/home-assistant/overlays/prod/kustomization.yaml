@@ -17,11 +17,18 @@ helmCharts:
       env:
         - name: TZ
           value: America/Los_Angeles
+      service:
+        type: NodePort
+        port: 8123
       hostPort:
         enabled: true
         port: 8123
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        kubernetes.io/hostname: "infra1" # Pin to infra1 because it needs the SonOff hardware.
+      securityContext:
+        privileged: true
       persistence:
         enabled: true
         retain: true
@@ -36,8 +43,9 @@ helmCharts:
       # additionalMounts:
       #   - mountPath: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
       #     name: sonoff-usb
-      homeassistant:
-        trusted_proxies: ["10.10.1.0/24", "10.42.0.0/16"]
+      configuration:
+        enabled: true
+        trusted_proxies: ["10.42.0.0/16", "10.10.1.0/24"]
       addons:
         codeserver:
           enabled: true
