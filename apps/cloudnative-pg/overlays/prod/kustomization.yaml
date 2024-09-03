@@ -1,0 +1,22 @@
+# From https://github.com/truecharts/charts/blob/master/charts/system/cloudnative-pg/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: cloudnative-pg
+    repo: oci://tccr.io/truecharts
+    releaseName: cloudnative-pg
+    namespace: databases
+    version: 8.1.1
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      cloudnative-pg:
+        monitoring:
+          podMonitorEnabled: false
