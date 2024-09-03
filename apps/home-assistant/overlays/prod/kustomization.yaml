@@ -49,3 +49,23 @@ helmCharts:
       addons:
         codeserver:
           enabled: true
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: home-assistant
+      spec:
+        volumeClaimTemplates:
+          - apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: home-assistant
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+              storageClassName: longhorn-retain
