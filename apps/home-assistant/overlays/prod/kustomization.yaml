@@ -35,14 +35,14 @@ helmCharts:
         accessMode: ReadWriteOnce
         size: 5Gi
         storageClass: "longhorn-retain"
-      # additionalVolumes:
-      #   - hostPath:
-      #       path: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
-      #       type: CharDevice
-      #     name: sonoff-usb
-      # additionalMounts:
-      #   - mountPath: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
-      #     name: sonoff-usb
+      additionalVolumes:
+        - hostPath:
+            path: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
+            type: CharDevice
+          name: sonoff-usb
+      additionalMounts:
+        - mountPath: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
+          name: sonoff-usb
       configuration:
         enabled: true
         trusted_proxies: ["10.42.0.0/16", "10.10.1.0/24"]
