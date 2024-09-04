@@ -55,20 +55,17 @@ helmCharts:
 
 patches:
   - patch: |-
-      apiVersion: apps/v1
+      - op: add
+        path: /spec/volumeClaimTemplates/0/apiVersion
+        value: v1
+      - op: add
+        path: /spec/volumeClaimTemplates/0/kind
+        value: PersistentVolumeClaim
+      - op: add
+        path: /spec/template/spec/containers/1/securityContext/runAsUser
+        value: 0
+    target:
+      group: apps
+      version: v1
       kind: StatefulSet
-      metadata:
-        name: home-assistant
-      spec:
-        volumeClaimTemplates:
-          - apiVersion: v1
-            kind: PersistentVolumeClaim
-            metadata:
-              name: home-assistant
-            spec:
-              accessModes:
-              - ReadWriteOnce
-              resources:
-                requests:
-                  storage: 5Gi
-              storageClassName: longhorn-retain
+      name: home-assistant
