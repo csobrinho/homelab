@@ -28,8 +28,8 @@ helmCharts:
                     operator: In
                     values:
                       - infra1
-                      - infra2
-                      - infra3
+                      # - infra2
+                      # - infra3
       admin:
         enabled: false
       extraEnvVars:
