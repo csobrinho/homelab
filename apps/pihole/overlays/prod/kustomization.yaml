@@ -27,8 +27,8 @@ helmCharts:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - infra1
-                      # - infra2
+                      # - infra1
+                      - infra2
                       # - infra3
       admin:
         enabled: false
