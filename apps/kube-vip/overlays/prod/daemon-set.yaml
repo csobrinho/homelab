@@ -64,12 +64,6 @@ spec:
               value: "3"
             - name: vip_retryperiod #         Number of times the leader will hold the lease for
               value: "1"
-            - name: lb_enable
-              value: "true"
-            - name: lb_port
-              value: "6443"
-            - name: lb_fwdmethod
-              value: local
             - name: address #                 VIP config: <IP Address> or <DNS name>. 
               value: 10.10.1.10
             - name: prometheus_server
