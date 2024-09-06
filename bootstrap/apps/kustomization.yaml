@@ -22,3 +22,4 @@ resources:
   - apps/readarr-app.yaml
   - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
+  - apps/unpackerr-app.yaml
