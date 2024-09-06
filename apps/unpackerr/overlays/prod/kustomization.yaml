@@ -15,6 +15,35 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  UN_SONARR_0_URL: https://sonarr.sobrinho.pt
+                  UN_SONARR_0_PATHS_0: /data/torrents/tv
+                  UN_SONARR_0_API_KEY:
+                    secretKeyRef:
+                      name: unpackerr-secret
+                      key: UN_SONARR_0_API_KEY
+                      expandObjectName: false
+
+                  UN_RADARR_0_URL: https://radarr.sobrinho.pt
+                  UN_RADARR_0_PATHS_0: /data/torrents/movies
+                  UN_RADARR_0_API_KEY:
+                    secretKeyRef:
+                      name: unpackerr-secret
+                      key: UN_RADARR_0_API_KEY
+                      expandObjectName: false
+
+                  UN_READARR_0_URL: https://readarr.sobrinho.pt
+                  UN_READARR_0_PATHS_0: /data/torrents/books
+                  UN_READARR_0_API_KEY:
+                    secretKeyRef:
+                      name: unpackerr-secret
+                      key: UN_READARR_0_API_KEY
+                      expandObjectName: false
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
