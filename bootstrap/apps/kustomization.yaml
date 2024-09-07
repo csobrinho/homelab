@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - apps/actual-budget-app.yaml
   - apps/argocd-app.yaml
+  - apps/bazarr-app.yaml
   - apps/cert-manager-app.yaml
   - apps/cyberchef-app.yaml
   - apps/esphome-app.yaml
