@@ -18,6 +18,10 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+      qbitportforward:
+        enabled: true
+        QBT_USERNAME: ""
+        QBT_PASSWORD: ""
       persistence:
         config:
           enabled: true
@@ -25,27 +29,66 @@ helmCharts:
           storageClass: longhorn-retain
           accessMode: ReadWriteOnce
           size: 1Gi
-        downloads:
+        data:
           enabled: true
-          mountPath: /downloads
-          storageClass: longhorn-rc1
-          accessMode: ReadWriteOnce
-          size: 10Gi
-        media:
-          enabled: true
-          mountPath: /media
-          storageClass: longhorn-rc1
-          accessMode: ReadWriteOnce
-          size: 10Gi
+          type: nfs
+          path: /media
+          server: infra1
+          mountPath: /data
       gluetunImage:
         repository: ghcr.io/qdm12/gluetun
-        tag: v3.39@sha256:18d7b866adf55f38fb0aae506b0d64f9cc4eb26e57948330c32241bebc2dad32
+        tag: v3.39
         pullPolicy: IfNotPresent
+      qbitportforwardImage:
+        repository: ghcr.io/csobrinho/qbittorrent-port-forward-gluetun-server
+        pullPolicy: IfNotPresent
+        tag: master
       addons:
         vpn:
-          type: disabled # gluetun
+          type: gluetun
           killSwitch: true
           excludedNetworks_IPv4:
             - "10.10.1.0/24"
           excludedNetworks_IPv6: []
-          existingSecret: vpn-secret
+          env:
+            DNS_KEEP_NAMESERVER: off
+            VPN_PORT_FORWARDING_PROVIDER: protonvpn
+            VPN_PORT_FORWARDING: on
+            VPN_TYPE: wireguard
+            VPN_SERVICE_PROVIDER: custom
+            WIREGUARD_ENDPOINT_IP:
+              secretKeyRef:
+                name: vpn-secret
+                key: WIREGUARD_ENDPOINT_IP
+                expandObjectName: false
+            WIREGUARD_ENDPOINT_PORT:
+              secretKeyRef:
+                name: vpn-secret
+                key: WIREGUARD_ENDPOINT_PORT
+                expandObjectName: false
+            WIREGUARD_PUBLIC_KEY:
+              secretKeyRef:
+                name: vpn-secret
+                key: WIREGUARD_PUBLIC_KEY
+                expandObjectName: false
+            WIREGUARD_PRIVATE_KEY:
+              secretKeyRef:
+                name: vpn-secret
+                key: WIREGUARD_PRIVATE_KEY
+                expandObjectName: false
+            WIREGUARD_ADDRESSES:
+              secretKeyRef:
+                name: vpn-secret
+                key: WIREGUARD_ADDRESSES
+                expandObjectName: false
+
+patches:
+  - patch: |-
+      - op: remove
+        path: /spec/jobTemplate/spec/template/spec/hostUsers
+        value: true
+    target:
+      group: batch
+      version: v1
+      kind: CronJob
+      name: qbittorrent-qbitportforward
