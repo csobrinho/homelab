@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: xfinity-usage
+  namespace: tools
+spec:
+  schedule: "0/30 * * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+            - name: create-log
+              image: busybox
+              command: ["touch", "/config/xfinity.log"]
+              volumeMounts:
+                - mountPath: /config
+                  name: config
+          containers:
+            - name: xfinity-usage
+              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.1@sha256:615a83b86d9baf51da0ab9d56703a5bc0faa791d1c7c9ac87b8fbb76a8bdd51b
+              imagePullPolicy: IfNotPresent
+              command: ["python3", "-Wignore", "xfinity_usage_addon.py"]
+              resources:
+                limits:
+                  memory: 4Gi
+                  cpu: 1000m
+                requests:
+                  memory: 2Gi
+                  cpu: 200m
+              env:
+                - name: TZ
+                  value: America/Los_Angeles
+                - name: POLLING_RATE
+                  value: "3600"
+                - name: PAGE_TIMEOUT
+                  value: "60"
+                - name: LOGLEVEL
+                  value: "debug_support"
+                - name: MQTT_SERVICE
+                  value: "true"
+                - name: MQTT_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: MQTT_USERNAME
+                      name: xfinity-usage-secret
+                - name: MQTT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: MQTT_PASSWORD
+                      name: xfinity-usage-secret
+                - name: MQTT_HOST
+                  value: "mqtt.sobrinho.pt"
+                - name: MQTT_PORT
+                  value: "443"
+                - name: XFINITY_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: XFINITY_USERNAME
+                      name: xfinity-usage-secret
+                - name: XFINITY_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: XFINITY_PASSWORD
+                      name: xfinity-usage-secret
+              volumeMounts:
+                - mountPath: /config
+                  name: config
+          volumes:
+            - emptyDir:
+                medium: Memory
+                sizeLimit: 1Gi
+              name: config
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: false
