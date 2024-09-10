@@ -1,0 +1,30 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/overseerr/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: overseerr
+    repo: oci://tccr.io/truecharts
+    releaseName: overseerr
+    namespace: media
+    version: 15.1.5
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "longhorn-retain"
+          accessMode: ReadWriteOnce
+          size: 2Gi
+      portal:
+        open:
+          enabled: false

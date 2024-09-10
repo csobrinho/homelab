@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: overseerr-ingress
+  namespace: media
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`overseerr.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: overseerr
+          port: main
