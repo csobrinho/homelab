@@ -21,7 +21,8 @@ spec:
             - name: xfinity-usage
               image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.1@sha256:615a83b86d9baf51da0ab9d56703a5bc0faa791d1c7c9ac87b8fbb76a8bdd51b
               imagePullPolicy: IfNotPresent
-              command: ["python3", "-Wignore", "xfinity_usage_addon.py"]
+              command: ["/bin/bash"]
+              args: ["-c", "python3 -Wignore xfinity_usage_addon.py || true"]
               resources:
                 limits:
                   memory: 4Gi
