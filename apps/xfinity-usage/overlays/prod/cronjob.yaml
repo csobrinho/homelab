@@ -55,9 +55,9 @@ spec:
                       key: MQTT_PASSWORD
                       name: xfinity-usage-secret
                 - name: MQTT_HOST
-                  value: "mosquitto.mosquitto.svc.cluster.local"
+                  value: "mqtt.sobrinho.pt"
                 - name: MQTT_PORT
-                  value: "1883"
+                  value: "443"
                 - name: XFINITY_USERNAME
                   valueFrom:
                     secretKeyRef:
