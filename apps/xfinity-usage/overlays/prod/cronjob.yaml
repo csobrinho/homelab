@@ -19,7 +19,7 @@ spec:
                   name: config
           containers:
             - name: xfinity-usage
-              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.1@sha256:615a83b86d9baf51da0ab9d56703a5bc0faa791d1c7c9ac87b8fbb76a8bdd51b
+              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.2@sha256:897360c2f9e8e85d040f6da18ae11c1b524f80dec5c40b703e717df69272bba9
               imagePullPolicy: IfNotPresent
               command: ["/bin/bash"]
               args: ["-c", "python3 -Wignore xfinity_usage_addon.py || true"]
