@@ -25,7 +25,7 @@ helmCharts:
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
           size: 1Gi
-        downloads:
+        data:
           enabled: true
           type: nfs
           path: /media
