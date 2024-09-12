@@ -51,10 +51,10 @@ ports:
       options: "traefik-mtls"
     middlewares:
       - traefik-traefik-forward-auth@kubernetescrd
-  # DISABLED(MQTT) mqtt:
-  #   port: 9883
-  #   expose: false
-  #   exposedPort: 1883
+  mqtt:
+    port: 9883
+    expose: false
+    exposedPort: 1883
 
 service:
   annotations:
