@@ -5,7 +5,8 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
-  # DISABLED(MQTT) - ingress-route-mqtt.yaml
+  - ingress-route-mqtt.yaml
+  - ingress-route-cs.yaml
 
 helmCharts:
   - name: mosquitto
@@ -19,6 +20,10 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+      codeserverImage:
+        repository: ghcr.io/coder/code-server
+        tag: 4.92.2
+        pullPolicy: IfNotPresent
       service:
         websockets:
           enabled: false
@@ -37,3 +42,6 @@ helmCharts:
           storageClass: "longhorn-retain"
           accessMode: ReadWriteOnce
           size: 256Mi
+      addons:
+        codeserver:
+          enabled: true

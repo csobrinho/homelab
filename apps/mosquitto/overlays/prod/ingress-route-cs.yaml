@@ -1,0 +1,18 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: mosquitto-ingress-codeserver
+  namespace: mosquitto
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`mqtt.cs.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: mosquitto-codeserver
+          port: codeserver
+  tls:
+    passthrough: false

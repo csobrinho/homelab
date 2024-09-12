@@ -5,7 +5,7 @@ resources:
   - ../../base
   - traefik-forward-auth.yaml
   - traefik-external.yaml
-  # DISABLED(MQTT) - traefik-mqtt.yaml
+  - traefik-mqtt.yaml
   - tls-option.yaml
 
 configMapGenerator:
