@@ -14,5 +14,3 @@ spec:
       services:
         - name: mosquitto-codeserver
           port: codeserver
-  tls:
-    passthrough: false
