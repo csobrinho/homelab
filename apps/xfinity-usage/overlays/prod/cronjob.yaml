@@ -11,6 +11,7 @@ spec:
   startingDeadlineSeconds: 360 # 6 min
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         spec:
           initContainers:
