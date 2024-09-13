@@ -1,0 +1,10 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/whatsapp/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - deployment.yaml
+  - ingress-route.yaml
+  - pvc.yaml
+  - service.yaml

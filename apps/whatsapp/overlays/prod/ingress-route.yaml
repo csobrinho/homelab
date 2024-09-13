@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: whatsapp-ingress
+  namespace: tools
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`whatsapp.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: whatsapp
+          port: main

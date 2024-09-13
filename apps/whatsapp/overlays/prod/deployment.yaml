@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whatsapp
+  namespace: tools
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: whatsapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: whatsapp
+    spec:
+      containers:
+        - name: whatsapp
+          image: devlikeapro/waha:noweb-arm
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: WHATSAPP_DEFAULT_ENGINE
+              value: NOWEB
+            - name: WHATSAPP_START_SESSION
+              value: default
+            - name: WHATSAPP_HOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: whatsapp-secret
+                  key: WEBHOOK_URL
+            - name: WHATSAPP_HOOK_EVENTS
+              value: "session.status,message,message.reaction,presence.update,call.received,call.accepted,call.rejected"
+            - name: WAHA_PRINT_QR
+              value: "False"
+            - name: WAHA_LOG_FORMAT
+              value: PRETTY
+            - name: WAHA_LOG_LEVEL
+              value: debug
+          resources:
+            limits:
+              cpu: 300m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 300Mi
+          ports:
+            - name: main
+              containerPort: 3000
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /ping
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 4
+            httpGet:
+              path: /ping
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 12
+            successThreshold: 2
+            timeoutSeconds: 5
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /ping
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp/waha-sessions
+              name: sessions
+            - mountPath: /dev/shm
+              name: devshm
+            - mountPath: /shared
+              name: shared
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/logs
+              name: varlogs
+            - mountPath: /var/run
+              name: varrun
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+      terminationGracePeriodSeconds: 5
+      volumes:
+        - name: sessions
+          persistentVolumeClaim:
+            claimName: whatsapp-sessions
+        - name: media
+          persistentVolumeClaim:
+            claimName: whatsapp-media
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+          name: devshm
+        - emptyDir: {}
+          name: shared
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+          name: tmp
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+          name: varlogs
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+          name: varrun
