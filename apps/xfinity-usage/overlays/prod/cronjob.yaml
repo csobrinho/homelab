@@ -57,7 +57,7 @@ spec:
                 - name: MQTT_HOST
                   value: "mqtt.sobrinho.pt"
                 - name: MQTT_PORT
-                  value: "1883"
+                  value: "443"
                 - name: XFINITY_USERNAME
                   valueFrom:
                     secretKeyRef:
