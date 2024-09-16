@@ -33,7 +33,7 @@ spec:
                   name: whatsapp-secret
                   key: WEBHOOK_URL
             - name: WHATSAPP_HOOK_EVENTS
-              value: "session.status,message,message.reaction,presence.update,call.received,call.accepted,call.rejected"
+              value: "session.status,message,message.reaction,message.any,message.ack,state.change,group.join,presence.update,poll.vote,poll.vote.failed,call.received,call.accepted,call.rejected"
             - name: WAHA_PRINT_QR
               value: "False"
             - name: WAHA_LOG_FORMAT
