@@ -58,7 +58,8 @@ ports:
 
 service:
   annotations:
-    kube-vip.io/loadbalancerIPs: 10.10.1.7
+    metallb.universe.tf/allow-shared-ip: infra-int
+    metallb.universe.tf/address-pool: pool-infra-int
 
 ingressRoute:
   dashboard:

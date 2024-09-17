@@ -42,7 +42,8 @@ helmCharts:
         annotations:
       serviceDns:
         annotations:
-          kube-vip.io/loadbalancerIPs: 10.10.1.9
+          metallb.universe.tf/allow-shared-ip: infra-dns
+          metallb.universe.tf/address-pool: pool-infra-dns
         type: LoadBalancer
       serviceDhcp:
         enabled: false

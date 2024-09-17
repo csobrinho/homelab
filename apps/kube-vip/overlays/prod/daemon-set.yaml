@@ -52,10 +52,6 @@ spec:
               value: "true"
             - name: cp_namespace #            The namespace where the lease will reside
               value: kube-system
-            - name: svc_enable #              Enables kube-vip to watch Services of type LoadBalancer
-              value: "true"
-            - name: svc_leasename
-              value: plndr-svcs-lock
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
               value: "true"
             - name: vip_leasename
