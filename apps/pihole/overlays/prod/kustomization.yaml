@@ -19,6 +19,17 @@ helmCharts:
       hostNetwork: true
       DNS1: 10.10.1.1
       DNS2: ""
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - infra1
+                      - infra2
+                      - infra3
       admin:
         enabled: false
       extraEnvVars:
