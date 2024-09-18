@@ -19,6 +19,8 @@ helmCharts:
       hostNetwork: true
       DNS1: 10.10.1.1
       DNS2: ""
+      nodeSelector:
+        kubernetes.io/arch: arm64
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
