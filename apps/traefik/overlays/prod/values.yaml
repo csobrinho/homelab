@@ -56,6 +56,9 @@ ports:
     expose: false
     exposedPort: 1883
 
+nodeSelector:
+  kubernetes.io/arch: arm64
+
 service:
   annotations:
     metallb.universe.tf/allow-shared-ip: infra-int

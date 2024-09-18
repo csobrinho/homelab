@@ -16,6 +16,8 @@ spec:
         app: traefik-forward-auth
     spec:
       terminationGracePeriodSeconds: 60
+      nodeSelector:
+        kubernetes.io/arch: arm64
       containers:
         - image: thomseddon/traefik-forward-auth:2-arm64
           name: traefik-forward-auth
