@@ -26,6 +26,7 @@ helmCharts:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
+        kubernetes.io/arch: arm64
         kubernetes.io/hostname: "infra1" # Pin to infra1 because it needs the SonOff hardware.
       securityContext:
         privileged: true
