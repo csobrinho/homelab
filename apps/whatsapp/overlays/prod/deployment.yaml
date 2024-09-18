@@ -16,6 +16,8 @@ spec:
       labels:
         app: whatsapp
     spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
       containers:
         - name: whatsapp
           image: devlikeapro/waha:noweb-arm
@@ -105,8 +107,6 @@ spec:
               name: varlogs
             - mountPath: /var/run
               name: varrun
-      nodeSelector:
-        kubernetes.io/arch: arm64
       restartPolicy: Always
       securityContext:
         fsGroup: 568
