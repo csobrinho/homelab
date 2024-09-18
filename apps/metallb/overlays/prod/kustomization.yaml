@@ -1,3 +1,4 @@
+# From https://github.com/metallb/metallb/blob/main/charts/metallb/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -13,3 +14,10 @@ helmCharts:
     namespace: metallb-system
     version: 0.14.8
     includeCRDs: true
+    valuesInline:
+      controller:
+        nodeSelector:
+          kubernetes.io/arch: arm64
+      speaker:
+        nodeSelector:
+          kubernetes.io/arch: arm64
