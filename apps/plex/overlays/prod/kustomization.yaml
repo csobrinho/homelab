@@ -19,6 +19,10 @@ helmCharts:
         nodeSelector:
           kubernetes.io/arch: "arm64"
           kubernetes.io/hostname: "infra1"
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/control-plane
+            operator: Exists
       persistence:
         config:
           enabled: true

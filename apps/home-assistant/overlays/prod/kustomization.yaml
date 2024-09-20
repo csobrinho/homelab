@@ -28,6 +28,10 @@ helmCharts:
       nodeSelector:
         kubernetes.io/arch: arm64
         kubernetes.io/hostname: "infra1" # Pin to infra1 because it needs the SonOff hardware.
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
       securityContext:
         privileged: true
       persistence:
