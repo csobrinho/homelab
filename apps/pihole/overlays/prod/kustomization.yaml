@@ -21,17 +21,6 @@ helmCharts:
       DNS2: ""
       nodeSelector:
         kubernetes.io/arch: arm64
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - infra1
-                      - infra2
-                      - infra3
       admin:
         enabled: false
       extraEnvVars:
