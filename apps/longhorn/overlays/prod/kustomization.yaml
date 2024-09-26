@@ -1,3 +1,4 @@
+# From https://github.com/longhorn/longhorn/blob/master/chart/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -13,3 +14,14 @@ helmCharts:
     namespace: longhorn
     version: 1.7.1
     includeCRDs: true
+    valuesInline:
+      global:
+        nodeSelector:
+          kubernetes.io/arch: arm64
+      defaultSettings:
+        backupTarget: s3://longhorn.sobrinho.pt@us-west-1/
+        backupTargetCredentialSecret: aws-secret
+        nodeDrainPolicy: allow-if-replica-is-stopped
+        backupstorePollInterval: 0
+        storageReservedPercentageForDefaultDisk: 30
+        createDefaultDiskLabeledNodes: true
