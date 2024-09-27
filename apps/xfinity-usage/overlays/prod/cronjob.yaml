@@ -23,10 +23,8 @@ spec:
                   name: config
           containers:
             - name: xfinity-usage
-              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.2@sha256:897360c2f9e8e85d040f6da18ae11c1b524f80dec5c40b703e717df69272bba9
+              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:v0.0.12.8
               imagePullPolicy: IfNotPresent
-              command: ["/bin/bash"]
-              args: ["-c", "python3 -Wignore xfinity_usage_addon.py || true"]
               resources:
                 limits:
                   memory: 4Gi
@@ -38,11 +36,11 @@ spec:
                 - name: TZ
                   value: America/Los_Angeles
                 - name: POLLING_RATE
-                  value: "3600"
+                  value: "0"
                 - name: PAGE_TIMEOUT
                   value: "60"
                 - name: LOGLEVEL
-                  value: "debug_support"
+                  value: "info"
                 - name: MQTT_SERVICE
                   value: "true"
                 - name: MQTT_USERNAME
