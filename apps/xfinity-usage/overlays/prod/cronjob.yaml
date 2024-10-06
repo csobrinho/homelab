@@ -58,7 +58,7 @@ spec:
                 - name: MQTT_HOST
                   value: mosquitto.mosquitto.svc.cluster.local
                 - name: MQTT_PORT
-                  value: 1883
+                  value: "1883"
                 - name: XFINITY_USERNAME
                   valueFrom:
                     secretKeyRef:
