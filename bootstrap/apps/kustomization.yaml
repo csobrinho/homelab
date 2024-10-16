@@ -10,7 +10,6 @@ resources:
   - apps/esphome-app.yaml
   - apps/home-assistant-app.yaml
   - apps/jupyter-app.yaml
-  - apps/kube-vip-app.yaml
   - apps/longhorn-app.yaml
   - apps/mealie-app.yaml
   - apps/metallb-app.yaml
@@ -29,3 +28,4 @@ resources:
   - apps/unpackerr-app.yaml
   - apps/whatsapp-app.yaml
   - apps/xfinity-usage-app.yaml
+  # Disabled: - apps/kube-vip-app.yaml
