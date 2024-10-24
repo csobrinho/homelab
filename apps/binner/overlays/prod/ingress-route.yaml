@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: binner-ingress
+  namespace: binner
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`binner.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: binner
+          port: main
