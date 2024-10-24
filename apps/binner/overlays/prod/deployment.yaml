@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: binner
+  namespace: binner
+spec:
+  selector:
+    matchLabels:
+      app: binner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: binner
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      containers:
+        - name: binner
+          image: ghcr.io/csobrinho/binner-docker:main
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 384Mi
+              cpu: 200m
+          ports:
+            - containerPort: 8090
+              name: main
+              protocol: TCP
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+          volumeMounts:
+            - mountPath: /app/data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: binner-data

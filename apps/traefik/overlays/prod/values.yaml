@@ -3,9 +3,6 @@ globalArguments:
   - "--global.sendanonymoususage=false"
   - "--global.checknewversion=false"
 
-additionalArguments:
-  - "--serversTransport.insecureSkipVerify=true"
-
 env:
   - name: TZ
     value: America/Los_Angeles
