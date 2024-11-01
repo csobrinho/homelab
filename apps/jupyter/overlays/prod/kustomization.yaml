@@ -40,8 +40,11 @@ helmCharts:
       singleuser:
         defaultUrl: /tree/
         extraEnv:
-          JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"        
+          JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
         storage:
           dynamic:
+            pvcNameTemplate: jupyter-pvc-{username}
+            volumeNameTemplate: jupyter-pv-{username}
             storageClass: "longhorn-retain"
           capacity: 2Gi
+          homeMountPath: /home/jovyan
