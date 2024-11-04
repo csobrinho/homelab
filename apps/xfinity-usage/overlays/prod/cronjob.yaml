@@ -23,10 +23,8 @@ spec:
                   name: config
           containers:
             - name: xfinity-usage
-              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.7.2.2@sha256:897360c2f9e8e85d040f6da18ae11c1b524f80dec5c40b703e717df69272bba9
+              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.8.2@sha256:91bb61f0294296d47c5c41d040099c9d971bd9be48c61a53a37828da5401d613
               imagePullPolicy: IfNotPresent
-              command: ["/bin/bash"]
-              args: ["-c", "python3 -Wignore xfinity_usage_addon.py || true"]
               resources:
                 limits:
                   memory: 4Gi
@@ -37,28 +35,8 @@ spec:
               env:
                 - name: TZ
                   value: America/Los_Angeles
-                - name: POLLING_RATE
-                  value: "3600"
-                - name: PAGE_TIMEOUT
-                  value: "60"
-                - name: LOGLEVEL
-                  value: "debug_support"
-                - name: MQTT_SERVICE
-                  value: "true"
-                - name: MQTT_USERNAME
-                  valueFrom:
-                    secretKeyRef:
-                      key: MQTT_USERNAME
-                      name: xfinity-usage-secret
-                - name: MQTT_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: MQTT_PASSWORD
-                      name: xfinity-usage-secret
-                - name: MQTT_HOST
-                  value: mosquitto.mosquitto.svc.cluster.local
-                - name: MQTT_PORT
-                  value: "1883"
+                - name: BYPASS
+                  value: "1" # Use docker mode instead of HASSIO addon mode.
                 - name: XFINITY_USERNAME
                   valueFrom:
                     secretKeyRef:
@@ -69,6 +47,28 @@ spec:
                     secretKeyRef:
                       key: XFINITY_PASSWORD
                       name: xfinity-usage-secret
+                - name: PAGE_TIMEOUT
+                  value: "90"
+                - name: LOGLEVEL
+                  value: "debug_support"
+                - name: POLLING_RATE
+                  value: "0" # Oneshot mode.
+                - name: MQTT_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: MQTT_USERNAME
+                      name: xfinity-usage-secret
+                - name: MQTT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: MQTT_PASSWORD
+                      name: xfinity-usage-secret
+                - name: MQTT_SERVICE
+                  value: "true"
+                - name: MQTT_HOST
+                  value: mosquitto.mosquitto.svc.cluster.local
+                - name: MQTT_PORT
+                  value: "1883"
               volumeMounts:
                 - mountPath: /config
                   name: config
