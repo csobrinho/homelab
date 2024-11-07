@@ -46,5 +46,5 @@ helmCharts:
             pvcNameTemplate: jupyter-pvc-{username}
             volumeNameTemplate: jupyter-pv-{username}
             storageClass: "longhorn-retain"
-          capacity: 2Gi
+          capacity: 5Gi
           homeMountPath: /home/jovyan
