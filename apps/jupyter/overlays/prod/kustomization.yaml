@@ -39,6 +39,18 @@ helmCharts:
         service:
           type: ClusterIP
       singleuser:
+        uid: 0
+        fsGid: 0
+        allowPrivilegeEscalation: true
+        defaultUrl: /lab
+        extraEnv:
+          CHOWN_HOME: "yes"
+          CHOWN_HOME_OPTS: -R
+          GRANT_SUDO: "yes"
+          NOTEBOOK_ARGS: "--allow-root"
+        extraPodConfig:
+          securityContext:
+            fsGroup: 100
         storage:
           dynamic:
             pvcNameTemplate: jupyter-pvc-{username}
@@ -46,13 +58,14 @@ helmCharts:
             storageClass: "longhorn-retain"
           capacity: 5Gi
           homeMountPath: /home/jovyan
-          extraVolumeMounts: 
-            - mountPath: /dev/ttyACM0
-              name: chipwhisperer
+          extraVolumeMounts:
+            - mountPath: /dev/bus/usb
+              name: dev-bus-usb
           extraVolumes:
             - hostPath:
-                path: /dev/serial/by-id/usb-NewAE_Technology_Inc._ChipWhisperer_Lite_50203220343043543230333232323034-if01
-              name: chipwhisperer
+                path: /dev/bus/usb
+                type: Directory
+              name: dev-bus-usb
         nodeSelector:
           feature.node.kubernetes.io/usb-chipwhisperer.present: "true"
         image:
