@@ -55,3 +55,6 @@ helmCharts:
               name: chipwhisperer
         nodeSelector:
           feature.node.kubernetes.io/usb-chipwhisperer.present: "true"
+        image:
+          name: ghcr.io/csobrinho/jupyter-singleuser-hardware
+          tag: main
