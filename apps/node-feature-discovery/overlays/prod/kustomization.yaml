@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - usb-chipwhisperer-device.yaml
   - usb-zigbee-device.yaml
 
 helmCharts:

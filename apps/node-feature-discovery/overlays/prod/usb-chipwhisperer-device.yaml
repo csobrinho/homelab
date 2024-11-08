@@ -1,0 +1,18 @@
+apiVersion: nfd.k8s-sigs.io/v1alpha1
+kind: NodeFeatureRule
+metadata:
+  name: usb-chipwhisperer-device
+  namespace: tools
+spec:
+  rules:
+    - name: "chipwhisperer.present label"
+      labelsTemplate: |
+        usb-chipwhisperer.present=true
+        {{ range .usb.device }}
+        usb-{{ .class }}_{{ .vendor }}_{{ .device }}.present=true
+        {{ end }}
+      matchFeatures:
+        - feature: usb.device
+          matchExpressions:
+            vendor: { op: In, value: ["2b3e"] }
+            device: { op: In, value: ["ace2"]}

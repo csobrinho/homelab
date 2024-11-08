@@ -1,3 +1,4 @@
+# See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/jupyterhub/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -10,7 +11,7 @@ helmCharts:
     repo: https://hub.jupyter.org/helm-chart/
     releaseName: jupyter
     namespace: jupyter
-    version: 3.3.8
+    version: 4.0.0
     includeCRDs: true
     valuesInline:
       hub:
@@ -38,9 +39,6 @@ helmCharts:
         service:
           type: ClusterIP
       singleuser:
-        defaultUrl: /tree/
-        extraEnv:
-          JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
         storage:
           dynamic:
             pvcNameTemplate: jupyter-pvc-{username}
@@ -48,3 +46,12 @@ helmCharts:
             storageClass: "longhorn-retain"
           capacity: 5Gi
           homeMountPath: /home/jovyan
+          extraVolumeMounts: 
+            - mountPath: /dev/ttyACM0
+              name: chipwhisperer
+          extraVolumes:
+            - hostPath:
+                path: /dev/serial/by-id/usb-NewAE_Technology_Inc._ChipWhisperer_Lite_50203220343043543230333232323034-if01
+              name: chipwhisperer
+        nodeSelector:
+          feature.node.kubernetes.io/usb-chipwhisperer.present: "true"
