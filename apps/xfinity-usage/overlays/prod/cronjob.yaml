@@ -23,7 +23,7 @@ spec:
                   name: config
           containers:
             - name: xfinity-usage
-              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.0.12.8.2@sha256:91bb61f0294296d47c5c41d040099c9d971bd9be48c61a53a37828da5401d613
+              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.1.0
               imagePullPolicy: IfNotPresent
               resources:
                 limits:
