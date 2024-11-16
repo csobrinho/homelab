@@ -5,7 +5,7 @@ metadata:
   namespace: tools
 spec:
   schedule: "0/30 * * * *"
-  concurrencyPolicy: Forbid
+  concurrencyPolicy: Replace
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 1
   startingDeadlineSeconds: 360 # 6 min
