@@ -16,7 +16,8 @@ spec:
         spec:
           initContainers:
             - name: create-log
-              image: busybox
+              image: busybox:stable-musl
+              imagePullPolicy: IfNotPresent
               command: ["touch", "/config/xfinity.log"]
               volumeMounts:
                 - mountPath: /config
