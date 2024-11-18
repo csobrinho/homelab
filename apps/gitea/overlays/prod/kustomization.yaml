@@ -1,0 +1,29 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/gitea/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: gitea
+    repo: oci://tccr.io/truecharts
+    releaseName: gitea
+    namespace: gitea
+    version: 20.5.4
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      cnpg:
+        main:
+          enabled: false
+      memcached:
+        enabled: false
+      portal:
+        open:
+          enabled: false
+
