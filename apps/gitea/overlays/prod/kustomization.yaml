@@ -26,4 +26,6 @@ helmCharts:
       portal:
         open:
           enabled: false
-
+      metrics:
+        main:
+          enabled: false
