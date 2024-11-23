@@ -1,4 +1,4 @@
-# From https://github.com/truecharts/charts/blob/master/charts/stable/home-assistant/values.yaml
+# From https://github.com/pajikos/home-assistant-helm-chart/blob/main/charts/home-assistant/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -11,7 +11,7 @@ helmCharts:
     repo: http://pajikos.github.io/home-assistant-helm-chart/
     releaseName: home-assistant
     namespace: home-assistant
-    version: 0.2.84
+    version: 0.2.88
     includeCRDs: true
     valuesInline:
       env:
