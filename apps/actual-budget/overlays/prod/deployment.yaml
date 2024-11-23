@@ -18,7 +18,7 @@ spec:
         kubernetes.io/arch: arm64
       containers:
         - name: actual-budget
-          image: ghcr.io/actualbudget/actual-server:edge-alpine
+          image: ghcr.io/actualbudget/actual-server:latest
           resources:
             limits:
               memory: 384Mi
