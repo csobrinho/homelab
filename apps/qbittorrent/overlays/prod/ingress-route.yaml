@@ -14,3 +14,6 @@ spec:
       services:
         - name: qbittorrent
           port: main
+      middlewares:
+        - name: traefik-api-key
+          namespace: traefik
