@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - insecure-transport.yaml
-  - traefik-api-key.yaml
+  - traefik-api-key-auth.yaml
   - traefik-forward-auth.yaml
   - traefik-external.yaml
   - traefik-mqtt.yaml
