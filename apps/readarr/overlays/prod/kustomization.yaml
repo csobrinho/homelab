@@ -18,6 +18,10 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+      image:
+        repository: ghcr.io/onedr0p/readarr-develop
+        pullPolicy: IfNotPresent
+        tag: rolling
       persistence:
         config:
           enabled: true
