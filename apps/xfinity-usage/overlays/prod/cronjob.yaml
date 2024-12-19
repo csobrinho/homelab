@@ -8,52 +8,36 @@ spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 1
-  startingDeadlineSeconds: 360 # 6 min
+  startingDeadlineSeconds: 60 # 1 min
   jobTemplate:
     spec:
       backoffLimit: 0
       template:
         spec:
-          initContainers:
-            - name: create-log
-              image: busybox:stable-musl
-              imagePullPolicy: IfNotPresent
-              command: ["touch", "/config/xfinity.log"]
-              volumeMounts:
-                - mountPath: /config
-                  name: config
           containers:
             - name: xfinity-usage
-              image: ghcr.io/thor0215/hassio-xfinity-usage-aarch64:0.1.2
+              image: ghcr.io/csobrinho/xfinity-usage:main
               imagePullPolicy: IfNotPresent
               resources:
                 limits:
-                  memory: 4Gi
-                  cpu: 3000m
+                  memory: 256Mi
+                  cpu: 200m
                 requests:
-                  memory: 2Gi
-                  cpu: 1000m
+                  memory: 128Mi
+                  cpu: 100m
               env:
                 - name: TZ
                   value: America/Los_Angeles
-                - name: BYPASS
-                  value: "1" # Use docker mode instead of HASSIO addon mode.
-                - name: XFINITY_USERNAME
+                - name: CLIENT_SECRET
                   valueFrom:
                     secretKeyRef:
-                      key: XFINITY_USERNAME
+                      key: CLIENT_SECRET
                       name: xfinity-usage-secret
-                - name: XFINITY_PASSWORD
+                - name: REFRESH_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      key: XFINITY_PASSWORD
+                      key: REFRESH_TOKEN
                       name: xfinity-usage-secret
-                - name: PAGE_TIMEOUT
-                  value: "90"
-                - name: LOGLEVEL
-                  value: "debug_support"
-                - name: POLLING_RATE
-                  value: "0" # Oneshot mode.
                 - name: MQTT_USERNAME
                   valueFrom:
                     secretKeyRef:
@@ -64,20 +48,8 @@ spec:
                     secretKeyRef:
                       key: MQTT_PASSWORD
                       name: xfinity-usage-secret
-                - name: MQTT_SERVICE
-                  value: "true"
-                - name: MQTT_HOST
-                  value: mosquitto.mosquitto.svc.cluster.local
-                - name: MQTT_PORT
-                  value: "1883"
-              volumeMounts:
-                - mountPath: /config
-                  name: config
-          volumes:
-            - emptyDir:
-                medium: Memory
-                sizeLimit: 1Gi
-              name: config
+                - name: MQTT_URL
+                  value: "mqtt://mosquitto.mosquitto.svc.cluster.local:1883"
           restartPolicy: Never
           securityContext:
             runAsNonRoot: false
