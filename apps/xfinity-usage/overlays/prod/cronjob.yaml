@@ -35,6 +35,7 @@ spec:
                     name: xfinity-usage-secret
               securityContext:
                 allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
                 capabilities:
                   drop:
                     - ALL
@@ -43,4 +44,3 @@ spec:
             runAsUser: 1000
             runAsGroup: 1000
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
