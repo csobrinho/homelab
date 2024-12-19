@@ -35,4 +35,4 @@ spec:
                     name: xfinity-usage-secret
           restartPolicy: Never
           securityContext:
-            runAsNonRoot: false
+            runAsNonRoot: true
