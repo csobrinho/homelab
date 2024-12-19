@@ -35,4 +35,11 @@ spec:
                     name: xfinity-usage-secret
           restartPolicy: Never
           securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
             runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
