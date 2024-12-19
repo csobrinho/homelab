@@ -28,28 +28,11 @@ spec:
               env:
                 - name: TZ
                   value: America/Los_Angeles
-                - name: CLIENT_SECRET
-                  valueFrom:
-                    secretKeyRef:
-                      key: CLIENT_SECRET
-                      name: xfinity-usage-secret
-                - name: REFRESH_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      key: REFRESH_TOKEN
-                      name: xfinity-usage-secret
-                - name: MQTT_USERNAME
-                  valueFrom:
-                    secretKeyRef:
-                      key: MQTT_USERNAME
-                      name: xfinity-usage-secret
-                - name: MQTT_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: MQTT_PASSWORD
-                      name: xfinity-usage-secret
                 - name: MQTT_URL
                   value: "mqtt://mosquitto.mosquitto.svc.cluster.local:1883"
+              envFrom:
+                - secretRef:
+                    name: xfinity-usage-secret
           restartPolicy: Never
           securityContext:
             runAsNonRoot: false
