@@ -19,8 +19,17 @@ spec:
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
-  name: pool-infra-dns
+  name: pool-infra-dns1
   namespace: metallb-system
 spec:
   ipAddressPools:
-    - pool-infra-dns
+    - pool-infra-dns1
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: pool-infra-dns2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - pool-infra-dns2
