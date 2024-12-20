@@ -11,7 +11,7 @@ spec:
   source:
     path: apps/xfinity-usage/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
-    targetRevision: main
+    targetRevision: old
   syncPolicy:
     automated:
       prune: true

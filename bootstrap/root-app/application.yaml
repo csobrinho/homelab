@@ -10,7 +10,7 @@ spec:
   source:
     path: bootstrap/apps
     repoURL: https://github.com/csobrinho/homelab
-    targetRevision: main
+    targetRevision: old
   destination:
     namespace: argocd
     name: in-cluster
