@@ -29,5 +29,5 @@ resources:
   - apps/traefik-app.yaml
   - apps/unpackerr-app.yaml
   - apps/whatsapp-app.yaml
-  - apps/xfinity-usage-app.yaml
+  # - apps/xfinity-usage-app.yaml
   # Disabled: - apps/kube-vip-app.yaml
