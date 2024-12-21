@@ -29,7 +29,7 @@ spec:
                 - name: TZ
                   value: America/Los_Angeles
                 - name: MQTT_URL
-                  value: "mqtt://mosquitto.mosquitto.svc.cluster.local:1883"
+                  value: "mqtts://mqtt.sobrinho.pt:443"
               envFrom:
                 - secretRef:
                     name: xfinity-usage-secret
