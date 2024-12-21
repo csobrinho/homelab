@@ -1,0 +1,69 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rook-ceph
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: rook-ceph
+    releaseName: rook-ceph
+    namespace: rook-ceph
+    repo: https://charts.rook.io/release
+    version: v1.15.6
+    includeCRDs: true
+    # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph/values.yaml
+    valuesInline:
+      nodeSelector:
+        kubernetes.io/arch: "arm64"
+      logLevel: INFO
+
+  - name: rook-ceph-cluster
+    releaseName: rook-release
+    namespace: rook-ceph
+    repo: https://charts.rook.io/release
+    version: v1.15.6
+    includeCRDs: true
+    # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph-cluster/values.yaml
+    valuesInline:
+      operatorNamespace: rook-ceph
+      toolbox:
+        enabled: true
+      cephClusterSpec:
+        cephVersion:
+          # Workaround https://github.com/rook/rook/issues/14502: v18.2.4 not working with arm64.
+          image: quay.io/ceph/ceph:v18.2.2
+        storage:
+          useAllNodes: false
+          useAllDevices: false
+          config:
+            osdsPerDevice: "1"
+          nodes:
+            - name: infra3
+              devices:
+                - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_256GB_S251NSAG548480W-part3"
+            - name: infra4
+              devices:
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0X707212X-part3"
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X152103W"
+            - name: infra5
+              devices:
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0WA17672P-part3"
+            - name: infra6
+              devices:
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNU0X415592A-part3"
+        network:
+          hostNetwork: true
+        resources:
+          osd:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 1Gi
+      # cephFileSystemVolumeSnapshotClass:
+      #   enabled: true
+      # cephBlockPoolsVolumeSnapshotClass:
+      #   enabled: true
+      cephFileSystems: []
+      cephObjectStores: []
