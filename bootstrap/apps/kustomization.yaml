@@ -25,6 +25,7 @@ resources:
   # - apps/qbittorrent-app.yaml
   # - apps/radarr-app.yaml
   # - apps/readarr-app.yaml
+  - apps/rook-ceph-app.yaml
   # - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
   # - apps/unpackerr-app.yaml
