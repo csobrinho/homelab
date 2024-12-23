@@ -9,13 +9,13 @@ spec:
     - websecure
     - websecure-ext
   routes:
-    - match: Host(`argocd.sobrinho.pt`)
+    - match: Host(`argocd-old.sobrinho.pt`)
       kind: Rule
       priority: 10
       services:
         - name: argocd-server
           port: http
-    - match: Host(`argocd.sobrinho.pt`) && Header(`Content-Type`, `application/grpc`)
+    - match: Host(`argocd-old.sobrinho.pt`) && Header(`Content-Type`, `application/grpc`)
       kind: Rule
       priority: 11
       services:

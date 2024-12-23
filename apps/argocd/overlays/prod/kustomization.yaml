@@ -14,7 +14,7 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       global:
-        domain: argocd.sobrinho.pt
+        domain: argocd-old.sobrinho.pt
         env:
           - name: TZ
             value: America/Los_Angeles
