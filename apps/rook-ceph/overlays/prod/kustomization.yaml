@@ -14,7 +14,6 @@ resources:
   - ingress-route.yaml
   - s3-ingress-route.yaml
   - bucket-obdisian.yaml
-  - object-store-user-obsidian.yaml
 
 helmCharts:
   - name: rook-ceph
