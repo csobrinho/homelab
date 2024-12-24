@@ -110,6 +110,7 @@ patches:
       metadata:
         name: ceph-bucket
       reclaimPolicy: Retain
+      allowVolumeExpansion: true
   - patch: |-
       apiVersion: ceph.rook.io/v1
       kind: CephObjectStore
