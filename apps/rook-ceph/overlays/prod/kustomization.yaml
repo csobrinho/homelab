@@ -56,14 +56,49 @@ helmCharts:
         network:
           hostNetwork: true
         resources:
+          mgr:
+            limits:
+              memory: 500Mi # Default: 1Gi
+            requests:
+              cpu: 500m #     Default: 500m
+              memory: 256Mi # Default: 512Mi
+          mon:
+            limits:
+              memory: 1Gi #   Default: 2Gi
+            requests:
+              cpu: 750m #     Default: 1000m
+              memory: 500Mi # Default: 1Gi
           osd:
             limits:
-              memory: 2Gi
+              memory: 1.5Gi # Default: 4Gi
             requests:
-              memory: 1Gi
+              cpu: 750m #     Default: 1000m
+              memory: 750Mi # Default: 4Gi
+      cephBlockPools:
+        # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
+        - name: ceph-blockpool
+          storageClass:
+            reclaimPolicy: Retain
+      cephBlockPoolsVolumeSnapshotClass:
+        enabled: true
+
+      cephFileSystems: []
       # cephFileSystemVolumeSnapshotClass:
       #   enabled: true
-      # cephBlockPoolsVolumeSnapshotClass:
-      #   enabled: true
-      cephFileSystems: []
-      cephObjectStores: []
+
+      cephObjectStores:
+        # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
+        - name: ceph-objectstore
+          spec:
+            preservePoolsOnDelete: true
+            gateway:
+              resources:
+                limits:
+                  memory: 512Mi # Default: 2Gi
+                requests:
+                  cpu: 750m #     Default: 1000m
+                  memory: 256Mi # Default: 1Gi
+          storageClass:
+            enabled: true
+            name: ceph-bucket
+            reclaimPolicy: Retain
