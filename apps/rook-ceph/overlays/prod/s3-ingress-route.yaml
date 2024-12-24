@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: ceph-s3-ingress
+  namespace: rook-ceph
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`s3.sobrinho.pt`) && PathPrefix(`/obsidian`)
+      kind: Rule
+      services:
+        - name: rook-ceph-rgw-ceph-objectstore
+          port: 80

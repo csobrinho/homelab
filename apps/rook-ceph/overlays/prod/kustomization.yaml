@@ -12,6 +12,8 @@ resources:
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v6.0.1/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
   - ../../base
   - ingress-route.yaml
+  - s3-ingress-route.yaml
+  - object-store-user-obsidian.yaml
 
 helmCharts:
   - name: rook-ceph

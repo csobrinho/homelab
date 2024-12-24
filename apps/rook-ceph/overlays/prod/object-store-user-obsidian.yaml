@@ -1,0 +1,11 @@
+# From https://rook.github.io/docs/rook/latest-release/CRDs/Object-Storage/ceph-object-store-user-crd/
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStoreUser
+metadata:
+  name: obsidian-user
+  namespace: rook-ceph
+spec:
+  store: ceph-objectstore
+  capabilities:
+    user: "*"
+    bucket: "*"
