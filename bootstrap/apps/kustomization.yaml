@@ -32,3 +32,8 @@ resources:
   - apps/whatsapp-app.yaml
   - apps/xfinity-usage-app.yaml
   # Disabled: - apps/kube-vip-app.yaml
+
+patches:
+  - path: patches/app.yaml
+    target:
+      kind: Application

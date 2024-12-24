@@ -1,0 +1,20 @@
+- op: replace
+  path: /spec/source/targetRevision
+  value: main
+
+- op: replace
+  path: /spec/syncPolicy
+  value:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 1m
+        maxDuration: 16m
+        factor: 2
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - ApplyOutOfSyncOnly=true
