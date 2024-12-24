@@ -56,6 +56,7 @@ helmCharts:
         network:
           hostNetwork: true
         resources:
+          # Reduce the memory consuption so that they fit on 4 CPUs and 8GB ram.
           mgr:
             limits:
               memory: 500Mi # Default: 1Gi
@@ -74,31 +75,43 @@ helmCharts:
             requests:
               cpu: 750m #     Default: 1000m
               memory: 750Mi # Default: 4Gi
-      cephBlockPools:
-        # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
-        - name: ceph-blockpool
-          storageClass:
-            reclaimPolicy: Retain
+
+      # cephBlockPools:
+      # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
       cephBlockPoolsVolumeSnapshotClass:
         enabled: true
 
       cephFileSystems: []
-      # cephFileSystemVolumeSnapshotClass:
-      #   enabled: true
+      # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#filesystem-settings for available configuration
+      # Disabled for now.
 
-      cephObjectStores:
-        # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
-        - name: ceph-objectstore
-          spec:
-            preservePoolsOnDelete: true
-            gateway:
-              resources:
-                limits:
-                  memory: 512Mi # Default: 2Gi
-                requests:
-                  cpu: 750m #     Default: 1000m
-                  memory: 256Mi # Default: 1Gi
-          storageClass:
-            enabled: true
-            name: ceph-bucket
-            reclaimPolicy: Retain
+      # cephObjectStores:
+      # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
+
+patches:
+  - patch: |-
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: ceph-block
+      reclaimPolicy: Retain
+  - patch: |-
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: ceph-bucket
+      reclaimPolicy: Retain
+  - patch: |-
+      apiVersion: ceph.rook.io/v1
+      kind: CephObjectStore
+      metadata:
+        name: ceph-objectstore
+        namespace: rook-ceph
+      spec:
+        gateway:
+          resources:
+            limits:
+              memory: 512Mi # Default: 2Gi
+            requests:
+              cpu: 750m #     Default: 1000m
+              memory: 256Mi # Default: 1Gi
