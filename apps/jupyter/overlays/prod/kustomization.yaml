@@ -19,7 +19,7 @@ helmCharts:
           TZ: America/Los_Angeles
         db:
           pvc:
-            storageClassName: "longhorn-retain"
+            storageClassName: "ceph-block"
         config:
           Authenticator:
             admin_users:
@@ -55,7 +55,7 @@ helmCharts:
           dynamic:
             pvcNameTemplate: jupyter-pvc-{username}
             volumeNameTemplate: jupyter-pv-{username}
-            storageClass: "longhorn-retain"
+            storageClass: "ceph-block"
           capacity: 5Gi
           homeMountPath: /home/jovyan
           extraVolumeMounts:

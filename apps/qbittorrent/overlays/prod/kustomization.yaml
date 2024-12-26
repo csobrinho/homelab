@@ -26,7 +26,7 @@ helmCharts:
         config:
           enabled: true
           retain: true
-          storageClass: longhorn-retain
+          storageClass: ceph-block
           accessMode: ReadWriteOnce
           size: 1Gi
         data:

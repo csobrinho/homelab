@@ -24,7 +24,7 @@ helmCharts:
           enabled: true
           retain: true
           mountPath: /config
-          storageClass: "longhorn-retain"
+          storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
         platformio:

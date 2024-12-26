@@ -33,13 +33,13 @@ helmCharts:
         data:
           enabled: true
           retain: true
-          storageClass: "longhorn-retain"
+          storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 2Gi
         configinc:
           enabled: true
           retain: true
-          storageClass: "longhorn-retain"
+          storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
       addons:

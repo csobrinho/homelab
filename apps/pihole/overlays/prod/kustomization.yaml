@@ -27,7 +27,7 @@ helmCharts:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
         enabled: true
-        storageClass: longhorn-retain
+        storageClass: ceph-block
         size: 1Gi
       serviceWeb:
         annotations:
