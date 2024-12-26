@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - cm-change-storage-class.yaml
 
 helmCharts:
   - name: velero
