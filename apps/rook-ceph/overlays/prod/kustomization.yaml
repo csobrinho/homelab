@@ -50,6 +50,9 @@ helmCharts:
           config:
             osdsPerDevice: "1"
           nodes:
+            - name: infra2
+              devices:
+                - name: "/dev/disk/by-id/ata-Samsung_SSD_860_PRO_1TB_S45ENF0M201675D-part3"
             - name: infra3
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_256GB_S251NSAG548480W-part3"
