@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+spec:
+  destination:
+    namespace: velero
+    name: in-cluster
+  project: default
+  source:
+    path: apps/velero/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

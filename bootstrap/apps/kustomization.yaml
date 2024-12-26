@@ -29,6 +29,7 @@ resources:
   # - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
   - apps/unpackerr-app.yaml
+  - apps/velero-app.yaml
   - apps/whatsapp-app.yaml
   - apps/xfinity-usage-app.yaml
   # Disabled: - apps/kube-vip-app.yaml
