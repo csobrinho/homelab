@@ -27,6 +27,7 @@ resources:
   - apps/readarr-app.yaml
   - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
+  - apps/velero-app.yaml
   # Disabled: - apps/unpackerr-app.yaml
   # Disabled: - apps/whatsapp-app.yaml
   # Disabled: - apps/xfinity-usage-app.yaml
