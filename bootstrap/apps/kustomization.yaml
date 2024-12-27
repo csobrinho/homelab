@@ -2,17 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  # - apps/actual-budget-app.yaml
+  - apps/actual-budget-app.yaml
   - apps/argocd-app.yaml
   - apps/bazarr-app.yaml
-  # - apps/binner-app.yaml
+  - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
-  # - apps/cyberchef-app.yaml
+  - apps/cyberchef-app.yaml
   # - apps/esphome-app.yaml
   # - apps/gitea-app.yaml
   # - apps/home-assistant-app.yaml
-  # - apps/jupyter-app.yaml
-  # - apps/mealie-app.yaml
+  - apps/jupyter-app.yaml
+  - apps/mealie-app.yaml
   - apps/metallb-app.yaml
   # - apps/mosquitto-app.yaml
   - apps/node-feature-discovery-app.yaml
