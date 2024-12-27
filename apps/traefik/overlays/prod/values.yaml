@@ -58,8 +58,8 @@ nodeSelector:
 
 service:
   annotations:
-    metallb.universe.tf/allow-shared-ip: infra-int
-    metallb.universe.tf/address-pool: pool-infra-int
+    metallb.io/allow-shared-ip: infra-int
+    metallb.io/address-pool: pool-infra-int
 
 ingressRoute:
   dashboard:
