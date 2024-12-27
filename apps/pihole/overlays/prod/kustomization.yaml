@@ -31,6 +31,9 @@ helmCharts:
         size: 1Gi
       serviceWeb:
         annotations:
+        http:
+          enabled: false
+      webHttp: "81"
       serviceDns:
         annotations:
           metallb.universe.tf/allow-shared-ip: infra-dns
