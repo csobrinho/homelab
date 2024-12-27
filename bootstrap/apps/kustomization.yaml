@@ -8,7 +8,7 @@ resources:
   - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
   - apps/cyberchef-app.yaml
-  # - apps/esphome-app.yaml
+  - apps/esphome-app.yaml
   # - apps/gitea-app.yaml
   # - apps/home-assistant-app.yaml
   - apps/jupyter-app.yaml
