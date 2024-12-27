@@ -36,8 +36,8 @@ helmCharts:
       webHttp: "81"
       serviceDns:
         annotations:
-          metallb.universe.tf/allow-shared-ip: infra-dns
-          metallb.universe.tf/address-pool: pool-infra-dns
+          metallb.universe.tf/allow-shared-ip: infra-dns1
+          metallb.universe.tf/address-pool: pool-infra-dns1
         type: LoadBalancer
       serviceDhcp:
         enabled: false
