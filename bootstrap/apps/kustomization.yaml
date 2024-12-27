@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   # - apps/actual-budget-app.yaml
   - apps/argocd-app.yaml
-  # - apps/bazarr-app.yaml
+  - apps/bazarr-app.yaml
   # - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
   # - apps/cyberchef-app.yaml
@@ -18,15 +18,15 @@ resources:
   # - apps/mosquitto-app.yaml
   - apps/node-feature-discovery-app.yaml
   - apps/node-red-app.yaml
-  # - apps/overseerr-app.yaml
+  - apps/overseerr-app.yaml
   # - apps/pihole-app.yaml
   # - apps/plex-app.yaml
-  # - apps/prowlarr-app.yaml
-  # - apps/qbittorrent-app.yaml
-  # - apps/radarr-app.yaml
-  # - apps/readarr-app.yaml
+  - apps/prowlarr-app.yaml
+  - apps/qbittorrent-app.yaml
+  - apps/radarr-app.yaml
+  - apps/readarr-app.yaml
   - apps/rook-ceph-app.yaml
-  # - apps/sonarr-app.yaml
+  - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
   - apps/unpackerr-app.yaml
   - apps/velero-app.yaml

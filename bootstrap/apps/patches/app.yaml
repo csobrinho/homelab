@@ -5,9 +5,9 @@
 - op: replace
   path: /spec/syncPolicy
   value:
-    automated:
-      prune: true
-      selfHeal: true
+    # automated:
+    #   prune: true
+    #   selfHeal: true
     retry:
       limit: 3
       backoff:
