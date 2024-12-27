@@ -19,7 +19,7 @@ resources:
   - apps/node-red-app.yaml
   - apps/overseerr-app.yaml
   - apps/pihole-app.yaml
-  # - apps/plex-app.yaml
+  - apps/plex-app.yaml
   - apps/prowlarr-app.yaml
   - apps/qbittorrent-app.yaml
   - apps/radarr-app.yaml
