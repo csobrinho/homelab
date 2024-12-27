@@ -12,7 +12,6 @@ resources:
   # - apps/gitea-app.yaml
   # - apps/home-assistant-app.yaml
   # - apps/jupyter-app.yaml
-  # - apps/longhorn-app.yaml
   # - apps/mealie-app.yaml
   - apps/metallb-app.yaml
   # - apps/mosquitto-app.yaml

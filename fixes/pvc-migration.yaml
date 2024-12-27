@@ -13,7 +13,7 @@ spec:
   resources:
     requests:
       storage: 500Mi
-  storageClassName: longhorn
+  storageClassName: ceph-block
   volumeName: pvc-ce5eeed7-f9d7-4f38-8695-f49d2094f17c
 ---
 apiVersion: batch/v1
