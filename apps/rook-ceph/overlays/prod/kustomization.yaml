@@ -21,19 +21,19 @@ helmCharts:
     releaseName: rook-ceph
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.15.6
+    version: v1.15.7
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph/values.yaml
     valuesInline:
       nodeSelector:
         kubernetes.io/arch: "arm64"
-      logLevel: INFO
+      enableDiscoveryDaemon: true
 
   - name: rook-ceph-cluster
     releaseName: rook-release
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.15.6
+    version: v1.15.7
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph-cluster/values.yaml
     valuesInline:
@@ -44,6 +44,12 @@ helmCharts:
         cephVersion:
           # Workaround https://github.com/rook/rook/issues/14502: v18.2.4 not working with arm64.
           image: quay.io/ceph/ceph:v18.2.2
+        mgr:
+          count: 2
+          allowMultiplePerNode: false
+          modules:
+            - name: rook
+              enabled: true
         storage:
           useAllNodes: false
           useAllDevices: false
