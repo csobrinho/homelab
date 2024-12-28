@@ -43,7 +43,6 @@ helmCharts:
         volumeSnapshotLocation:
           - name: default
             provider: csi
-        uploaderType: restic
         features: EnableCSI
         defaultBackupStorageLocation: default
         defaultVolumeSnapshotLocations: csi:default
@@ -55,9 +54,6 @@ helmCharts:
       credentials:
         useSecret: true
         existingSecret: velero-secret
-      backupsEnabled: true
-      snapshotsEnabled: true
-      deployNodeAgent: true
       schedules:
         cluster-full-backup:
           disabled: false
@@ -70,6 +66,6 @@ helmCharts:
               name: resource-policy
             snapshotMoveData: true
             snapshotVolumes: true
-            ttl: "2160h0m0s" # 90 days.
+            ttl: "480h0m0s" # 20 days.
             uploaderConfig:
               parallelFilesUpload: 10
