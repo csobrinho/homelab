@@ -10,7 +10,7 @@ resources:
   - apps/cyberchef-app.yaml
   - apps/esphome-app.yaml
   # - apps/gitea-app.yaml
-  # - apps/home-assistant-app.yaml
+  - apps/home-assistant-app.yaml
   - apps/jupyter-app.yaml
   - apps/mealie-app.yaml
   - apps/metallb-app.yaml
