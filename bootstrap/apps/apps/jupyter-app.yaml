@@ -11,3 +11,14 @@ spec:
   source:
     path: apps/jupyter/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences:
+    - kind: "Secret"
+      jsonPointers:
+        - "/data/hub.config.ConfigurableHTTPProxy.auth_token"
+        - "/data/hub.config.CryptKeeper.keys"
+        - "/data/hub.config.JupyterHub.cookie_secret"
+    - group: "apps"
+      kind: "Deployment"
+      jsonPointers:
+        - "/spec/template/metadata/annotations/checksum~1secret"
+        - "/spec/template/metadata/annotations/checksum~1auth-token"
