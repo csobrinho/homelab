@@ -32,6 +32,9 @@ helmCharts:
       serviceWeb:
         annotations:
         http:
+          enabled: true
+          port: 81
+        https:
           enabled: false
       webHttp: "81"
       serviceDns:
