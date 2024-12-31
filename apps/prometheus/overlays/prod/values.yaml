@@ -1,0 +1,94 @@
+nameOverride: prometheus
+
+defaultRules:
+  create: true
+  rules:
+    alertmanager: true
+    etcd: true
+    configReloaders: true
+    general: true
+    k8s: true
+    kubeApiserverAvailability: true
+    kubeApiserverBurnrate: true
+    kubeApiserverHistogram: true
+    kubeApiserverSlos: true
+    kubeControllerManager: true
+    kubelet: true
+    kubeProxy: true
+    kubePrometheusGeneral: true
+    kubePrometheusNodeRecording: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeSchedulerAlerting: true
+    kubeSchedulerRecording: true
+    kubeStateMetrics: true
+    network: true
+    node: true
+    nodeExporterAlerting: true
+    nodeExporterRecording: true
+    prometheus: true
+    prometheusOperator: true
+
+prometheus:
+  prometheusSpec:
+    replicas: 1
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    retention: 2d
+    enableAdminAPI: true
+    walCompression: true
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        memory: 1Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+grafana:
+  defaultDashboardsTimezone: America/Los_Angeles
+# adminUser: ""
+# adminPassword: ""
+# admin:
+#   existingSecret: grafana-secret
+#   userKey: GRAFANA_USER
+#   passwordKey: GRAFANA_PASSWORD
+
+kube-state-metrics:
+  selfMonitor:
+    enabled: true
+
+cleanPrometheusOperatorObjectNames: true
+
+prometheusOperator:
+  # Disable linkerd injection for admission webhooks jobs
+  admissionWebhooks:
+    patch:
+      podAnnotations:
+        linkerd.io/inject: disabled
+
+# Enable serviceaccount automount
+prometheus-node-exporter:
+  serviceAccount:
+    automountServiceAccountToken: true
