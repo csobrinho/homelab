@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - service-monitor.yaml
   - ingress-route.yaml
 
 helmCharts:
@@ -15,7 +14,3 @@ helmCharts:
     version: 67.5.0
     includeCRDs: true
     valuesFile: values.yaml
-
-# podOptions:
-#   nodeSelector:
-#     kubernetes.io/arch: "arm64"

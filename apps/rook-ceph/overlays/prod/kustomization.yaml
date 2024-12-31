@@ -28,7 +28,11 @@ helmCharts:
       nodeSelector:
         kubernetes.io/arch: "arm64"
       enableDiscoveryDaemon: true
-
+      serviceMonitor:
+        enabled: true
+      monitoring:
+        enabled: true
+        
   - name: rook-ceph-cluster
     releaseName: rook-release
     namespace: rook-ceph
@@ -39,6 +43,8 @@ helmCharts:
     valuesInline:
       operatorNamespace: rook-ceph
       toolbox:
+        enabled: true
+      monitoring:
         enabled: true
       cephClusterSpec:
         cephVersion:
