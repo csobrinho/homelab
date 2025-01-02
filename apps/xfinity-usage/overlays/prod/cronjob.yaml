@@ -4,7 +4,7 @@ metadata:
   name: xfinity-usage
   namespace: tools
 spec:
-  schedule: "0/30 * * * *"
+  schedule: "0/20 * * * *"
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 1
