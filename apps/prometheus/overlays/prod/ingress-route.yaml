@@ -18,7 +18,7 @@ spec:
       kind: Rule
       services:
         - name: kube-prometheus-stack-alertmanager
-          port: 9090
+          port: 9093
     - match: Host(`grafana.sobrinho.pt`)
       kind: Rule
       services:
