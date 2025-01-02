@@ -24,3 +24,5 @@ helmCharts:
     version: 33.2.1
     includeCRDs: true
     valuesFile: values.yaml
+    apiVersions:
+      - monitoring.coreos.com/v1
