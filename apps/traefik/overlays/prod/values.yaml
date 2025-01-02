@@ -83,3 +83,8 @@ tlsStore:
   default:
     defaultCertificate:
       secretName: letsencrypt-prod-crt
+
+metrics:
+  prometheus:
+    serviceMonitor:
+      enabled: true
