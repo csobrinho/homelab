@@ -1,0 +1,16 @@
+# From https://github.com/truecharts/public/blob/master/charts/system/intel-gpu-plugin/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: intel-gpu-plugin
+    repo: oci://tccr.io/truecharts
+    releaseName: intel-gpu-plugin
+    namespace: intel
+    version: 0.4.0
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
