@@ -68,12 +68,6 @@ alertmanager:
 
 grafana:
   defaultDashboardsTimezone: America/Los_Angeles
-# adminUser: ""
-# adminPassword: ""
-# admin:
-#   existingSecret: grafana-secret
-#   userKey: GRAFANA_USER
-#   passwordKey: GRAFANA_PASSWORD
 
 kube-state-metrics:
   selfMonitor:
