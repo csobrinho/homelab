@@ -1,0 +1,18 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: unifi-ingress
+  namespace: infra
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`unifi.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: unifi
+          port: 443
+          scheme: https
+          serversTransport: traefik-insecure-transport@kubernetescrd

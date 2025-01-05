@@ -29,6 +29,7 @@ resources:
   - apps/rook-ceph-app.yaml
   - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
+  - apps/unifi-app.yaml
   - apps/unpackerr-app.yaml
   - apps/velero-app.yaml
   - apps/whatsapp-app.yaml

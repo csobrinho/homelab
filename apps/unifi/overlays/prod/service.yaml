@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi
+  namespace: infra
+spec:
+  type: ExternalName
+  externalName: unifi
+  ports:
+    - port: 443
