@@ -45,3 +45,6 @@ helmCharts:
           gpu.intel.com/i915: "1"         
           cpu: 500m
           memory: 1Gi
+      securityContext:
+        container:
+          privileged: true
