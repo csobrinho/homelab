@@ -38,13 +38,13 @@ helmCharts:
           enabled: false
       resources:
         limits:
-          gpu.intel.com/i915: "1"         
+          gpu.intel.com/i915: "1"
           cpu: 4000m
           memory: 8Gi
         requests:
-          gpu.intel.com/i915: "1"         
+          gpu.intel.com/i915: "1"
           cpu: 500m
           memory: 1Gi
       securityContext:
-        container:
-          privileged: true
+        pod:
+          supplementalGroups: [105] # Add render group.
