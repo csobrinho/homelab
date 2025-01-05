@@ -31,6 +31,11 @@ helmCharts:
           path: /media
           server: infra1
           mountPath: /data
+        dri:
+          enabled: true
+          type: hostPath
+          mountPath: /dev/dri
+          hostPath: /dev/dri
       plex:
         additionalAdvertiseURL: "https://plex.sobrinho.pt"
       portal:
@@ -43,3 +48,6 @@ helmCharts:
         requests:
           cpu: 500m
           memory: 1Gi
+      securityContext:
+        container:
+          privileged: true
