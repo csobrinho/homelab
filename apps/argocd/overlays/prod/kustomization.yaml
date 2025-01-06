@@ -21,3 +21,15 @@ helmCharts:
       configs:
         params:
           server.insecure: true
+        cm:
+          kustomize.buildOptions: --enable-helm --enable-alpha-plugins --enable-exec
+          resource.customizations.ignoreDifferences.apps_Deployment: |
+            jqPathExpressions:
+              - '.spec.template.spec.hostUsers'
+          resource.exclusions: |
+            - apiGroups:
+              - "velero.io"
+              kinds:
+              - "Backup"
+              clusters:
+              - "*"
