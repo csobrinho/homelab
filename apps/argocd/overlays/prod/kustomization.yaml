@@ -22,6 +22,7 @@ helmCharts:
         params:
           server.insecure: true
         cm:
+          exec.enabled: true
           kustomize.buildOptions: --enable-helm --enable-alpha-plugins --enable-exec
           resource.customizations.ignoreDifferences.apps_Deployment: |
             jqPathExpressions:
