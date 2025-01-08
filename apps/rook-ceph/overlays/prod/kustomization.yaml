@@ -68,9 +68,6 @@ helmCharts:
             - name: infra3
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_256GB_S251NSAG548480W-part3"
-            - name: infra4
-              devices:
-                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0X707212X-part3"
             - name: infra5
               devices:
                 - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0WA17672P-part3"
@@ -80,6 +77,9 @@ helmCharts:
             - name: infra7
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_1TB_S3D2NX0J201186E-part3"
+            - name: infra9
+              devices:
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X152103W-part3"
         network:
           hostNetwork: true
         resources:
