@@ -86,3 +86,8 @@ prometheusOperator:
 prometheus-node-exporter:
   serviceAccount:
     automountServiceAccountToken: true
+  tolerations:
+    - key: node.kubernetes.io/unreachable
+      effect: NoExecute
+      operator: Exists
+      tolerationSeconds: 60
