@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "kubernetes": {
+    "fileMatch": ["kustomization.yaml"]
+  },
+  "packageRules": [
+    {
+      "managers": ["kustomize"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "assignees": ["@csobrinho"]
+    }
+  ]
+}
