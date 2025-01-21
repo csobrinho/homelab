@@ -33,6 +33,7 @@ defaultRules:
 
 prometheus:
   prometheusSpec:
+    externalUrl: https://prometheus.sobrinho.pt
     replicas: 1
     ruleSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
@@ -57,6 +58,7 @@ prometheus:
 
 alertmanager:
   alertmanagerSpec:
+    externalUrl: https://alertmanager.sobrinho.pt
     storage:
       volumeClaimTemplate:
         spec:
