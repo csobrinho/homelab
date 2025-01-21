@@ -10,7 +10,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: unpackerr
     namespace: media
-    version: 15.3.2
+    version: 15.5.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
