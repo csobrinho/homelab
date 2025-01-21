@@ -20,10 +20,11 @@ ports:
     expose:
       default: true
     exposedPort: 80
-    redirectTo:
-      port: websecure
-      priority: 10
-      permanent: true
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
   websecure:
     port: 8443
     expose:
@@ -35,10 +36,11 @@ ports:
     port: 9080
     expose: false
     exposedPort: 80
-    redirectTo:
-      port: websecure-ext
-      priority: 10
-      permanent: true
+    redirections:
+      entryPoint:
+        to: websecure-ext
+        scheme: https
+        permanent: true
   websecure-ext:
     port: 9443
     expose: false
