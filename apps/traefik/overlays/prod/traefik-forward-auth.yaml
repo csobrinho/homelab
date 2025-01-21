@@ -23,8 +23,8 @@ spec:
           name: traefik-forward-auth
           resources:
             limits:
-              cpu: 100m
-              memory: 10Mi
+              cpu: 200m
+              memory: 256Mi
           ports:
             - containerPort: 4181
               protocol: TCP
