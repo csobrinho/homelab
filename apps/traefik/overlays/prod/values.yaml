@@ -56,6 +56,12 @@ ports:
 nodeSelector:
   kubernetes.io/arch: arm64
 
+tolerations:
+  - key: node.kubernetes.io/unreachable
+    effect: NoExecute
+    operator: Exists
+    tolerationSeconds: 60
+
 service:
   annotations:
     metallb.io/allow-shared-ip: infra-int
