@@ -49,7 +49,7 @@ helmCharts:
       cephClusterSpec:
         cephVersion:
           # Workaround https://github.com/rook/rook/issues/14502: v18.2.4 not working with arm64.
-          image: quay.io/ceph/ceph:v18.2.2
+          image: quay.io/ceph/ceph:v18.2.4
         mgr:
           count: 2
           allowMultiplePerNode: false
