@@ -28,8 +28,8 @@ helmCharts:
         media:
           enabled: true
           type: nfs
-          path: /media
-          server: infra1
+          path: /data
+          server: infra9
           mountPath: /data
       plex:
         additionalAdvertiseURL: "https://plex.sobrinho.pt"

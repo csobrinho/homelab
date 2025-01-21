@@ -54,6 +54,6 @@ helmCharts:
         downloads:
           enabled: true
           type: nfs
-          path: /media/torrents
-          server: infra1
+          path: /data/torrents
+          server: infra9
           mountPath: /data/torrents
