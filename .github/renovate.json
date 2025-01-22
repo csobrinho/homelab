@@ -2,10 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "assignees": ["csobrinho"],
-  "packageRules": [
-    {
-      "managers": ["kustomize"],
-      "matchUpdateTypes": ["minor", "patch"],
-    }
-  ]
+  "helm-values": {
+    "fileMatch": ["\\.ya?ml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["\\.ya?ml$"]
+  }
 }
