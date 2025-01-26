@@ -10,7 +10,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: intel-gpu-plugin
     namespace: infra
-    version: 0.4.0
+    version: 0.5.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
