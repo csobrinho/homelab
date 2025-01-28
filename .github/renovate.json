@@ -8,10 +8,8 @@
   "kubernetes": {
     "fileMatch": ["\\.ya?ml$"]
   },
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    }
-  ]
+  "automerge": true,
+  "major": {
+    "automerge": false
+  }
 }
