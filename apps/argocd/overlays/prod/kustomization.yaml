@@ -35,14 +35,13 @@ helmCharts:
               - "Backup"
               clusters:
               - "*"
-      controller: 
-        metrics: 
+      controller:
+        metrics:
           enabled: true
-          serviceMonitor: 
-            selector: true
-      repoServer: 
-        metrics: 
+          serviceMonitor:
+            enabled: true
+      repoServer:
+        metrics:
           enabled: true
-          serviceMonitor: 
-            selector: true
-
+          serviceMonitor:
+            enabled: true
