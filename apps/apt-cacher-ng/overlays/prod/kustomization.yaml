@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ingress-route.yaml
 
 helmCharts:
   - name: apt-cacher-ng
