@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - apps/actual-budget-app.yaml
+  - apps/apt-cacher-ng-app.yaml
   - apps/argocd-app.yaml
   - apps/bazarr-app.yaml
   - apps/binner-app.yaml

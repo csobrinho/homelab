@@ -1,0 +1,32 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/apt-cacher-ng/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: apt-cacher-ng
+    repo: oci://tccr.io/truecharts
+    releaseName: apt-cacher-ng
+    namespace: tools
+    version: 10.5.1
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+    persistence:
+      apt-cacher-ng:
+        enabled: true
+        mountPath: /var/cache/apt-cacher-ng
+        retain: true
+        accessMode: ReadWriteOnce
+        size: 4Gi
+        storageClass: "ceph-block"
+    portal:
+      open:
+        enabled: false
+

@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: apt-cacher-ng-ingress
+  namespace: tools
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`apt.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: apt-cacher-ng
+          port: main
