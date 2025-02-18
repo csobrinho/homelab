@@ -8,7 +8,7 @@ app="$1"
 ns="${2:-$1}"
 subdomain="${3:-$1}"
 
-cd $HOME/k3s/homelab
+cd /data/config/homelab
 
 cp -R "apps/cyberchef/" "apps/$app"
 cp "bootstrap/apps/apps/cyberchef-app.yaml" "bootstrap/apps/apps/$app-app.yaml"
