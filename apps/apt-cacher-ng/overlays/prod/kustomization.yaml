@@ -18,15 +18,15 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
-    persistence:
-      apt-cacher-ng:
-        enabled: true
-        mountPath: /var/cache/apt-cacher-ng
-        retain: true
-        accessMode: ReadWriteOnce
-        size: 4Gi
-        storageClass: "ceph-block"
-    portal:
-      open:
-        enabled: false
+      persistence:
+        apt-cacher-ng:
+          enabled: true
+          mountPath: /var/cache/apt-cacher-ng
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 4Gi
+          storageClass: "ceph-block"
+      portal:
+        open:
+          enabled: false
 
