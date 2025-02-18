@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ingress-route.yaml
 
 helmCharts:
   - name: apt-cacher-ng
@@ -18,6 +17,12 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "amd64"
+      service:
+        main:
+          annotations:
+            metallb.io/address-pool: pool-infra-int
+          type: LoadBalancer
+          sharedKey: infra-int
       persistence:
         apt-cacher-ng:
           enabled: true
