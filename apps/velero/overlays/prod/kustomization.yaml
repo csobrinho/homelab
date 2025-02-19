@@ -11,7 +11,7 @@ helmCharts:
     repo: https://vmware-tanzu.github.io/helm-charts
     releaseName: velero
     namespace: velero
-    version: 8.3.0
+    version: 8.4.0
     includeCRDs: true
     valuesInline:
       nodeSelector:
