@@ -1,0 +1,34 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/ollama/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: ollama
+    repo: oci://tccr.io/truecharts
+    releaseName: ollama
+    namespace: llm
+    version: 7.11.11
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+        data:
+          enabled: true
+          retain: true
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+      portal:
+        open:
+          enabled: false

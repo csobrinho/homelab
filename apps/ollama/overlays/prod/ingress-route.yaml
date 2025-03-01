@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: ollama-ingress
+  namespace: llm
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`llm.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: ollama
+          port: main

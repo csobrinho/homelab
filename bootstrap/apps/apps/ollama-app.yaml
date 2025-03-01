@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama
+  namespace: argocd
+spec:
+  destination:
+    namespace: llm
+    name: in-cluster
+  project: default
+  source:
+    path: apps/ollama/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
