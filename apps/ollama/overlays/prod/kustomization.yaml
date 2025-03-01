@@ -25,11 +25,17 @@ helmCharts:
               main:
                 resources:
                   limits:
+                    cpu: "4"
                     memory: 32Gi
+                  requests:
+                    cpu: 500m
+                    memory: 2Gi
                 env:
                   OLLAMA_FLASH_ATTENTION: "1"
                   OLLAMA_NUM_THREADS: "4"
-                  OLLAMA_MAX_LOADED: "2"
+                  OLLAMA_MAX_LOADED_MODELS: "2"
+                  OLLAMA_INTEL_GPU: "true"
+                  OLLAMA_DEBUG: "false"
       persistence:
         config:
           enabled: true
