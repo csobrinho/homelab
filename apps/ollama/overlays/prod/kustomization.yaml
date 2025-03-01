@@ -18,6 +18,13 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "amd64"
+      extraEnv:
+        - name: OLLAMA_FLASH_ATTENTION
+          value: "1"
+        - name: OLLAMA_NUM_THREADS
+          value: "4"
+        - name: OLLAMA_MAX_LOADED
+          value: "2"
       persistence:
         config:
           enabled: true
