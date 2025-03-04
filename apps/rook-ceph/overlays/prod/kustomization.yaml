@@ -59,6 +59,9 @@ helmCharts:
           config:
             osdsPerDevice: "1"
           nodes:
+            - name: infra1
+              devices:
+                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X152103W-part3"
             - name: infra2
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_860_PRO_1TB_S45ENF0M201675D-part3"
@@ -77,9 +80,6 @@ helmCharts:
             - name: infra8
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_Portable_SSD_T5_S3UJNV0K408351K-part3"
-            - name: infra9
-              devices:
-                - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X152103W-part3"
         network:
           hostNetwork: true
         resources:

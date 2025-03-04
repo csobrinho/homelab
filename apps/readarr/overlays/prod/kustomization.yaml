@@ -33,7 +33,7 @@ helmCharts:
           enabled: true
           type: nfs
           path: /data
-          server: infra9
+          server: infra1
           mountPath: /data
       metrics:
         main:
