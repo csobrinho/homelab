@@ -24,7 +24,7 @@ helmCharts:
           retain: true
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
-          size: 4Gi
+          size: 8Gi
         media:
           enabled: true
           type: nfs
