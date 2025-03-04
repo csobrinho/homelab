@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  creationTimestamp: null
   labels:
     app.kubernetes.io/name: kube-vip-ds
-    app.kubernetes.io/version: v0.8.3
+    app.kubernetes.io/version: v0.8.9
   name: kube-vip-ds
   namespace: kube-system
 spec:
@@ -12,12 +13,11 @@ spec:
       app.kubernetes.io/name: kube-vip-ds
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app.kubernetes.io/name: kube-vip-ds
-        app.kubernetes.io/version: v0.8.3
+        app.kubernetes.io/version: v0.8.9
     spec:
-      nodeSelector:
-        kubernetes.io/arch: arm64
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -32,10 +32,6 @@ spec:
         - args:
             - manager
           env:
-            - name: EGRESS_CLEAN
-              value: "true"
-            - name: vip_loglevel
-              value: "5"
             - name: vip_arp
               value: "true"
             - name: port
@@ -44,8 +40,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: vip_interface #           Linux interface
-              value: eth0
             - name: vip_cidr #                Used when advertising BGP addresses
               value: "32"
             - name: dns_mode
@@ -54,6 +48,10 @@ spec:
               value: "true"
             - name: cp_namespace #            The namespace where the lease will reside
               value: kube-system
+            - name: svc_enable
+              value: "true"
+            - name: svc_leasename
+              value: plndr-svcs-lock
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
               value: "true"
             - name: vip_leasename
@@ -77,7 +75,6 @@ spec:
               add:
                 - NET_ADMIN
                 - NET_RAW
-                - SYS_TIME
       hostNetwork: true
       serviceAccountName: kube-vip
       tolerations:

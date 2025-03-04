@@ -14,6 +14,7 @@ resources:
   - apps/home-assistant-app.yaml
   - apps/intel-gpu-plugin-app.yaml
   - apps/jupyter-app.yaml
+  - apps/kube-vip-app.yaml
   - apps/mealie-app.yaml
   - apps/metallb-app.yaml
   - apps/mosquitto-app.yaml
@@ -36,7 +37,6 @@ resources:
   - apps/velero-app.yaml
   - apps/whatsapp-app.yaml
   - apps/xfinity-usage-app.yaml
-  # Disabled: - apps/kube-vip-app.yaml
 
 patches:
   - path: patches/app.yaml
