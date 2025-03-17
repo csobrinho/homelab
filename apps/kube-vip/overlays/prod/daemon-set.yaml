@@ -49,7 +49,7 @@ spec:
             - name: cp_namespace #            The namespace where the lease will reside
               value: kube-system
             - name: svc_enable
-              value: "true"
+              value: "false" #                Disable for now until we migrate from metallb
             - name: svc_leasename
               value: plndr-svcs-lock
             - name: vip_leaderelection #      Enables Kubernetes LeaderElection
