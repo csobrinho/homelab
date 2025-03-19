@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: gitea
     namespace: gitea
-    version: 20.12.11
+    version: 20.12.12
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
