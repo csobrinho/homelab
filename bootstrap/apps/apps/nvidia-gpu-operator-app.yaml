@@ -11,3 +11,9 @@ spec:
   source:
     path: apps/nvidia-gpu-operator/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences:
+    - group: "nvidia.com"
+      kind: ClusterPolicy
+      name: cluster-policy
+      jsonPointers:
+        - /spec/migManager/config/name
