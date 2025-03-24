@@ -20,6 +20,7 @@ resources:
   - apps/mosquitto-app.yaml
   - apps/node-feature-discovery-app.yaml
   - apps/node-red-app.yaml
+  - apps/nvidia-gpu-plugin-app.yaml
   - apps/ollama-app.yaml
   - apps/overseerr-app.yaml
   - apps/pihole-app.yaml
