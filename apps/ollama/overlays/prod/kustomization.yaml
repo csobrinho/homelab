@@ -27,6 +27,7 @@ helmCharts:
                   limits:
                     cpu: "4"
                     memory: 32Gi
+                    nvidia.com/gpu: 2
                   requests:
                     cpu: 500m
                     memory: 2Gi
@@ -34,8 +35,11 @@ helmCharts:
                   OLLAMA_FLASH_ATTENTION: "1"
                   OLLAMA_NUM_THREADS: "4"
                   OLLAMA_MAX_LOADED_MODELS: "2"
-                  OLLAMA_INTEL_GPU: "true"
-                  OLLAMA_DEBUG: "false"
+                  OLLAMA_DEBUG: "true"
+            tolerations:
+              - key: nvidia.com/gpu
+                operator: Exists
+                effect: NoSchedule
       persistence:
         config:
           enabled: true
