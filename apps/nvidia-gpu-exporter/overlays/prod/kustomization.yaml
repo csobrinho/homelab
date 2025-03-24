@@ -1,0 +1,24 @@
+# From https://github.com/utkuozdemir/helm-charts/blob/master/nvidia-gpu-exporter/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: nvidia-gpu-exporter
+    repo: https://utkuozdemir.org/helm-charts
+    releaseName: nvidia-gpu-exporter
+    namespace: infra
+    version: 1.0.0
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+      serviceMonitor:
+        enabled: true
