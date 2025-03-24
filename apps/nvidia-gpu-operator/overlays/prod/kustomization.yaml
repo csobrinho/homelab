@@ -1,0 +1,44 @@
+# From https://github.com/NVIDIA/gpu-operator/blob/main/deployments/gpu-operator/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: nvidia-gpu-operator
+
+resources:
+  - ../../base
+  - time-slicing-config-all.yaml
+
+helmCharts:
+  - name: gpu-operator
+    namespace: nvidia-gpu-operator
+    releaseName: gpu-operator
+    repo: https://nvidia.github.io/gpu-operator
+    includeCRDs: true
+    version: v24.9.2
+    valuesInline:
+      # Node Feature Discovery.
+      nfd:
+        enabled: false # Already installed.
+      # Device Plugin
+      devicePlugin:
+        enabled: true
+        config:
+          create: false
+          name: time-slicing-config-all
+          default: any
+      # Metrics
+      dcgmExporter:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      # k3s compatibility
+      toolkit:
+        enabled: true
+        env:
+          - name: CONTAINERD_CONFIG
+            value: /var/lib/rancher/k3s/agent/etc/containerd/config.toml
+          - name: CONTAINERD_SOCKET
+            value: /run/k3s/containerd/containerd.sock
+          - name: CONTAINERD_RUNTIME_CLASS
+            value: nvidia
+          - name: CONTAINERD_SET_AS_DEFAULT
+            value: "true"

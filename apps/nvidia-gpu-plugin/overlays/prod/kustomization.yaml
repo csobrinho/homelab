@@ -1,8 +1,0 @@
-# From https://github.com/truecharts/charts/blob/master/charts/stable/nvidia-gpu-plugin/values.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: kube-system
-
-resources:
-  - ../../base
-  - https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.17.1/deployments/static/nvidia-device-plugin.yml
