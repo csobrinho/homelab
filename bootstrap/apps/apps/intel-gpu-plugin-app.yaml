@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: intel
+    namespace: intel-gpu-plugin
     name: in-cluster
   project: default
   source:
