@@ -45,6 +45,7 @@ helmCharts:
           retain: true
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
+          size: 160Gi
         data:
           enabled: true
           retain: true
