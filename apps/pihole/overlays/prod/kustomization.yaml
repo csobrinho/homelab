@@ -6,6 +6,7 @@ resources:
   - ../../base
   - dashboard-redirect.yaml
   - ingress-route.yaml
+  - secrets/api-secret-enc.yaml
 
 helmCharts:
   - name: pihole
