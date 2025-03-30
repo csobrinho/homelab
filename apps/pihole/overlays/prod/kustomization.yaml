@@ -16,13 +16,15 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       hostname: "pihole"
+      virtualHost: pihole.sobrinho.pt
       hostNetwork: true
       DNS1: 10.10.1.1
       DNS2: ""
       nodeSelector:
         kubernetes.io/arch: arm64
       admin:
-        enabled: false
+        enabled: true
+        existingSecret: admin-secret
       extraEnvVars:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
