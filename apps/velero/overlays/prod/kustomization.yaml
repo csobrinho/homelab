@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - resource-policy.yaml
+  - secrets/velero-secret-enc.yaml
 
 helmCharts:
   - name: velero
