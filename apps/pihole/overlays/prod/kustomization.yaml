@@ -24,7 +24,7 @@ helmCharts:
         kubernetes.io/arch: arm64
       admin:
         enabled: true
-        existingSecret: admin-secret
+        existingSecret: api-secret
       extraEnvVars:
         TZ: America/Los_Angeles
       persistentVolumeClaim:
