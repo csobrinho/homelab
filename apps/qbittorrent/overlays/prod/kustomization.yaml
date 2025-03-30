@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - secrets/vpn-secret-enc.yaml
 
 helmCharts:
   - name: qbittorrent
