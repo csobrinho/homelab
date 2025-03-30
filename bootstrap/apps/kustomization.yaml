@@ -32,6 +32,7 @@ resources:
   - apps/radarr-app.yaml
   - apps/readarr-app.yaml
   - apps/rook-ceph-app.yaml
+  - apps/sealed-secrets-app.yaml
   - apps/sonarr-app.yaml
   - apps/traefik-app.yaml
   - apps/unifi-app.yaml

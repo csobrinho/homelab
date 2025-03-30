@@ -1,0 +1,23 @@
+# From https://github.com/bitnami-labs/sealed-secrets/blob/main/helm/sealed-secrets/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: sealed-secrets
+    repo: https://bitnami-labs.github.io/sealed-secrets
+    releaseName: sealed-secrets
+    namespace: kube-system
+    version: 2.17.2
+    includeCRDs: true
+    valuesInline:
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      metrics:
+        serviceMonitor:
+          enabled: true
+        dashboards:
+          create: true
