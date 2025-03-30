@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - secrets/unpackerr-secret-enc.yaml
 
 helmCharts:
   - name: unpackerr
