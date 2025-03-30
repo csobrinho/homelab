@@ -1,5 +1,5 @@
 #!/bin/env bash
-[[ $# -lt 1 ]] && { echo "usage: new.sh app-name [ns-name] [subdomain]"; exit 1; }
+[[ $# -lt 1 ]] && { echo "usage: new app-name [ns-name] [subdomain]"; exit 1; }
 
 set -x
 set -eu -o pipefail
