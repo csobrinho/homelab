@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ../../base
   - cronjob.yaml
+  - secrets/xfinity-usage-secret-enc.yaml
