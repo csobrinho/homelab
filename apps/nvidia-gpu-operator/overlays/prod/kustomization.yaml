@@ -18,6 +18,10 @@ helmCharts:
       # Node Feature Discovery.
       nfd:
         enabled: false # Already installed.
+      # Driver config.
+      driver:
+        usePrecompiled: true
+        version: "570"
       # Device Plugin
       devicePlugin:
         enabled: true
