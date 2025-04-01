@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kernel-module-params
+  namespace: nvidia-gpu-operator
+data:
+  nvidia.conf: |-
+    NVreg_PreserveVideoMemoryAllocations=1
+    NVreg_EnableS0ixPowerManagement=1
+    NVreg_RegistryDwords="PowerMizerEnable=0x1; PerfLevelSrc=0x2222; PowerMizerDefault=0x3; PowerMizerDefaultAC=0x3"
+    NVreg_DynamicPowerManagement=0x02

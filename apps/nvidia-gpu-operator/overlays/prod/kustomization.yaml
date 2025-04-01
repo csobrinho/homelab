@@ -6,6 +6,7 @@ namespace: nvidia-gpu-operator
 resources:
   - ../../base
   - time-slicing-config-all.yaml
+  - kernel-module-params.yaml
 
 helmCharts:
   - name: gpu-operator
@@ -22,6 +23,8 @@ helmCharts:
       driver:
         usePrecompiled: true
         version: "570"
+        kernelModuleConfig:
+          name: "kernel-module-params" # With power saving attributes.
       # Device Plugin
       devicePlugin:
         enabled: true
