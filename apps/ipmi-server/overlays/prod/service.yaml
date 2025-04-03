@@ -6,7 +6,10 @@ metadata:
 spec:
   selector:
     app: ipmi-server
+  type: NodePort
   ports:
     - name: main
-      port: 9595
-      targetPort: 9595
+      nodePort: 31246
+      port: 80
+      protocol: TCP
+      targetPort: 80

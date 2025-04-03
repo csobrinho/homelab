@@ -14,10 +14,6 @@ spec:
       labels:
         app: ipmi-server
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        fsGroup: 568
       containers:
         - name: ipmi-server
           image: mneveroff/ipmi-server:1.2.7
@@ -26,10 +22,11 @@ spec:
               memory: "128Mi"
               cpu: "200m"
           securityContext:
-            readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
           ports:
-            - containerPort: 9595
+            - containerPort: 80
+              name: main
+              protocol: TCP
           env:
             - name: TZ
               value: America/Los_Angeles
