@@ -29,6 +29,8 @@ spec:
               value: NOWEB
             - name: WHATSAPP_START_SESSION
               value: default
+            - name: WAHA_LOCAL_STORE_BASE_DIR
+              value: /tmp/waha-sessions
             - name: WHATSAPP_HOOK_URL
               valueFrom:
                 secretKeyRef:
