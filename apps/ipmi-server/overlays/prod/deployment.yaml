@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipmi-server
+  namespace: tools
+spec:
+  selector:
+    matchLabels:
+      app: ipmi-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ipmi-server
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        fsGroup: 568
+      containers:
+        - name: ipmi-server
+          image: mneveroff/ipmi-server:1.2.7
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 9595
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+      restartPolicy: Always

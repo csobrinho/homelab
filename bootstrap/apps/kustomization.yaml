@@ -13,6 +13,7 @@ resources:
   # - apps/gitea-app.yaml
   - apps/home-assistant-app.yaml
   - apps/intel-gpu-plugin-app.yaml
+  - apps/ipmi-server-app.yaml
   - apps/jupyter-app.yaml
   - apps/kube-vip-app.yaml
   - apps/mealie-app.yaml

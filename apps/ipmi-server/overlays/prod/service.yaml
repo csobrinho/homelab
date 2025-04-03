@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipmi-server
+  namespace: tools
+spec:
+  selector:
+    app: ipmi-server
+  ports:
+    - name: main
+      port: 9595
+      targetPort: 9595

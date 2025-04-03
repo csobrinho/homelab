@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ipmi-server
+  namespace: argocd
+spec:
+  destination:
+    namespace: tools
+    name: in-cluster
+  project: default
+  source:
+    path: apps/ipmi-server/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
