@@ -34,7 +34,6 @@ helmCharts:
             provider: aws
             bucket: velero
             default: true
-            accessMode: ReadWrite
             credential:
               name: velero-secret
               key: cloud
@@ -47,8 +46,8 @@ helmCharts:
             provider: csi
         features: EnableCSI
         defaultBackupStorageLocation: default
-        defaultVolumeSnapshotLocations: csi:default
-        defaultSnapshotMoveData: true
+        # defaultVolumeSnapshotLocations: csi:default
+        # defaultSnapshotMoveData: true
         defaultVolumesToFsBackup: true
         extraEnvVars:
           TZ: America/Los_Angeles
