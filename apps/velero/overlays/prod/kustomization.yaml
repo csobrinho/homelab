@@ -39,7 +39,7 @@ helmCharts:
               key: cloud
             config:
               region: default
-              s3ForcePathStyle: 'true'
+              s3ForcePathStyle: "true"
               s3Url: https://s3.sobrinho.pt
         volumeSnapshotLocation:
           - name: default
@@ -67,6 +67,8 @@ helmCharts:
             resourcePolicy:
               kind: configmap
               name: resource-policy
+            excludedNamespaces:
+              - "llm" # Ignore the large XX GB language models.
             snapshotMoveData: true
             snapshotVolumes: true
             ttl: "480h0m0s" # 20 days.
