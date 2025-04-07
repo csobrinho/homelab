@@ -48,7 +48,6 @@ helmCharts:
         features: EnableCSI
         defaultBackupStorageLocation: default
         defaultVolumeSnapshotLocations: csi:default
-        logFormat: json
         defaultSnapshotMoveData: true
         defaultVolumesToFsBackup: true
         extraEnvVars:
