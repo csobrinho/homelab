@@ -100,6 +100,8 @@ helmCharts:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
       cephBlockPoolsVolumeSnapshotClass:
         enabled: true
+        annotations:
+          velero.io/csi-volumesnapshot-class: "true"
 
       cephFileSystems: []
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#filesystem-settings for available configuration
