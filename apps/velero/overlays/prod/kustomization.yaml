@@ -15,8 +15,6 @@ helmCharts:
     version: 8.7.1
     includeCRDs: true
     valuesInline:
-      nodeSelector:
-        kubernetes.io/arch: "arm64"
       initContainers:
         - name: velero-plugin-for-aws
           image: velero/velero-plugin-for-aws:v1.11.1
@@ -28,6 +26,8 @@ helmCharts:
         enabled: true
         serviceMonitor:
           enabled: true
+      upgradeCRDs: true
+      cleanUpCRDs: false
       configuration:
         backupStorageLocation:
           - name: default
@@ -46,14 +46,17 @@ helmCharts:
             provider: csi
         features: EnableCSI
         defaultBackupStorageLocation: default
-        # defaultVolumeSnapshotLocations: csi:default
-        # defaultSnapshotMoveData: true
-        defaultVolumesToFsBackup: true
+        defaultVolumeSnapshotLocations: csi:default
+        defaultSnapshotMoveData: true
+        defaultVolumesToFsBackup: false
         extraEnvVars:
           TZ: America/Los_Angeles
       credentials:
         useSecret: true
         existingSecret: velero-secret
+      backupsEnabled: true
+      snapshotsEnabled: true
+      deployNodeAgent: true
       schedules:
         cluster-full-backup:
           disabled: false
