@@ -27,13 +27,11 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
-        platformio:
+        cache:
           enabled: true
           type: emptyDir
-          mountPath: /config/.esphome
-          size: 3Gi
+          size: 5Gi
         build:
           enabled: true
           type: emptyDir
-          mountPath: /build
-          size: 6Gi
+          size: 8Gi
