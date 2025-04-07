@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: snapshot-controller
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    name: in-cluster
+  project: default
+  source:
+    path: apps/snapshot-controller/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

@@ -3,11 +3,6 @@ kind: Kustomization
 namespace: rook-ceph
 
 resources:
-  # Install snapshot CRDs.
-  - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd/?ref=v8.2.1
-  # Install snapshot controllers.
-  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/csi-snapshotter?ref=v8.2.1
-  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller/?ref=v8.2.1
   - ../../base
   - ingress-route.yaml
   - s3-ingress-route.yaml
