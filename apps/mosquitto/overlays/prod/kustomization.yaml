@@ -22,7 +22,7 @@ helmCharts:
           kubernetes.io/arch: "arm64"
       codeserverImage:
         repository: ghcr.io/coder/code-server
-        tag: 4.99.1
+        tag: 4.99.2
         pullPolicy: IfNotPresent
       service:
         websockets:
