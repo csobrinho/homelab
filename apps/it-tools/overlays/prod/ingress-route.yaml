@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: it-tools-ingress
+  namespace: tools
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`itt.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: it-tools
+          port: main
