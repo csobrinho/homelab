@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: lidarr-ingress
+  namespace: media
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`lidarr.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: lidarr
+          port: main

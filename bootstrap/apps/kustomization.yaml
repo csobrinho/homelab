@@ -17,6 +17,7 @@ resources:
   - apps/it-tools-app.yaml
   - apps/jupyter-app.yaml
   - apps/kube-vip-app.yaml
+  - apps/lidarr-app.yaml
   - apps/mealie-app.yaml
   - apps/metallb-app.yaml
   - apps/mosquitto-app.yaml
