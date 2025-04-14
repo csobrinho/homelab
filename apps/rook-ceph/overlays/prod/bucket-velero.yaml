@@ -8,4 +8,4 @@ spec:
   bucketName: velero
   storageClassName: ceph-bucket
   additionalConfig:
-    bucketMaxSize: 64G
+    bucketMaxSize: 128G
