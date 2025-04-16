@@ -11,7 +11,7 @@ helmCharts:
     repo: https://hub.jupyter.org/helm-chart/
     releaseName: jupyter
     namespace: jupyter
-    version: 4.1.0
+    version: 4.2.0
     includeCRDs: true
     valuesInline:
       hub:
