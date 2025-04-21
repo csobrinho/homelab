@@ -31,7 +31,7 @@ helmCharts:
       persistentVolumeClaim:
         enabled: true
         storageClass: ceph-block
-        size: 1Gi
+        size: 2Gi
       serviceWeb:
         annotations:
         http:
