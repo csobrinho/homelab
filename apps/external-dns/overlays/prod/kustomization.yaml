@@ -19,7 +19,8 @@ helmCharts:
           value: America/Los_Angeles
       nodeSelector:
         kubernetes.io/arch: arm64
-      logLevel: &logLevel debug
+      logLevel: &logLevel info
+      interval: 10m
       provider:
         name: webhook
         webhook:
