@@ -61,6 +61,7 @@ helmCharts:
         - service
         - traefik-proxy # Enable Traefik IngressRoute support.
         - node # Add an A record per each node externalIP.
+      registry: noop # Don't create any TXT records.
       triggerLoopOnEvent: true # Triggers run loop on create/update/delete events in addition of regular interval.
       serviceMonitor:
         enabled: true
