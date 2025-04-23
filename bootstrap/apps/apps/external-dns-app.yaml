@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  destination:
+    namespace: external-dns
+    name: in-cluster
+  project: default
+  source:
+    path: apps/external-dns/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

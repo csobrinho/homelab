@@ -1,0 +1,70 @@
+# From https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - secrets/unifi-secret-enc.yaml
+
+helmCharts:
+  - name: external-dns
+    repo: https://kubernetes-sigs.github.io/external-dns/
+    releaseName: external-dns
+    namespace: external-dns
+    version: 1.16.1
+    includeCRDs: true
+    valuesInline:
+      env:
+        - name: TZ
+          value: America/Los_Angeles
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      logLevel: &logLevel debug
+      provider:
+        name: webhook
+        webhook:
+          image:
+            repository: ghcr.io/kashalls/external-dns-unifi-webhook
+            tag: v0.5.2
+          env:
+            - name: UNIFI_HOST
+              value: https://unifi.sobrinho.pt
+            - name: UNIFI_EXTERNAL_CONTROLLER
+              value: "false"
+            - name: UNIFI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: unifi-secret
+                  key: api-key
+            - name: LOG_LEVEL
+              value: *logLevel
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http-webhook
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http-webhook
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+      extraArgs:
+        - --ignore-ingress-tls-spec # Ignore TLS spec in Ingress resources.
+        - --traefik-disable-legacy # Disable listeners on Resources under traefik.containo.us.
+        # - --no-expose-internal-ipv6 # Only expose IPv4 node addresses.
+        # - --no-exclude-unschedulable # Keep unschedulable nodes.
+      policy: upsert-only
+      sources:
+        - ingress
+        - service
+        - traefik-proxy # Enable Traefik IngressRoute support.
+        - node # Add an A record per each node externalIP.
+      txtOwnerId: default
+      txtPrefix: k3s.
+      domainFilters:
+        - sobrinho.pt
+      triggerLoopOnEvent: true # Triggers run loop on create/update/delete events in addition of regular interval.
+      serviceMonitor:
+        enabled: true
