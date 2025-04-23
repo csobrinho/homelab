@@ -3,6 +3,9 @@ apiVersion: traefik.io/v1alpha1
 metadata:
   name: bazarr-ingress
   namespace: media
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: bazarr.sobrinho.pt
+    external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:
   entryPoints:

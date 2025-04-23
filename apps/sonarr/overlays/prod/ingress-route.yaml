@@ -3,6 +3,9 @@ apiVersion: traefik.io/v1alpha1
 metadata:
   name: sonarr-ingress
   namespace: media
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: sonarr.sobrinho.pt
+    external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:
   entryPoints:

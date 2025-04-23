@@ -92,6 +92,9 @@ kind: IngressRoute
 metadata:
   name: traefik-forward-auth
   namespace: traefik
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: auth.sobrinho.pt
+    external-dns.alpha.kubernetes.io/target: infra-int
 spec:
   entryPoints:
     - websecure

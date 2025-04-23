@@ -72,6 +72,9 @@ service:
 ingressRoute:
   dashboard:
     enabled: true
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: traefik.sobrinho.pt
+      external-dns.alpha.kubernetes.io/target: infra-int
     matchRule: Host(`traefik.sobrinho.pt`)
     services:
       - name: api@internal
