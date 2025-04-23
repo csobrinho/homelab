@@ -53,8 +53,8 @@ helmCharts:
       extraArgs:
         - --ignore-ingress-tls-spec # Ignore TLS spec in Ingress resources.
         - --traefik-disable-legacy # Disable listeners on Resources under traefik.containo.us.
-        # - --no-expose-internal-ipv6 # Only expose IPv4 node addresses.
-        # - --no-exclude-unschedulable # Keep unschedulable nodes.
+        - --expose-internal-ipv6=false # Only expose IPv4 node addresses.
+        - --exclude-unschedulable=false # Keep unschedulable nodes.
       policy: upsert-only
       sources:
         - ingress
