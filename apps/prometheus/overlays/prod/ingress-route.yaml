@@ -4,7 +4,6 @@ metadata:
   name: prometheus-ingress
   namespace: prometheus
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: prometheus.sobrinho.pt,alertmanager.sobrinho.pt,grafana.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

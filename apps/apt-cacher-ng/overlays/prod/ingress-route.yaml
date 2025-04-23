@@ -4,7 +4,6 @@ metadata:
   name: apt-cacher-ng-ingress
   namespace: tools
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: apt.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

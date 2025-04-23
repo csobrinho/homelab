@@ -4,7 +4,6 @@ metadata:
   name: home-assistant-ingress
   namespace: home-assistant
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: homeassistant.sobrinho.pt,homeassistant.cs.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

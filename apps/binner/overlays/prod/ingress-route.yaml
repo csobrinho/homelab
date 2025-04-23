@@ -4,7 +4,6 @@ metadata:
   name: binner-ingress
   namespace: binner
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: binner.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

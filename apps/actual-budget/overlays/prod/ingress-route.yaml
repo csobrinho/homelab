@@ -4,7 +4,6 @@ metadata:
   name: actual-budget-ingress
   namespace: actual-budget
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: budget.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

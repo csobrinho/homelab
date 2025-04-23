@@ -4,7 +4,6 @@ metadata:
   name: mosquitto-ingress-codeserver
   namespace: mosquitto
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: mqtt.cs.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

@@ -4,7 +4,6 @@ metadata:
   name: it-tools-ingress
   namespace: tools
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: itt.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

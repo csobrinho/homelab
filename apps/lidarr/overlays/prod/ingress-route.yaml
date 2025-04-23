@@ -4,7 +4,6 @@ metadata:
   name: lidarr-ingress
   namespace: media
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: lidarr.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

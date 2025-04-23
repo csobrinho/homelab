@@ -4,7 +4,6 @@ metadata:
   name: esphome-ingress
   namespace: esphome
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: esphome.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

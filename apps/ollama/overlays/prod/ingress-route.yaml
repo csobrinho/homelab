@@ -4,7 +4,6 @@ metadata:
   name: ollama-ingress
   namespace: llm
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: llm.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

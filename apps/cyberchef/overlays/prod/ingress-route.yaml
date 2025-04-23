@@ -4,7 +4,6 @@ metadata:
   name: cyberchef-ingress
   namespace: cyberchef
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: cyberchef.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

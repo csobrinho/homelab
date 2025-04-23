@@ -4,7 +4,6 @@ metadata:
   name: argocd-ingress
   namespace: argocd
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: argocd.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

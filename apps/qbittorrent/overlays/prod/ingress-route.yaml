@@ -4,7 +4,6 @@ metadata:
   name: qbittorrent-ingress
   namespace: media
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: qbittorrent.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

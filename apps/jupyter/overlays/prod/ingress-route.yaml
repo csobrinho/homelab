@@ -4,7 +4,6 @@ metadata:
   name: jupyter-ingress
   namespace: jupyter
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: jupyter.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:

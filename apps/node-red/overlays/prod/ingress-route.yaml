@@ -4,7 +4,6 @@ metadata:
   name: node-red-ingress
   namespace: node-red
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: node-red.sobrinho.pt
     external-dns.alpha.kubernetes.io/target: infra-int
 
 spec:
