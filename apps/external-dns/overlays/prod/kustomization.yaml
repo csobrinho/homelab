@@ -61,8 +61,6 @@ helmCharts:
         - service
         - traefik-proxy # Enable Traefik IngressRoute support.
         - node # Add an A record per each node externalIP.
-      txtOwnerId: default
-      txtPrefix: k3s.
       domainFilters:
         - sobrinho.pt
       triggerLoopOnEvent: true # Triggers run loop on create/update/delete events in addition of regular interval.
