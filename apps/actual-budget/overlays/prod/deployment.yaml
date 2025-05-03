@@ -18,7 +18,7 @@ spec:
         kubernetes.io/arch: arm64
       containers:
         - name: actual-budget
-          image: ghcr.io/actualbudget/actual:25.4.0
+          image: ghcr.io/actualbudget/actual:25.5.0
           resources:
             limits:
               memory: 384Mi
