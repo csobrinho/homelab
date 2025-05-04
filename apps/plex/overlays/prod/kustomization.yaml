@@ -39,7 +39,7 @@ helmCharts:
       resources:
         limits:
           gpu.intel.com/i915: "1"
-          cpu: 2000m
+          cpu: 3000m
           memory: 4Gi
         requests:
           gpu.intel.com/i915: "1"
