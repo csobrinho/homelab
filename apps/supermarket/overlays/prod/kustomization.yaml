@@ -3,5 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - cronjob.yaml
+  - cronjob-judy.yaml
+  - cronjob-sobry.yaml
   - secrets/supermarket-secret-enc.yaml
+  - secrets/supermarket-user-judy-secret-enc.yaml
+  - secrets/supermarket-user-sobry-secret-enc.yaml

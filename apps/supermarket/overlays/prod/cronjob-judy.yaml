@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: supermarket-judy
+  namespace: tools
+spec:
+  schedule: "2 * * * *"
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  startingDeadlineSeconds: 60 # 1 min
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          containers:
+            - name: supermarket
+              image: ghcr.io/csobrinho/supermarket-api:main@sha256:41e8276e151144e1d1dced31c2c6924ea19ad0cb8632beea4a54a70d9e73d060
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  memory: 256Mi
+                  cpu: 200m
+                requests:
+                  memory: 128Mi
+                  cpu: 100m
+              env:
+                - name: TZ
+                  value: America/Los_Angeles
+                - name: USER_AGENT
+                  value: okhttp/4.12.0
+                - name: CLIP_ALL
+                  value: "true"
+                - name: APP_VERSION
+                  value: 2025.12.0
+              envFrom:
+                - secretRef:
+                    name: supermarket-secret
+                - secretRef:
+                    name: supermarket-user-judy-secret
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: supermarket
+  name: supermarket-sobry
   namespace: tools
 spec:
   schedule: "0 * * * *"
@@ -37,6 +37,8 @@ spec:
               envFrom:
                 - secretRef:
                     name: supermarket-secret
+                - secretRef:
+                    name: supermarket-user-sobry-secret
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
