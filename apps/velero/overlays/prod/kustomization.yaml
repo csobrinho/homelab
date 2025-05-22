@@ -50,7 +50,8 @@ helmCharts:
         defaultSnapshotMoveData: true
         defaultVolumesToFsBackup: false
         extraEnvVars:
-          TZ: America/Los_Angeles
+          - name: TZ
+            value: America/Los_Angeles
       credentials:
         useSecret: true
         existingSecret: velero-secret
