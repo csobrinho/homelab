@@ -16,3 +16,7 @@ spec:
       services:
         - name: plex
           port: main
+  tls:
+    options:
+      name: mtls-any
+      namespace: traefik
