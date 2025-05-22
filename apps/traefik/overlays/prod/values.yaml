@@ -47,7 +47,7 @@ ports:
     exposedPort: 443
     tls:
       enabled: true
-      options: "traefik-mtls"
+      options: "traefik-mtls-required"
     middlewares:
       - traefik-traefik-forward-auth@kubernetescrd
   mqtt:
