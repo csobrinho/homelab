@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - secrets/n8n-secret-enc.yaml
 
 helmCharts:
   - name: n8n
@@ -23,6 +24,8 @@ helmCharts:
               enabled: "true"
             runners:
               enabled: "true"
+            enforce:
+              settings_file_permissions: "true"
           db:
             type: sqlite
           generic:
@@ -44,6 +47,16 @@ helmCharts:
           accessModes:
             - ReadWriteOnce
           size: 8Gi
+        extraEnv: &extraEnv
+          EXECUTIONS_MODE:
+            value: "queue"
+          OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS:
+            value: "true"
+          N8N_ENCRYPTION_KEY:
+            valueFrom:
+              secretKeyRef:
+                name: n8n-secret
+                key: encryption-key
         resources: &limits
           limits:
             cpu: 750m
@@ -55,12 +68,14 @@ helmCharts:
           kubernetes.io/arch: arm64
       worker:
         enabled: true
+        extraEnv: *extraEnv
         resources: *limits
         nodeSelector: *nodeSelector
       webhook:
         enabled: true
         persistence:
           enabled: false
+        extraEnv: *extraEnv
         resources: *limits
         nodeSelector: *nodeSelector
       # Bitnami Valkey configuration
