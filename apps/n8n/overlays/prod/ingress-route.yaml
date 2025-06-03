@@ -1,0 +1,18 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: n8n-ingress
+  namespace: llm
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`n8n.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: n8n
+          port: http
