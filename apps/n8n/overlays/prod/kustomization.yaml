@@ -16,6 +16,13 @@ helmCharts:
     valuesInline:
       main:
         config:
+          n8n:
+            editor:
+              base_url: https://n8n.sobrinho.pt/
+            templates:
+              enabled: "true"
+            runners:
+              enabled: "true"
           db:
             type: sqlite
           generic:
@@ -52,6 +59,8 @@ helmCharts:
         nodeSelector: *nodeSelector
       webhook:
         enabled: true
+        persistence:
+          enabled: false
         resources: *limits
         nodeSelector: *nodeSelector
       # Bitnami Valkey configuration
