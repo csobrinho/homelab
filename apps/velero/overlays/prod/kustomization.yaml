@@ -15,6 +15,7 @@ helmCharts:
     version: 10.0.1
     includeCRDs: true
     valuesInline:
+      revisionHistoryLimit: 1
       initContainers:
         - name: velero-plugin-for-aws
           image: velero/velero-plugin-for-aws:v1.12.1
