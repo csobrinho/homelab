@@ -1,0 +1,8 @@
+#!/bin/env bash
+[[ $# -gt 1 ]] && { echo "usage: k3s-version [stable]"; exit 1; }
+
+# set -x
+set -eu -o pipefail
+
+channel="${1:-stable}"
+curl -s https://update.k3s.io/v1-release/channels | jq -r ".data[] | select(.id == \"$channel\") | .latest"
