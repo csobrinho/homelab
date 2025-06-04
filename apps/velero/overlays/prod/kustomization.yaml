@@ -76,3 +76,14 @@ helmCharts:
             ttl: "480h0m0s" # 20 days.
             uploaderConfig:
               parallelFilesUpload: 10
+      nodeAgent:
+        tolerations:
+          # Handle unreachable and not-ready nodes.
+          - key: node.kubernetes.io/unreachable
+            operator: Exists
+            effect: NoExecute
+            tolerationSeconds: 300
+          - key: node.kubernetes.io/not-ready
+            operator: Exists
+            effect: NoExecute
+            tolerationSeconds: 300
