@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - secrets/node-red-secret-enc.yaml
 
 helmCharts:
   - name: node-red
@@ -15,6 +16,17 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  NODE_RED_CREDENTIAL_SECRET:
+                    secretKeyRef:
+                      name: node-red-secret
+                      key: credential_secret
+                      expandObjectName: false
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
