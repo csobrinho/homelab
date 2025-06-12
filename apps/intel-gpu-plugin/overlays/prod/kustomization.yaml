@@ -1,4 +1,3 @@
-# From https://github.com/intel/helm-charts/blob/main/charts/gpu-device-plugin/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -6,6 +5,7 @@ resources:
   - ../../base
 
 helmCharts:
+  # From https://github.com/intel/helm-charts/blob/main/charts/device-plugin-operator/values.yaml
   - name: intel-device-plugins-operator
     repo: https://intel.github.io/helm-charts
     releaseName: intel-device-plugins-operator
@@ -13,6 +13,7 @@ helmCharts:
     version: 0.32.1
     includeCRDs: true
 
+  # From https://github.com/intel/helm-charts/blob/main/charts/gpu-device-plugin/values.yaml
   - name: intel-device-plugins-gpu
     repo: https://intel.github.io/helm-charts
     releaseName: intel-device-plugins-gpu
