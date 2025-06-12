@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd/overlays/node-feature-rules?ref=v0.32.1
 
 helmCharts:
   - name: intel-gpu-plugin

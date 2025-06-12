@@ -15,13 +15,5 @@ helmCharts:
     version: 0.17.3
     includeCRDs: true
     valuesInline:
-      master:
-        extraEnvs:
-          - name: TZ
-            value: America/Los_Angeles
-      worker:
-        extraEnvs:
-          - name: TZ
-            value: America/Los_Angeles
       prometheus:
         enable: true
