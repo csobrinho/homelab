@@ -1,4 +1,4 @@
-# From https://github.com/truecharts/charts/blob/master/charts/stable/n8n/values.yaml
+# From https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -30,8 +30,6 @@ helmCharts:
             type: sqlite
           generic:
             timezone: America/Los_Angeles
-          webhook:
-            url: https://n8n.sobrinho.pt/
           queue:
             health:
               check:
@@ -49,9 +47,7 @@ helmCharts:
           size: 8Gi
         extraEnv: &extraEnv
           EXECUTIONS_MODE:
-            value: "queue"
-          OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS:
-            value: "true"
+            value: "regular"
           N8N_ENCRYPTION_KEY:
             valueFrom:
               secretKeyRef:
@@ -67,17 +63,9 @@ helmCharts:
         nodeSelector: &nodeSelector
           kubernetes.io/arch: arm64
       worker:
-        enabled: true
-        extraEnv: *extraEnv
-        resources: *limits
-        nodeSelector: *nodeSelector
+        enabled: false
       webhook:
-        enabled: true
-        persistence:
-          enabled: false
-        extraEnv: *extraEnv
-        resources: *limits
-        nodeSelector: *nodeSelector
+        enabled: false
       # Bitnami Valkey configuration
       # https://artifacthub.io/packages/helm/bitnami/valkey
       valkey:
