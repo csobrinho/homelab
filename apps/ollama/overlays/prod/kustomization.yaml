@@ -39,6 +39,12 @@ helmCharts:
               - key: nvidia.com/gpu
                 operator: Exists
                 effect: NoSchedule
+        ui:
+          podSpec:
+            containers:
+              ui:
+                env:
+                  ENV: dev
       persistence:
         config:
           enabled: true
