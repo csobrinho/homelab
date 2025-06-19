@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: ollama
     namespace: llm
-    version: 7.19.5
+    version: 7.19.6
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
