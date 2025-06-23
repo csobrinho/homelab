@@ -28,7 +28,7 @@ helmCharts:
         transcode:
           enabled: true
           type: nfs
-          path: /data/transcode
+          path: /data/media/transcode
           server: infra1
           mountPath: /transcode
           size: 16Gi
