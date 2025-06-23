@@ -41,6 +41,7 @@ resources:
   - apps/snapshot-controller-app.yaml
   - apps/sonarr-app.yaml
   - apps/supermarket-app.yaml
+  - apps/tautulli-app.yaml
   - apps/traefik-app.yaml
   - apps/unifi-app.yaml
   - apps/unpackerr-app.yaml
