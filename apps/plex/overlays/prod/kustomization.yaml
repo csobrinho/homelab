@@ -25,6 +25,12 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 8Gi
+        transcode:
+          enabled: true
+          type: emptyDir
+          medium: ""
+          targetSelectAll: true
+          size: 16Gi
         media:
           enabled: true
           type: nfs
