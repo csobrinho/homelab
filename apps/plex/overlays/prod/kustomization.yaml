@@ -27,10 +27,11 @@ helmCharts:
           size: 8Gi
         transcode:
           enabled: true
-          type: emptyDir
-          medium: ""
-          targetSelectAll: true
-          size: 10Gi
+          type: nfs
+          path: /data/transcode
+          server: infra1
+          mountPath: /transcode
+          size: 16Gi
         media:
           enabled: true
           type: nfs
