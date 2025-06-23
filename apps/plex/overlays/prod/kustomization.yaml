@@ -30,7 +30,7 @@ helmCharts:
           type: emptyDir
           medium: ""
           targetSelectAll: true
-          size: 16Gi
+          size: 10Gi
         media:
           enabled: true
           type: nfs
