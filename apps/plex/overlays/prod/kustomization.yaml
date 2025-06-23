@@ -40,7 +40,7 @@ helmCharts:
         limits:
           gpu.intel.com/i915: "1"
           cpu: 3000m
-          memory: 6Gi
+          memory: 8Gi
         requests:
           gpu.intel.com/i915: "1"
           cpu: 500m
