@@ -17,6 +17,12 @@ helmCharts:
       env:
         - name: TZ
           value: America/Los_Angeles
+        # Define the flags via environment variables because the Helm chart did
+        # not seem to support boolean flags them after v1.16.0.
+        - name: EXTERNAL_DNS_IGNORE_INGRESS_TLS_SPEC
+          value: "true" # Ignore TLS spec in Ingress resources.
+        - name: EXTERNAL_DNS_TRAEFIK_DISABLE_LEGACY
+          value: "true" # Disable listeners on Resources under traefik.containo.us.
       nodeSelector:
         kubernetes.io/arch: arm64
       logLevel: &logLevel info
@@ -51,11 +57,6 @@ helmCharts:
               port: http-webhook
             initialDelaySeconds: 10
             timeoutSeconds: 5
-      extraArgs:
-        ignore-ingress-tls-spec: true # Ignore TLS spec in Ingress resources.
-        traefik-disable-legacy: true # Disable listeners on Resources under traefik.containo.us.
-        # - --no-expose-internal-ipv6 # Only expose IPv4 node addresses.
-        # - --no-exclude-unschedulable # Keep unschedulable nodes.
       policy: upsert-only
       sources:
         - ingress
