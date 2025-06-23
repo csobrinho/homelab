@@ -45,6 +45,7 @@ helmCharts:
         volumeSnapshotLocation:
           - name: default
             provider: csi
+            config: {}
         features: EnableCSI
         defaultBackupStorageLocation: default
         defaultVolumeSnapshotLocations: csi:default
