@@ -8,4 +8,4 @@ spec:
   bucketName: obsidian
   storageClassName: ceph-bucket
   additionalConfig:
-    bucketMaxSize: 5G
+    maxSize: 5G
