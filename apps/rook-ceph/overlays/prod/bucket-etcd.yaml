@@ -8,4 +8,4 @@ spec:
   bucketName: etcd
   storageClassName: ceph-bucket
   additionalConfig:
-    maxSize: "4G"
+    bucketMaxSize: "4G"
