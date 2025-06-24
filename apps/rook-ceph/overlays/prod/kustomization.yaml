@@ -7,7 +7,6 @@ resources:
   - ingress-route.yaml
   - s3-ingress-route.yaml
   - bucket-obdisian.yaml
-  - bucket-velero.yaml
 
 helmCharts:
   - name: rook-ceph
