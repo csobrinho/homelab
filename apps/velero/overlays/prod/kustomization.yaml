@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - bucket-velero.yaml
   - resource-policy.yaml
   - secrets/velero-secret-enc.yaml
 
