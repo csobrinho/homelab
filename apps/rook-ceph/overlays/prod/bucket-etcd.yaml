@@ -5,7 +5,6 @@ metadata:
   name: bucket-etcd
   namespace: rook-ceph
 spec:
+  additionalConfig:
   bucketName: etcd
   storageClassName: ceph-bucket
-  additionalConfig:
-    bucketMaxSize: "4G"
