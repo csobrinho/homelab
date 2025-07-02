@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: qbittorrent
     namespace: media
-    version: 22.5.4
+    version: 22.5.5
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
