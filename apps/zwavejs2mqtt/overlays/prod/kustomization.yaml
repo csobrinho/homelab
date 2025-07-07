@@ -1,0 +1,36 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/zwavejs2mqtt/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: zwavejs2mqtt
+    repo: oci://tccr.io/truecharts
+    releaseName: zwavejs2mqtt
+    namespace: home-assistant
+    version: 23.1.1
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      workload:
+        main:
+          labels:
+            feature.node.kubernetes.io/usb-zwave.present: "true"
+      persistence:
+        config:
+          enabled: true
+          retain: true
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+          size: 1Gi
+        usb-zwave:
+          enabled: true
+          type: device
+          path: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0
+          hostPath: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0

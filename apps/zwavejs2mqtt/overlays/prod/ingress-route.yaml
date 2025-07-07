@@ -1,0 +1,18 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: zwavejs2mqtt-ingress
+  namespace: home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`zwave.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: zwavejs2mqtt
+          port: main
