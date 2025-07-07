@@ -28,7 +28,6 @@ helmCharts:
       nodeSelector:
         kubernetes.io/arch: arm64
         feature.node.kubernetes.io/usb-zigbee.present: "true"
-        feature.node.kubernetes.io/usb-zwave.present: "true"
       securityContext:
         privileged: true
       persistence:
@@ -43,18 +42,12 @@ helmCharts:
             type: CharDevice
           name: usb-zigbee
         - hostPath:
-            path: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0
-            type: CharDevice
-          name: usb-zwave
-        - hostPath:
             path: /run/dbus
             type: Directory
           name: dbus
       additionalMounts:
         - mountPath: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
           name: usb-zigbee
-        - mountPath: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0
-          name: usb-zwave
         - mountPath: /run/dbus
           name: dbus
       addons:

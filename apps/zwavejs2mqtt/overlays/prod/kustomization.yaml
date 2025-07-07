@@ -18,10 +18,16 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
-      workload:
-        main:
-          labels:
-            feature.node.kubernetes.io/usb-zwave.present: "true"
+          feature.node.kubernetes.io/usb-zwave.present: "true"
+      service:
+        ws:
+          enabled: true
+          type: NodePort  # HomeAssistant uses host networking.
+          ports:
+            ws:
+              enabled: true
+              nodePort: 30046
+              targetPort: 3000
       persistence:
         config:
           enabled: true
