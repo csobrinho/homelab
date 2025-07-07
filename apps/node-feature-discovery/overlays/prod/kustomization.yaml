@@ -6,6 +6,7 @@ resources:
   - ../../base
   - usb-chipwhisperer-device.yaml
   - usb-zigbee-device.yaml
+  - usb-zwave-device.yaml
 
 helmCharts:
   - name: node-feature-discovery

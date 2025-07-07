@@ -1,18 +1,19 @@
 apiVersion: nfd.k8s-sigs.io/v1alpha1
 kind: NodeFeatureRule
 metadata:
-  name: usb-zigbee-device
+  name: usb-zwave-device
   namespace: tools
 spec:
   rules:
-    - name: "zigbee.sonoff.present label"
+    - name: "zwave.aeotec.present label"
       labelsTemplate: |
-        usb-zigbee.present=true
-        usb-zigbee_sonoff.present=true
+        usb-zwave.present=true
+        usb-zwave_aeotec.present=true
         {{ range .usb.device }}
         usb-{{ .class }}_{{ .vendor }}_{{ .device }}.present=true
         {{ end }}
       matchFeatures:
         - feature: usb.device
           matchExpressions:
-            vendor: { op: In, value: ["1a86"] }
+            vendor: { op: In, value: ["10c4"] }
+            device: { op: In, value: ["ea60"] }
