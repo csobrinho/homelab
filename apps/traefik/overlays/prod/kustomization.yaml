@@ -4,13 +4,13 @@ kind: Kustomization
 resources:
   - ../../base
   - insecure-transport.yaml
-  - traefik-api-key-auth.yaml
+  - traefik-basic-auth.yaml
   - traefik-forward-auth.yaml
   - traefik-external.yaml
   - traefik-mqtt.yaml
   - tls-option-any.yaml
   - tls-option-required.yaml
-  - secrets/api-key-secret-enc.yaml
+  - secrets/basic-auth-secret-enc.yaml
   - secrets/tls-ca-secret-enc.yaml
 
 configMapGenerator:
