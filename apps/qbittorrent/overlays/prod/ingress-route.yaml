@@ -9,6 +9,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
     - websecure-extba
   routes:
     - match: Host(`qbittorrent.sobrinho.pt`)

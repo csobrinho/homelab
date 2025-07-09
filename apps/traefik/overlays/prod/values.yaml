@@ -56,7 +56,6 @@ ports:
     exposedPort: 444
     tls:
       enabled: true
-      options: "traefik-mtls-none"
     middlewares:
       - traefik-traefik-basic-auth@kubernetescrd
   mqtt:
