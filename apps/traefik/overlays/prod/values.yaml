@@ -50,6 +50,15 @@ ports:
       options: "traefik-mtls-required"
     middlewares:
       - traefik-traefik-forward-auth@kubernetescrd
+  websecure-extba:
+    port: 9444
+    expose: false
+    exposedPort: 444
+    tls:
+      enabled: true
+      options: "traefik-mtls-none"
+    middlewares:
+      - traefik-traefik-basic-auth@kubernetescrd
   mqtt:
     port: 9883
     expose: false
