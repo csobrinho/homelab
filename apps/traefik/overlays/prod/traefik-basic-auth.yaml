@@ -6,3 +6,5 @@ metadata:
 spec:
   basicAuth:
     secret: basic-auth-secret
+    realm: sobrinho.pt
+    removeHeader: true
