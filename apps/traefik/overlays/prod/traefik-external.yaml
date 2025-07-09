@@ -15,9 +15,6 @@ spec:
     - name: websecure-ext
       port: 443
       targetPort: websecure-ext
-    - name: websecure-extba
-      port: 444
-      targetPort: websecure-extba
   selector:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
