@@ -1,0 +1,8 @@
+apiVersion: traefik.io/v1alpha1
+kind: TLSOption
+metadata:
+  name: mtls-none
+  namespace: traefik
+spec:
+  clientAuth:
+    clientAuthType: RequestClientCert

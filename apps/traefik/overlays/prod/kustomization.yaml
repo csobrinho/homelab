@@ -8,7 +8,8 @@ resources:
   - traefik-forward-auth.yaml
   - traefik-external.yaml
   - traefik-mqtt.yaml
-  - tls-option-any.yaml
+  - tls-option-none.yaml
+  - tls-option-requested.yaml
   - tls-option-required.yaml
   - secrets/basic-auth-secret-enc.yaml
   - secrets/tls-ca-secret-enc.yaml

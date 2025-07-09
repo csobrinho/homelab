@@ -12,7 +12,6 @@ spec:
     - websecure
   routes:
     - match: Host(`s3.sobrinho.pt`)
-    - match: Host(`s33.sobrinho.pt`)
       kind: Rule
       services:
         - name: rook-ceph-rgw-ceph-objectstore
@@ -29,7 +28,6 @@ spec:
     - websecure-ext
   routes:
     - match: Host(`s3.sobrinho.pt`)
-    - match: Host(`s33.sobrinho.pt`)
       kind: Rule
       services:
         - name: rook-ceph-rgw-ceph-objectstore
@@ -39,5 +37,5 @@ spec:
          namespace: traefik
   tls:
     options:
-      name: mtls-any
+      name: mtls-none
       namespace: traefik

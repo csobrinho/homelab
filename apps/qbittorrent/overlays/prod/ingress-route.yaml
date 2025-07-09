@@ -37,5 +37,5 @@ spec:
          namespace: traefik
   tls:
     options:
-      name: mtls-any
+      name: mtls-requested
       namespace: traefik
