@@ -32,9 +32,20 @@ ports:
     exposedPort: 443
     tls:
       enabled: true
+  websecure-ba:
+    port: 8444
+    expose:
+      default: true
+    exposedPort: 444
+    tls:
+      enabled: true
+      options: "traefik-mtls-none"
+    middlewares:
+      - traefik-traefik-basic-auth@kubernetescrd
   web-ext:
     port: 9080
-    expose: false
+    expose:
+      default: false
     exposedPort: 80
     redirections:
       entryPoint:
@@ -43,7 +54,8 @@ ports:
         permanent: true
   websecure-ext:
     port: 9443
-    expose: false
+    expose:
+      default: false
     exposedPort: 443
     tls:
       enabled: true
@@ -52,7 +64,8 @@ ports:
       - traefik-traefik-forward-auth@kubernetescrd
   websecure-extba:
     port: 9444
-    expose: false
+    expose:
+      default: false
     exposedPort: 444
     tls:
       enabled: true

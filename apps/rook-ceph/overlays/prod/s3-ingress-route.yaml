@@ -9,6 +9,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ba
     - websecure-ext
     - websecure-extba
   routes:
