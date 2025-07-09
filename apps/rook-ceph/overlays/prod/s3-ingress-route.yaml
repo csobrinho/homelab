@@ -9,9 +9,9 @@ metadata:
 spec:
   entryPoints:
     - websecure
-    - websecure-ba
     - websecure-ext
-    - websecure-extba
+    # - websecure-ba
+    # - websecure-extba
   routes:
     - match: Host(`s3.sobrinho.pt`)
       kind: Rule
