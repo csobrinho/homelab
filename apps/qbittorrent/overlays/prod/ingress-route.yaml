@@ -10,6 +10,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
   routes:
     - match: Host(`qbittorrent.sobrinho.pt`)
       kind: Rule
@@ -29,7 +30,7 @@ spec:
   entryPoints:
     - websecure-ext
   routes:
-    - match: Host(`qbittorrent.sobrinho.pt`)
+    - match: Host(`qbittorrentba.sobrinho.pt`)
       kind: Rule
       services:
         - name: qbittorrent
@@ -38,4 +39,6 @@ spec:
         - name: traefik-basic-auth
           namespace: traefik
   tls:
-    options: null
+    options:
+      name: mtls-none
+      namespace: traefik
