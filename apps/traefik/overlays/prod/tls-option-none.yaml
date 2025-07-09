@@ -5,4 +5,4 @@ metadata:
   namespace: traefik
 spec:
   clientAuth:
-    clientAuthType: RequestClientCert
+    clientAuthType: NoClientCert
