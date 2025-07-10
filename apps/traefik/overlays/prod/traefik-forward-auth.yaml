@@ -19,7 +19,7 @@ spec:
       nodeSelector:
         kubernetes.io/arch: arm64
       containers:
-        - image: thomseddon/traefik-forward-auth:2-arm64
+        - image: thomseddon/traefik-forward-auth:2-arm64@sha256:ba6e3e0e66746334329dadb531810ff60a2a2f5c1b333c252164630c086aaea7
           name: traefik-forward-auth
           resources:
             limits:
