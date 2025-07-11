@@ -10,8 +10,8 @@ spec:
   entryPoints:
     - websecure
     - websecure-ext
-    # - websecure-ba
-    # - websecure-extba
+    - websecure-ba
+    - websecure-extba
   routes:
     - match: Host(`qbt.sobrinho.pt`)
       kind: Rule

@@ -40,8 +40,6 @@ ports:
     tls:
       enabled: true
       options: "traefik-mtls-none"
-    middlewares:
-      - traefik-traefik-basic-auth@kubernetescrd
   web-ext:
     port: 9080
     expose:
@@ -61,7 +59,7 @@ ports:
       enabled: true
       options: "traefik-mtls-required"
     middlewares:
-      - traefik-traefik-forward-auth@kubernetescrd
+      - traefik-middleware-auth-forward@kubernetescrd
   websecure-extba:
     port: 9444
     expose:
@@ -71,7 +69,7 @@ ports:
       enabled: true
       options: "traefik-mtls-none"
     middlewares:
-      - traefik-traefik-basic-auth@kubernetescrd
+      - traefik-middleware-auth-s3@kubernetescrd
   mqtt:
     port: 9883
     expose: false
@@ -120,3 +118,9 @@ metrics:
   prometheus:
     serviceMonitor:
       enabled: true
+
+experimental:
+  plugins:
+    s3Auth:
+      moduleName: "github.com/csobrinho/traefik-s3-auth-middleware"
+      version: v0.0.7

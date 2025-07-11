@@ -3,22 +3,24 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - insecure-transport.yaml
-  - traefik-basic-auth.yaml
-  - traefik-forward-auth.yaml
-  - traefik-external.yaml
-  - traefik-mqtt.yaml
+  - middleware-auth-basic.yaml
+  - middleware-auth-forward.yaml
+  - middleware-auth-s3.yaml
+  - service-external.yaml
+  - service-mqtt.yaml
   - tls-option-none.yaml
   - tls-option-requested.yaml
   - tls-option-required.yaml
-  - secrets/basic-auth-secret-enc.yaml
+  - transport-insecure.yaml
+  - secrets/middleware-auth-basic-secret-enc.yaml
+  - secrets/middleware-auth-forward-secret-enc.yaml
   - secrets/tls-ca-secret-enc.yaml
 
 configMapGenerator:
-  - name: traefik-forward-auth-config
+  - name: middleware-auth-forward-config
     namespace: traefik
     files:
-      - rules/traefik-forward-auth.ini
+      - rules/middleware-auth-forward.ini
 
 helmCharts:
   - name: traefik

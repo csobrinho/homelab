@@ -17,4 +17,4 @@ spec:
         - name: unifi
           port: 443
           scheme: https
-          serversTransport: traefik-insecure-transport@kubernetescrd
+          serversTransport: traefik-transport-insecure@kubernetescrd

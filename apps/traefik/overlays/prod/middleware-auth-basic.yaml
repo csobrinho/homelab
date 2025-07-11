@@ -1,10 +1,10 @@
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: traefik-basic-auth
+  name: middleware-auth-basic
   namespace: traefik
 spec:
   basicAuth:
-    secret: basic-auth-secret
+    secret: middleware-auth-basic-secret
     realm: sobrinho.pt
     removeHeader: true

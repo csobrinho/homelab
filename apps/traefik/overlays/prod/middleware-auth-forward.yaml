@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: traefik-forward-auth
+  name: middleware-auth-forward
   namespace: traefik
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: traefik-forward-auth
+      app: middleware-auth-forward
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: traefik-forward-auth
+        app: middleware-auth-forward
     spec:
       terminationGracePeriodSeconds: 60
       nodeSelector:
         kubernetes.io/arch: arm64
       containers:
         - image: thomseddon/traefik-forward-auth:2-arm64@sha256:ba6e3e0e66746334329dadb531810ff60a2a2f5c1b333c252164630c086aaea7
-          name: traefik-forward-auth
+          name: middleware-auth-forward
           resources:
             limits:
               cpu: 200m
@@ -44,39 +44,39 @@ spec:
             - name: PROVIDERS_GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: traefik-forward-auth-secrets
+                  name: middleware-auth-forward-secret
                   key: google-client-id
             - name: PROVIDERS_GOOGLE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: traefik-forward-auth-secrets
+                  name: middleware-auth-forward-secret
                   key: google-client-secret
             - name: SECRET
               valueFrom:
                 secretKeyRef:
-                  name: traefik-forward-auth-secrets
+                  name: middleware-auth-forward-secret
                   key: secret
             - name: WHITELIST
               valueFrom:
                 secretKeyRef:
-                  name: traefik-forward-auth-secrets
+                  name: middleware-auth-forward-secret
                   key: whitelist
           volumeMounts:
-            - name: traefik-forward-auth-config
+            - name: middleware-auth-forward-config
               mountPath: /config
-              subPath: traefik-forward-auth.ini
+              subPath: middleware-auth-forward.ini
       volumes:
-        - name: traefik-forward-auth-config
+        - name: middleware-auth-forward-config
           configMap:
-            name: traefik-forward-auth-config
-        - name: traefik-forward-auth-secrets
+            name: middleware-auth-forward-config
+        - name: middleware-auth-forward-secret
           secret:
-            secretName: traefik-forward-auth-secrets
+            secretName: middleware-auth-forward-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: traefik-forward-auth
+  name: middleware-auth-forward
   namespace: traefik
 spec:
   type: ClusterIP
@@ -85,12 +85,12 @@ spec:
       port: 4181
       targetPort: 4181
   selector:
-    app: traefik-forward-auth
+    app: middleware-auth-forward
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: traefik-forward-auth
+  name: middleware-auth-forward
   namespace: traefik
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
@@ -102,17 +102,17 @@ spec:
     - match: Host(`auth.sobrinho.pt`)
       kind: Rule
       services:
-        - name: traefik-forward-auth
+        - name: middleware-auth-forward
           port: 4181
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: traefik-forward-auth
+  name: middleware-auth-forward
   namespace: traefik
 spec:
   forwardAuth:
-    address: http://traefik-forward-auth:4181
+    address: http://middleware-auth-forward:4181
     trustForwardHeader: true
     authResponseHeaders:
       - X-Forwarded-User

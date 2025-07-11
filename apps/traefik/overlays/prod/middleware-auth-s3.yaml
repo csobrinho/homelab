@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: middleware-auth-s3
+  namespace: traefik
+spec:
+  plugin:
+    s3Auth:
+      credentials:
+        - accessKeyId: 3U5AXV9QNHW3T5YVNN3P
+          accessSecretKey: Fz5tUz6nPEmXV3SbcEeLiFBqe8iWlBFcoE2qJeUg
+          region: us-east-1
+          service: s3
+          statusCode: 404
