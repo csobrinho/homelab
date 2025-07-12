@@ -12,6 +12,7 @@ resources:
   - apps/esphome-app.yaml
   - apps/external-dns-app.yaml
   # - apps/gitea-app.yaml
+  - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
   - apps/intel-gpu-plugin-app.yaml
   - apps/ipmi-server-app.yaml

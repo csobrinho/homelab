@@ -1,0 +1,21 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/go-playground/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+  - ingress-route-ext.yaml
+
+helmCharts:
+  - name: go-playground
+    repo: oci://tccr.io/truecharts
+    releaseName: go-playground
+    namespace: tools
+    version: 8.1.0
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
