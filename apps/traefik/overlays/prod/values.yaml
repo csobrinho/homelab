@@ -1,7 +1,7 @@
 # From https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
-globalArguments:
-  - "--global.sendanonymoususage=false"
-  - "--global.checknewversion=false"
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
 
 env:
   - name: TZ
@@ -93,4 +93,4 @@ experimental:
   plugins:
     s3Auth:
       moduleName: "github.com/csobrinho/traefik-s3-auth-middleware"
-      version: v0.0.7
+      version: v0.0.8
