@@ -9,8 +9,8 @@ spec:
   routes:
     - match: Host(`plex.sobrinho.pt`)
       kind: Rule
-      middlewares:
-        # No authentication middleware for this route.
+      # middlewares:
+      #   No authentication middleware for this route.
       services:
         - name: plex
           port: main

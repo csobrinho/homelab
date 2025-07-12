@@ -9,8 +9,8 @@ spec:
   routes:
     - match: Host(`homeassistant.sobrinho.pt`)
       kind: Rule
-      middlewares:
-        # No authentication middleware for this route.
+      # middlewares:
+      #   No authentication middleware for this route.
       services:
         - name: home-assistant
           port: http
