@@ -5,11 +5,9 @@ metadata:
   namespace: media
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: Host(`radarr.sobrinho.pt`)
       kind: Rule

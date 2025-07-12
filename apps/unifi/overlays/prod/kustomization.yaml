@@ -6,3 +6,4 @@ resources:
   - ../../base
   - service.yaml
   - ingress-route.yaml
+  - ingress-route-ext.yaml

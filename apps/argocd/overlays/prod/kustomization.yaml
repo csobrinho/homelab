@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - ingress-route-ext.yaml
 
 helmCharts:
   - name: argo-cd

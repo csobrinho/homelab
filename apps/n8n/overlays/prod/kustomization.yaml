@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - ingress-route-ext.yaml
   - secrets/n8n-secret-enc.yaml
 
 helmCharts:

@@ -1,0 +1,17 @@
+# kind: IngressRoute
+# apiVersion: traefik.io/v1alpha1
+# metadata:
+#   name: actual-budget-ingress
+#   namespace: actual-budget
+# spec:
+#   entryPoints:
+#     - websecure-ext
+#   routes:
+#     - match: Host(`budget.sobrinho.pt`)
+#       kind: Rule
+#       middlewares:
+#         - name: middleware-auth-forward
+#           namespace: traefik
+#       services:
+#         - name: actual-budget
+#           port: main

@@ -5,13 +5,9 @@ metadata:
   namespace: media
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
-    - websecure-ba
-    - websecure-extba
   routes:
     - match: Host(`qbt.sobrinho.pt`)
       kind: Rule

@@ -5,11 +5,9 @@ metadata:
   namespace: home-assistant
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: Host(`zwave.sobrinho.pt`)
       kind: Rule

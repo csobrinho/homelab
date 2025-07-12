@@ -1,0 +1,17 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: gitea-ingress-ext
+  namespace: gitea
+spec:
+  entryPoints:
+    - websecure-ext
+  routes:
+    - match: Host(`gitea.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-forward
+          namespace: traefik
+      services:
+        - name: gitea
+          port: main

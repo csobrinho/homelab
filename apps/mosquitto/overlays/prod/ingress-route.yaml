@@ -5,11 +5,9 @@ metadata:
   namespace: mosquitto
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: HostSNI(`mqtt.sobrinho.pt`)
       services:

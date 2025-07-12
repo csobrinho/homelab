@@ -6,6 +6,7 @@ resources:
   - ../../base
   - deployment.yaml
   - ingress-route.yaml
+  - ingress-route-ext.yaml
   - pvc.yaml
   - service.yaml
   - secrets/whatsapp-secret-enc.yaml

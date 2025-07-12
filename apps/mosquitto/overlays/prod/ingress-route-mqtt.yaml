@@ -3,7 +3,6 @@ apiVersion: traefik.io/v1alpha1
 metadata:
   name: mosquitto-ingress-mqtt
   namespace: mosquitto
-
 spec:
   entryPoints:
     - mqtt

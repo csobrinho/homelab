@@ -1,0 +1,17 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: qbittorrent-ingress-ext
+  namespace: media
+spec:
+  entryPoints:
+    - websecure-ext
+  routes:
+    - match: Host(`qbt.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-basic
+          namespace: traefik
+      services:
+        - name: qbittorrent
+          port: main

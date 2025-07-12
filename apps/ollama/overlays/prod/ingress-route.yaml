@@ -5,11 +5,9 @@ metadata:
   namespace: llm
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: Host(`llm.sobrinho.pt`)
       kind: Rule

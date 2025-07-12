@@ -5,11 +5,9 @@ metadata:
   namespace: actual-budget
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    # - websecure-ext - Disabled for now.
   routes:
     - match: Host(`budget.sobrinho.pt`)
       kind: Rule

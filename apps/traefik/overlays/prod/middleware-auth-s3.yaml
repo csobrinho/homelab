@@ -7,8 +7,8 @@ spec:
   plugin:
     s3Auth:
       credentials:
-        - accessKeyId: 3U5AXV9QNHW3T5YVNN3P
-          accessSecretKey: Fz5tUz6nPEmXV3SbcEeLiFBqe8iWlBFcoE2qJeUg
+        - accessKeyId: XXX
+          accessSecretKey: XXX
           region: us-east-1
           service: s3
           statusCode: 404

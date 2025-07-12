@@ -1,0 +1,17 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: ceph-s3-ingress
+  namespace: rook-ceph
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`s3.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-s3
+          namespace: traefik
+      services:
+        - name: rook-ceph-rgw-ceph-objectstore
+          port: 80

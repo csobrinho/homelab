@@ -32,24 +32,6 @@ ports:
     exposedPort: 443
     tls:
       enabled: true
-  websecure-ba:
-    port: 8444
-    expose:
-      default: true
-    exposedPort: 444
-    tls:
-      enabled: true
-      options: "traefik-mtls-none"
-  web-ext:
-    port: 9080
-    expose:
-      default: false
-    exposedPort: 80
-    redirections:
-      entryPoint:
-        to: websecure-ext
-        scheme: https
-        permanent: true
   websecure-ext:
     port: 9443
     expose:
@@ -60,23 +42,11 @@ ports:
       options: "traefik-mtls-required"
     middlewares:
       - traefik-middleware-auth-forward@kubernetescrd
-  websecure-extba:
-    port: 9444
-    expose:
-      default: false
-    exposedPort: 444
-    tls:
-      enabled: true
-      options: "traefik-mtls-none"
-    middlewares:
-      - traefik-middleware-auth-s3@kubernetescrd
   mqtt:
     port: 9883
-    expose: false
+    expose:
+      default: false
     exposedPort: 1883
-
-nodeSelector:
-  kubernetes.io/arch: arm64
 
 tolerations:
   - key: node.kubernetes.io/unreachable

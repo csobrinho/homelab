@@ -5,11 +5,9 @@ metadata:
   namespace: rook-ceph
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: Host(`ceph.sobrinho.pt`)
       kind: Rule

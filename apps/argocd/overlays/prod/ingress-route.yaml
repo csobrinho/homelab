@@ -5,11 +5,9 @@ metadata:
   namespace: argocd
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
-
 spec:
   entryPoints:
     - websecure
-    - websecure-ext
   routes:
     - match: Host(`argocd.sobrinho.pt`)
       kind: Rule

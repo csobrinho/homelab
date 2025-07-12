@@ -1,0 +1,17 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: sonarr-ingress-ext
+  namespace: media
+spec:
+  entryPoints:
+    - websecure-ext
+  routes:
+    - match: Host(`sonarr.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-forward
+          namespace: traefik
+      services:
+        - name: sonarr
+          port: main
