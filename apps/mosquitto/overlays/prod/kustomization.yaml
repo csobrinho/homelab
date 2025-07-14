@@ -42,6 +42,16 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
+        cs-data:
+          enabled: true
+          retain: true
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+          size: 512Mi
+          targetSelector:
+            main:
+              codeserver:
+                mountPath: /root
       addons:
         codeserver:
           enabled: true
