@@ -24,6 +24,7 @@ helmCharts:
         params:
           server.insecure: true
         cm:
+          accounts.monitoring: apiKey
           exec.enabled: true
           kustomize.buildOptions: --enable-helm --enable-alpha-plugins --enable-exec
           resource.customizations.ignoreDifferences.apps_Deployment: |
