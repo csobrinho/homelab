@@ -37,6 +37,21 @@ helmCharts:
               - "Backup"
               clusters:
               - "*"
+        rbac:
+          policy.csv: |
+            # Global monitoring role with read access to everything
+            p, role:monitoring-ro, applications, get, */*, allow
+            p, role:monitoring-ro, applications, list, */*, allow
+            p, role:monitoring-ro, clusters, get, *, allow
+            p, role:monitoring-ro, clusters, list, *, allow
+            p, role:monitoring-ro, projects, get, *, allow
+            p, role:monitoring-ro, projects, list, *, allow
+            p, role:monitoring-ro, repositories, get, *, allow
+            p, role:monitoring-ro, repositories, list, *, allow
+            p, role:monitoring-ro, logs, get, */*, allow
+
+            # Assign monitoring account to the role
+            g, monitoring, role:monitoring-ro
       controller:
         metrics:
           enabled: true
