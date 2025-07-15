@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: mqtt-explorer-ingress
+  namespace: mqtt-explorer
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`mqttx.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: mqtt-explorer
+          port: main

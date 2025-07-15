@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-explorer
+  namespace: mqtt-explorer
+spec:
+  selector:
+    matchLabels:
+      app: mqtt-explorer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mqtt-explorer
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      containers:
+        - name: mqtt-explorer
+          image: smeagolworms4/mqtt-explorer:latest@sha256:8c8a92b9727af767d840f484e22499e852203f2987f750ad384c3fc630c8b80b
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 300m
+          ports:
+            - containerPort: 4000
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+          volumeMounts:
+            - mountPath: /mqtt-explorer/config
+              name: config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: mqtt-explorer-config
