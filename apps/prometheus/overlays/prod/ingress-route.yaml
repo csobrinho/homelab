@@ -8,6 +8,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
   routes:
     - match: Host(`prometheus.sobrinho.pt`)
       kind: Rule

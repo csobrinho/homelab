@@ -8,6 +8,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
   routes:
     - match: Host(`plex.sobrinho.pt`)
       kind: Rule

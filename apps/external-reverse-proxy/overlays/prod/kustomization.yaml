@@ -4,13 +4,9 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ingress-route-infra-bcm-ext.yaml
   - ingress-route-infra-bcm.yaml
-  - ingress-route-infra-kvm-ext.yaml
   - ingress-route-infra-kvm.yaml
-  - ingress-route-infra-vm-ext.yaml
   - ingress-route-infra-vm.yaml
-  - ingress-route-unifi-ext.yaml
   - ingress-route-unifi.yaml
   - service-infra-bcm.yaml
   - service-infra-kvm.yaml

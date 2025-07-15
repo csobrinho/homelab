@@ -8,6 +8,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - websecure-ext
   routes:
     - match: Host(`llm.sobrinho.pt`)
       kind: Rule

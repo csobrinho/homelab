@@ -6,7 +6,6 @@ resources:
   - ../../base
   - dashboard-redirect.yaml
   - ingress-route.yaml
-  - ingress-route-ext.yaml
   - secrets/api-secret-enc.yaml
 
 helmCharts:
