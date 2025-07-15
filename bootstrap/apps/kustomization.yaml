@@ -11,6 +11,7 @@ resources:
   - apps/cyberchef-app.yaml
   - apps/esphome-app.yaml
   - apps/external-dns-app.yaml
+  - apps/external-reverse-proxy-app.yaml
   # - apps/gitea-app.yaml
   - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
@@ -45,7 +46,6 @@ resources:
   - apps/supermarket-app.yaml
   - apps/tautulli-app.yaml
   - apps/traefik-app.yaml
-  - apps/unifi-app.yaml
   - apps/unpackerr-app.yaml
   - apps/velero-app.yaml
   - apps/whatsapp-app.yaml

@@ -1,0 +1,19 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: infra-bcm-ingress-ext
+  namespace: infra
+spec:
+  entryPoints:
+    - websecure-ext
+  routes:
+    - match: Host(`infra-bcm.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-forward
+          namespace: traefik
+      services:
+        - name: infra-bcm
+          port: 443
+          scheme: https
+          serversTransport: traefik-transport-insecure@kubernetescrd

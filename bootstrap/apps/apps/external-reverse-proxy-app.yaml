@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: unifi
+  name: external-reverse-proxy
   namespace: argocd
 spec:
   destination:
@@ -9,5 +9,5 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: apps/unifi/overlays/prod
+    path: apps/external-reverse-proxy/overlays/prod
     repoURL: https://github.com/csobrinho/homelab

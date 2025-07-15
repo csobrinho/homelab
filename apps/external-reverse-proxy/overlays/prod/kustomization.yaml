@@ -1,0 +1,18 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/unifi/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route-infra-bcm-ext.yaml
+  - ingress-route-infra-bcm.yaml
+  - ingress-route-infra-kvm-ext.yaml
+  - ingress-route-infra-kvm.yaml
+  - ingress-route-infra-vm-ext.yaml
+  - ingress-route-infra-vm.yaml
+  - ingress-route-unifi-ext.yaml
+  - ingress-route-unifi.yaml
+  - service-infra-bcm.yaml
+  - service-infra-kvm.yaml
+  - service-infra-vm.yaml
+  - service-unifi.yaml
