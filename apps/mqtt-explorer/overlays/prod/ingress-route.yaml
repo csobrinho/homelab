@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`mqttx.sobrinho.pt`)
+    - match: Host(`mqtt.sobrinho.pt`)
       kind: Rule
       services:
         - name: mqtt-explorer

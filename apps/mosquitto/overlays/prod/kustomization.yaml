@@ -4,9 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ingress-route.yaml
   - ingress-route-mqtt.yaml
-  - ingress-route-cs.yaml
 
 helmCharts:
   - name: mosquitto
@@ -20,10 +18,6 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
-      codeserverImage:
-        repository: ghcr.io/coder/code-server
-        tag: 4.101.2
-        pullPolicy: IfNotPresent
       service:
         websockets:
           enabled: false
@@ -42,16 +36,3 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
-        cs-data:
-          enabled: true
-          retain: true
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 512Mi
-          targetSelector:
-            main:
-              codeserver:
-                mountPath: /root
-      addons:
-        codeserver:
-          enabled: true

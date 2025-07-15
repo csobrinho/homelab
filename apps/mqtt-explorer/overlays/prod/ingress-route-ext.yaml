@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure-ext
   routes:
-    - match: Host(`mqttx.sobrinho.pt`)
+    - match: Host(`mqtt.sobrinho.pt`)
       kind: Rule
       middlewares:
         - name: middleware-auth-forward
