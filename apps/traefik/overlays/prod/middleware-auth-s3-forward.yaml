@@ -20,7 +20,7 @@ spec:
         kubernetes.io/arch: arm64
       containers:
         - name: middleware-auth-s3-forward
-          image: ghcr.io/csobrinho/traefik-s3-forward-auth:main@sha256:343aa86683c5c827c30d21afdac9d760468cc4009f1b5d1efda9154aa073b667
+          image: ghcr.io/csobrinho/traefik-s3-forward-auth:main@sha256:d4b332a041e90026f282739d31c27ab233dd55b123eee18683136cf39d504dd0
           args: ["--config=/config/config.yaml"]
           resources:
             limits:
