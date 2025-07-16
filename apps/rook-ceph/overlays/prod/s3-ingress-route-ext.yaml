@@ -1,7 +1,7 @@
 kind: IngressRoute
 apiVersion: traefik.io/v1alpha1
 metadata:
-  name: ceph-s3-ingress
+  name: ceph-s3-ingress-ext
   namespace: rook-ceph
 spec:
   entryPoints:
