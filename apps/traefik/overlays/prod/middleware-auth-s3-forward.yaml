@@ -19,8 +19,9 @@ spec:
       nodeSelector:
         kubernetes.io/arch: arm64
       containers:
-        - image: ghcr.io/csobrinho/traefik-s3-forward-auth:main@sha256:4af6a30d30fb371ca7d525858f79bacc7c4c5329da811e18e1c0f5896dc3069d
-          name: middleware-auth-s3-forward
+        - name: middleware-auth-s3-forward
+          image: ghcr.io/csobrinho/traefik-s3-forward-auth:main@sha256:1e25b17b24003273978068015e5dfd9b8899e74f40444ca0b80fb893b4b7fd0b
+          args: ["--config=/config/config.yaml"]
           resources:
             limits:
               cpu: 200m
@@ -28,13 +29,6 @@ spec:
           ports:
             - containerPort: 4182
               protocol: TCP
-          env:
-            - name: CONFIG
-              value: /config/config.yaml
-            - name: LOG_LEVEL
-              value: trace
-            - name: LOG_FORMAT
-              value: pretty
           volumeMounts:
             - name: config
               mountPath: /config
