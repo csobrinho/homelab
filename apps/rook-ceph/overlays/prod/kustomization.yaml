@@ -6,6 +6,7 @@ resources:
   - ../../base
   - ingress-route.yaml
   - s3-ingress-route.yaml
+  - s3-ingress-route-ext.yaml
   - bucket-etcd.yaml
   - bucket-obdisian.yaml
 
