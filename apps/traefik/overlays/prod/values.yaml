@@ -76,8 +76,6 @@ providers:
   kubernetesCRD:
     allowExternalNameServices: true
     allowCrossNamespace: true
-  kubernetesIngress:
-    allowExternalNameServices: true
 
 tlsStore:
   default:
@@ -91,6 +89,6 @@ metrics:
 
 experimental:
   plugins:
-    s3Auth:
-      moduleName: "github.com/csobrinho/traefik-s3-auth-middleware"
-      version: v0.0.8
+    s3auth:
+      moduleName: github.com/csobrinho/traefik-plugin-s3-auth
+      version: v0.0.12

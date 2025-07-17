@@ -10,7 +10,7 @@ spec:
     - match: Host(`s3.sobrinho.pt`)
       kind: Rule
       middlewares:
-        - name: middleware-auth-s3-forward
+        - name: middleware-auth-s3
           namespace: traefik
       services:
         - name: rook-ceph-rgw-ceph-objectstore

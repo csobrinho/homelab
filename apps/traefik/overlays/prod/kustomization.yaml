@@ -5,7 +5,7 @@ resources:
   - ../../base
   - middleware-auth-basic.yaml
   - middleware-auth-forward.yaml
-  - middleware-auth-s3-forward.yaml
+  - middleware-auth-s3.yaml
   - service-external.yaml
   - service-mqtt.yaml
   - tls-option-none.yaml
@@ -13,7 +13,7 @@ resources:
   - tls-option-required.yaml
   - transport-insecure.yaml
   - secrets/middleware-auth-basic-secret-enc.yaml
-  - secrets/middleware-auth-s3-forward-secret-enc.yaml
+  - secrets/middleware-auth-s3-secret-enc.yaml
   - secrets/middleware-auth-forward-secret-enc.yaml
   - secrets/tls-ca-secret-enc.yaml
 
