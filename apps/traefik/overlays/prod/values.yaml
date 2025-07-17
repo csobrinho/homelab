@@ -88,6 +88,7 @@ metrics:
       enabled: true
 
 experimental:
+  abortOnPluginFailure: true
   plugins:
     s3auth:
       moduleName: github.com/csobrinho/traefik-plugin-s3-auth
