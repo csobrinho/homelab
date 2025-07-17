@@ -92,4 +92,4 @@ experimental:
   plugins:
     s3auth:
       moduleName: github.com/csobrinho/traefik-plugin-s3-auth
-      version: v0.0.12
+      version: v0.0.13
