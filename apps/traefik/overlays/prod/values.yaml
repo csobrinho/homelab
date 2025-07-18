@@ -98,11 +98,7 @@ metrics:
 
 experimental:
   abortOnPluginFailure: true
-  # plugins:
-  #   s3auth:
-  #     version: v0.0.13
-  #     moduleName: github.com/csobrinho/traefik-plugin-s3-auth
-  #     mountPath: /plugins-local/src/github.com/csobrinho/traefik-plugin-s3-auth
-  #     hostPath: /plugins-local/src/github.com/csobrinho/traefik-plugin-s3-auth
-additionalArguments:
-    - --experimental.localplugins.s3auth.moduleName=github.com/csobrinho/traefik-plugin-s3-auth
+  plugins:
+    s3auth:
+      moduleName: github.com/csobrinho/traefik-plugin-s3-auth
+      version: v0.0.14

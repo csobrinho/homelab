@@ -11,11 +11,11 @@ spec:
       kind: Rule
       middlewares:
         - name: middleware-auth-s3
-          namespace: traefik
+          namespace: rook-ceph
       services:
         - name: rook-ceph-rgw-ceph-objectstore
           port: 80
   tls:
     options:
-      name: mtls-requested
+      name: mtls-none
       namespace: traefik

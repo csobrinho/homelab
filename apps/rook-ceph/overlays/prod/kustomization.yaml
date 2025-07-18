@@ -5,6 +5,7 @@ namespace: rook-ceph
 resources:
   - ../../base
   - ingress-route.yaml
+  - middleware-auth-s3.yaml
   - s3-ingress-route.yaml
   - s3-ingress-route-ext.yaml
   - bucket-etcd.yaml
