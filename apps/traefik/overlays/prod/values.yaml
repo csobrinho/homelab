@@ -18,6 +18,7 @@ deployment:
       nfs:
         path: /data/config/traefik
         server: infra1
+        readOnly: true
 
 additionalVolumeMounts:
   - name: plugins-local
@@ -98,7 +99,5 @@ metrics:
 
 experimental:
   abortOnPluginFailure: true
-  plugins:
-    s3auth:
-      moduleName: github.com/csobrinho/traefik-plugin-s3-auth
-      version: v0.0.14
+additionalArguments:
+    - --experimental.localplugins.s3auth.moduleName=github.com/csobrinho/traefik-plugin-s3-auth
