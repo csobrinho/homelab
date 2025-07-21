@@ -9,9 +9,10 @@ spec:
   routes:
     - match: Host(`s3.sobrinho.pt`)
       kind: Rule
-      middlewares:
-        - name: middleware-auth-s3
-          namespace: rook-ceph
+      # Disabled for now.
+      # middlewares:
+      #   - name: middleware-auth-s3
+      #     namespace: rook-ceph
       services:
         - name: rook-ceph-rgw-ceph-objectstore
           port: 80
