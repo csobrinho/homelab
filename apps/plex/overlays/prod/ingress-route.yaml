@@ -17,5 +17,5 @@ spec:
           port: main
   tls:
     options:
-      name: mtls-requested
+      name: mtls-none
       namespace: traefik
