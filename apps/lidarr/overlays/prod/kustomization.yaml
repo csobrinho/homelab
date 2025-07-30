@@ -40,4 +40,4 @@ helmCharts:
           memory: 256Mi
       metrics:
         main:
-          enabled: true
+          enabled: false # Disabled until pvc reusage due to exportarr is fixed.
