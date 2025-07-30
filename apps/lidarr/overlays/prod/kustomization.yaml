@@ -38,6 +38,13 @@ helmCharts:
           path: /data
           server: infra1
           mountPath: /data
+      resources:
+        limits:
+          cpu: 250m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 256Mi
       metrics:
         main:
           enabled: true
