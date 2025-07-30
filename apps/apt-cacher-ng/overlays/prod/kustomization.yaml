@@ -22,6 +22,7 @@ helmCharts:
         main:
           annotations:
             metallb.io/address-pool: pool-infra-int
+            metallb.io/allow-shared-ip: infra-int
           type: LoadBalancer
           sharedKey: infra-int
       persistence:
