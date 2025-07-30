@@ -25,13 +25,6 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 5Gi
-          targetSelector:
-            main:
-              main:
-                mountPath: /config
-              exportarr:
-                mountPath: /config
-                readOnly: true
         data:
           enabled: true
           type: nfs
