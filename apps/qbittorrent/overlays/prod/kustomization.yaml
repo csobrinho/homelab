@@ -45,8 +45,8 @@ helmCharts:
         pullPolicy: IfNotPresent
         tag: master
       addons:
-        vpn:
-          type: gluetun
+        gluetun:
+          enabled: true
           killSwitch: true
           excludedNetworks_IPv4:
             - "10.10.1.0/24"
