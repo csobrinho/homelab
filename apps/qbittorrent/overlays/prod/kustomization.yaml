@@ -56,7 +56,7 @@ helmCharts:
               VPN_TYPE: wireguard
               VPN_SERVICE_PROVIDER: custom
               FIREWALL: "on"
-              FIREWALL_OUTBOUND_SUBNETS: "10.0.0.0/8"
+              FIREWALL_OUTBOUND_SUBNETS: "10.10.1.0/24"
               WIREGUARD_ENDPOINT_IP:
                 secretKeyRef:
                   name: vpn-secret
