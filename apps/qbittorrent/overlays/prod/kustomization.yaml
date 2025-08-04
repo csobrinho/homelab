@@ -17,6 +17,7 @@ helmCharts:
     valuesInline:
       TZ: America/Los_Angeles
       podOptions:
+        defaultAffinity: false
         nodeSelector:
           kubernetes.io/arch: "arm64"
       qbitportforward:
