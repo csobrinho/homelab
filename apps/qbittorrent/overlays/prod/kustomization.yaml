@@ -48,41 +48,40 @@ helmCharts:
       addons:
         gluetun:
           enabled: true
-          killSwitch: true
-          excludedNetworks_IPv4:
-            - "10.10.1.0/24"
-          excludedNetworks_IPv6: []
-          env:
-            DNS_KEEP_NAMESERVER: off
-            VPN_PORT_FORWARDING_PROVIDER: protonvpn
-            VPN_PORT_FORWARDING: on
-            VPN_TYPE: wireguard
-            VPN_SERVICE_PROVIDER: custom
-            WIREGUARD_ENDPOINT_IP:
-              secretKeyRef:
-                name: vpn-secret
-                key: WIREGUARD_ENDPOINT_IP
-                expandObjectName: false
-            WIREGUARD_ENDPOINT_PORT:
-              secretKeyRef:
-                name: vpn-secret
-                key: WIREGUARD_ENDPOINT_PORT
-                expandObjectName: false
-            WIREGUARD_PUBLIC_KEY:
-              secretKeyRef:
-                name: vpn-secret
-                key: WIREGUARD_PUBLIC_KEY
-                expandObjectName: false
-            WIREGUARD_PRIVATE_KEY:
-              secretKeyRef:
-                name: vpn-secret
-                key: WIREGUARD_PRIVATE_KEY
-                expandObjectName: false
-            WIREGUARD_ADDRESSES:
-              secretKeyRef:
-                name: vpn-secret
-                key: WIREGUARD_ADDRESSES
-                expandObjectName: false
+          container:
+            env:
+              DNS_KEEP_NAMESERVER: off
+              VPN_PORT_FORWARDING_PROVIDER: protonvpn
+              VPN_PORT_FORWARDING: on
+              VPN_TYPE: wireguard
+              VPN_SERVICE_PROVIDER: custom
+              FIREWALL: "on"
+              FIREWALL_OUTBOUND_SUBNETS: "10.0.0.0/8"
+              WIREGUARD_ENDPOINT_IP:
+                secretKeyRef:
+                  name: vpn-secret
+                  key: WIREGUARD_ENDPOINT_IP
+                  expandObjectName: false
+              WIREGUARD_ENDPOINT_PORT:
+                secretKeyRef:
+                  name: vpn-secret
+                  key: WIREGUARD_ENDPOINT_PORT
+                  expandObjectName: false
+              WIREGUARD_PUBLIC_KEY:
+                secretKeyRef:
+                  name: vpn-secret
+                  key: WIREGUARD_PUBLIC_KEY
+                  expandObjectName: false
+              WIREGUARD_PRIVATE_KEY:
+                secretKeyRef:
+                  name: vpn-secret
+                  key: WIREGUARD_PRIVATE_KEY
+                  expandObjectName: false
+              WIREGUARD_ADDRESSES:
+                secretKeyRef:
+                  name: vpn-secret
+                  key: WIREGUARD_ADDRESSES
+                  expandObjectName: false
 
 patches:
   - patch: |-
