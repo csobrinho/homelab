@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: tautulli
     namespace: media
-    version: 21.2.1
+    version: 21.2.2
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
