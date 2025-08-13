@@ -31,7 +31,7 @@ helmCharts:
           mountPath: /var/cache/apt-cacher-ng
           retain: true
           accessMode: ReadWriteOnce
-          size: 4Gi
+          size: 10Gi
           storageClass: "ceph-block"
       portal:
         open:
