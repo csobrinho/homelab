@@ -37,6 +37,8 @@ ports:
         permanent: true
   websecure:
     port: 8443
+    http3:
+      enabled: true
     expose:
       default: true
     exposedPort: 443
@@ -44,6 +46,8 @@ ports:
       enabled: true
   websecure-ext:
     port: 9443
+    http3:
+      enabled: true
     expose:
       default: false
     exposedPort: 443
