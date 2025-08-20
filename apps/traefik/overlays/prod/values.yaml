@@ -39,6 +39,7 @@ ports:
     port: 8443
     http3:
       enabled: true
+      advertisedPort: 443
     expose:
       default: true
     exposedPort: 443
@@ -48,6 +49,7 @@ ports:
     port: 9443
     http3:
       enabled: true
+      advertisedPort: 443
     expose:
       default: false
     exposedPort: 443
