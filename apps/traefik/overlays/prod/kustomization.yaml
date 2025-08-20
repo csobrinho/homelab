@@ -5,6 +5,7 @@ resources:
   - ../../base
   - middleware-auth-basic.yaml
   - middleware-auth-forward.yaml
+  - middleware-secure-headers.yaml
   - service-external.yaml
   - service-mqtt.yaml
   - tls-option-none.yaml
