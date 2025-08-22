@@ -11,7 +11,7 @@ helmCharts:
     repo: http://pajikos.github.io/home-assistant-helm-chart/
     releaseName: home-assistant
     namespace: home-assistant
-    version: 0.3.16
+    version: 0.3.17
     includeCRDs: true
     valuesInline:
       env:
