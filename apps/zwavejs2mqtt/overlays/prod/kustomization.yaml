@@ -22,7 +22,7 @@ helmCharts:
       service:
         ws:
           enabled: true
-          type: NodePort  # HomeAssistant uses host networking.
+          type: NodePort # HomeAssistant uses host networking.
           ports:
             ws:
               enabled: true
@@ -40,3 +40,8 @@ helmCharts:
           type: device
           path: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0
           hostPath: /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_6690cc8ae67ced11ba76ddf3fdf7b791-if00-port0
+        usb-zwave2:
+          enabled: true
+          type: device
+          path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+          hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00

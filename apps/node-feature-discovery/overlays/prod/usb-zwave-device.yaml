@@ -17,3 +17,15 @@ spec:
           matchExpressions:
             vendor: { op: In, value: ["10c4"] }
             device: { op: In, value: ["ea60"] }
+    - name: "zwave.zooz.present label"
+      labelsTemplate: |
+        usb-zwave.present=true
+        usb-zwave_zooz.present=true
+        {{ range .usb.device }}
+        usb-{{ .class }}_{{ .vendor }}_{{ .device }}.present=true
+        {{ end }}
+      matchFeatures:
+        - feature: usb.device
+          matchExpressions:
+            vendor: { op: In, value: ["1a86"] }
+            device: { op: In, value: ["55d4"] }
