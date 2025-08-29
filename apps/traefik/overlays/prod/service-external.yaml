@@ -12,6 +12,11 @@ spec:
     - name: websecure-ext
       port: 443
       targetPort: websecure-ext
+      protocol: TCP
+    - name: websecure-ext-http3
+      port: 443
+      targetPort: websecure-ext-h # Should be `websecure-ext-http3` but got truncated.
+      protocol: UDP
   selector:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
