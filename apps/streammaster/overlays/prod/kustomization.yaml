@@ -1,0 +1,35 @@
+# From https://github.com/truecharts/charts/blob/master/charts/stable/streammaster/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: streammaster
+    repo: oci://tccr.io/truecharts
+    releaseName: streammaster
+    namespace: media
+    version: 2.3.4
+    includeCRDs: true
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
+      persistence:
+        config:
+          enabled: true
+          mountPath: "/config"
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 512Mi
+          storageClass: "ceph-block"
+        logos:
+          enabled: true
+          mountPath: "/config/tv-logos"
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 512Mi
+          storageClass: "ceph-block"
