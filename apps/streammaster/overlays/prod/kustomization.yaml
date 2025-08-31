@@ -24,7 +24,7 @@ helmCharts:
           mountPath: "/config"
           retain: true
           accessMode: ReadWriteOnce
-          size: 512Mi
+          size: 2Gi
           storageClass: "ceph-block"
         logos:
           enabled: true
