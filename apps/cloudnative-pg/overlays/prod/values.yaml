@@ -7,5 +7,5 @@ nodeSelector:
 monitoring:
   grafanaDashboard:
     create: true
-    namespace: monitoring
+    namespace: prometheus
   podMonitorEnabled: true
