@@ -1,0 +1,15 @@
+# From https://github.com/cloudnative-pg/charts/blob/main/charts/cloudnative-pg/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: cloudnative-pg
+    repo: https://cloudnative-pg.github.io/charts
+    releaseName: cloudnative-pg
+    namespace: cnpg-system
+    version: 0.26.0
+    includeCRDs: true
+    valuesFile: values.yaml
