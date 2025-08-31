@@ -47,6 +47,7 @@ resources:
   - apps/streammaster-app.yaml
   - apps/supermarket-app.yaml
   - apps/tautulli-app.yaml
+  - apps/threadfin-app.yaml
   - apps/traefik-app.yaml
   - apps/unpackerr-app.yaml
   - apps/velero-app.yaml
