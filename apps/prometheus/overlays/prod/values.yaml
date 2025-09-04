@@ -46,7 +46,7 @@ prometheus:
       limits:
         memory: 2Gi
       requests:
-        memory: 1Gi
+        memory: 512Mi
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -54,7 +54,7 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 20Gi
+              storage: 32Gi
 
 alertmanager:
   alertmanagerSpec:
