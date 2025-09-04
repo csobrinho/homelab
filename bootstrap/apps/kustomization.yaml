@@ -44,7 +44,6 @@ resources:
   - apps/sealed-secrets-app.yaml
   - apps/snapshot-controller-app.yaml
   - apps/sonarr-app.yaml
-  - apps/streammaster-app.yaml
   - apps/supermarket-app.yaml
   - apps/tautulli-app.yaml
   - apps/threadfin-app.yaml
