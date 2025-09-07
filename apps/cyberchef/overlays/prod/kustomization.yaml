@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: cyberchef
     namespace: cyberchef
-    version: 12.3.4
+    version: 12.3.5
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
