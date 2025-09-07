@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: bazarr
     namespace: media
-    version: 22.4.4
+    version: 22.4.5
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
