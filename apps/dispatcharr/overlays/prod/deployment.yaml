@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispatcharr
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: dispatcharr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dispatcharr
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      containers:
+        - name: dispatcharr
+          image: ghcr.io/dispatcharr/dispatcharr:dev@sha256:7603bd601bac3533f7ad8488fa1823540c60007f3b984d8e89f40d7e90423678
+          resources:
+            limits:
+              gpu.intel.com/i915: "1"
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              gpu.intel.com/i915: "1"
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - containerPort: 9191
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /etc/profile.d
+              name: profile
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 105 # Add render group.
+          - 44
+          - 107
+          - 568
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dispatcharr-data
+        - name: profile
+          persistentVolumeClaim:
+            claimName: dispatcharr-profile
