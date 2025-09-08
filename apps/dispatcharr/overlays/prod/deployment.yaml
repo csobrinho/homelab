@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispatcharr
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: dispatcharr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dispatcharr
+    spec:
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
+      containers:
+        - name: dispatcharr
+          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:309d81f0a66ef97e91f288df8081cb5a0a80866f2019eec7d4d49fd1dae97bd9
+          resources:
+            limits:
+              gpu.intel.com/i915: "1"
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              gpu.intel.com/i915: "1"
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 9191
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      securityContext:
+        pod:
+          supplementalGroups: [105] # Add render group.
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dispatcharr-data
