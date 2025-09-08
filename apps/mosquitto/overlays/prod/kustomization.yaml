@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: mosquitto
     namespace: mosquitto
-    version: 17.3.5
+    version: 17.4.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
