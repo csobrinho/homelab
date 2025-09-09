@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: radarr
     namespace: media
-    version: 24.4.7
+    version: 24.5.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
