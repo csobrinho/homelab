@@ -73,6 +73,12 @@ helmCharts:
               name: resource-policy
             excludedNamespaces:
               - "llm" # Ignore the large XX GB language models.
+            includedResources:
+              - volumesnapshotclasses
+              - volumesnapshots
+              - volumesnapshotcontents
+              - "*"
+            includeClusterResources: true
             snapshotMoveData: true
             snapshotVolumes: true
             ttl: "480h0m0s" # 20 days.
