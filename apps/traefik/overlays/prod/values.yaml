@@ -92,6 +92,8 @@ providers:
   kubernetesCRD:
     allowExternalNameServices: true
     allowCrossNamespace: true
+  kubernetesGateway:
+    enabled: true
 
 tlsStore:
   default:
@@ -106,4 +108,4 @@ metrics:
 experimental:
   abortOnPluginFailure: true
 additionalArguments:
-    - --experimental.localplugins.s3auth.moduleName=github.com/csobrinho/traefik-plugin-s3-auth
+  - --experimental.localplugins.s3auth.moduleName=github.com/csobrinho/traefik-plugin-s3-auth
