@@ -19,7 +19,7 @@ helmCharts:
           containers:
             main:
               image:
-                repository: ghcr.io/mealie-recipes/mealie:latest@sha256:322369a5b748eddb091417e708f0667d21994e6119278d1b8c509900ba41e54b
+                repository: ghcr.io/mealie-recipes/mealie:latest@sha256:322369a5b748eddb091417e708f0667d21994e6119278d1b8c509900ba41e54b@sha256:322369a5b748eddb091417e708f0667d21994e6119278d1b8c509900ba41e54b
                 tag: latest
               env:
                 TZ: America/Los_Angeles
