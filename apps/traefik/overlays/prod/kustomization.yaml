@@ -15,9 +15,6 @@ resources:
   - secrets/middleware-auth-basic-secret-enc.yaml
   - secrets/middleware-auth-forward-secret-enc.yaml
   - secrets/tls-ca-secret-enc.yaml
-  # Gateway API support
-  - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
-  - https://raw.githubusercontent.com/traefik/traefik/v3.5/docs/content/reference/dynamic-configuration/kubernetes-gateway-rbac.yml
 
 configMapGenerator:
   - name: middleware-auth-forward-config
