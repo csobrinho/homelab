@@ -37,6 +37,11 @@ helmCharts:
         enabled: true
         serviceMonitor:
           enabled: true
+      validator:
+        plugin:
+          env:
+            - name: TZ
+              value: "America/Los_Angeles"
       # k3s compatibility
       toolkit:
         enabled: true
