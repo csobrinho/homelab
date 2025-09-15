@@ -15,3 +15,18 @@ spec:
       services:
         - name: dispatcharr
           port: main
+  tls:
+    secretName: dispatcharr-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: dispatcharr-cert
+  namespace: media
+spec:
+  secretName: dispatcharr-cert
+  dnsNames:
+    - dispatcharr.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -19,6 +19,20 @@ spec:
         - name: qbittorrent
           port: main
   tls:
+    secretName: qbittorrent-cert
     options:
       name: mtls-none
       namespace: traefik
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: qbittorrent-cert
+  namespace: media
+spec:
+  secretName: qbittorrent-cert
+  dnsNames:
+    - qbt.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

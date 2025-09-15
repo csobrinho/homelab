@@ -15,3 +15,18 @@ spec:
       services:
         - name: lidarr
           port: main
+  tls:
+    secretName: lidarr-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: lidarr-cert
+  namespace: media
+spec:
+  secretName: lidarr-cert
+  dnsNames:
+    - lidarr.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

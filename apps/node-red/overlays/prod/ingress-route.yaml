@@ -15,3 +15,18 @@ spec:
       services:
         - name: node-red
           port: main
+  tls:
+    secretName: node-red-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: node-red-cert
+  namespace: node-red
+spec:
+  secretName: node-red-cert
+  dnsNames:
+    - node-red.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

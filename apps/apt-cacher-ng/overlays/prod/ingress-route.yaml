@@ -15,3 +15,18 @@ spec:
       services:
         - name: apt-cacher-ng
           port: main
+  tls:
+    secretName: apt-cacher-ng-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: apt-cacher-ng-cert
+  namespace: tools
+spec:
+  secretName: apt-cacher-ng-cert
+  dnsNames:
+    - apt.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

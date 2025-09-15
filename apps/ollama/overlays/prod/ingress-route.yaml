@@ -15,3 +15,18 @@ spec:
       services:
         - name: ollama
           port: main
+  tls:
+    secretName: ollama-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: ollama-cert
+  namespace: llm
+spec:
+  secretName: ollama-cert
+  dnsNames:
+    - llm.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

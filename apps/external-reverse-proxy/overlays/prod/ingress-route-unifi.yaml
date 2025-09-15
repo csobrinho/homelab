@@ -17,3 +17,18 @@ spec:
           port: 443
           scheme: https
           serversTransport: traefik-transport-insecure@kubernetescrd
+  tls:
+    secretName: unifi-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: unifi-cert
+  namespace: infra
+spec:
+  secretName: unifi-cert
+  dnsNames:
+    - unifi.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

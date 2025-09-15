@@ -1,0 +1,13 @@
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: traefik-cert
+  namespace: traefik
+spec:
+  secretName: traefik-cert
+  dnsNames:
+    - auth.sobrinho.pt
+    - traefik.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

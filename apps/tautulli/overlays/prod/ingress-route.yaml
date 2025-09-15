@@ -15,3 +15,18 @@ spec:
       services:
         - name: tautulli
           port: main
+  tls:
+    secretName: tautulli-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: tautulli-cert
+  namespace: media
+spec:
+  secretName: tautulli-cert
+  dnsNames:
+    - tautulli.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

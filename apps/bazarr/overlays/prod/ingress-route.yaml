@@ -15,3 +15,18 @@ spec:
       services:
         - name: bazarr
           port: main
+  tls:
+    secretName: bazarr-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: bazarr-cert
+  namespace: media
+spec:
+  secretName: bazarr-cert
+  dnsNames:
+    - bazarr.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -20,3 +20,19 @@ spec:
       services:
         - name: home-assistant-codeserver
           port: codeserver
+  tls:
+    secretName: home-assistant-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: home-assistant-cert
+  namespace: home-assistant
+spec:
+  secretName: home-assistant-cert
+  dnsNames:
+    - homeassistant.sobrinho.pt
+    - homeassistant.cs.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -15,3 +15,18 @@ spec:
       services:
         - name: actual-budget
           port: main
+  tls:
+    secretName: actual-budget-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: actual-budget-cert
+  namespace: actual-budget
+spec:
+  secretName: actual-budget-cert
+  dnsNames:
+    - budget.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

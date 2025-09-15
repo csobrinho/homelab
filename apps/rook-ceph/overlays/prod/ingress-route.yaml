@@ -17,3 +17,18 @@ spec:
           port: 8443
           scheme: https
           serversTransport: traefik-transport-insecure@kubernetescrd
+  tls:
+    secretName: ceph-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: ceph-cert
+  namespace: rook-ceph
+spec:
+  secretName: ceph-cert
+  dnsNames:
+    - ceph.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

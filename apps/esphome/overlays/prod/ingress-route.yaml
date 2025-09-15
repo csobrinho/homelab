@@ -15,3 +15,18 @@ spec:
       services:
         - name: esphome
           port: main
+  tls:
+    secretName: esphome-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: esphome-cert
+  namespace: esphome
+spec:
+  secretName: esphome-cert
+  dnsNames:
+    - esphome.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

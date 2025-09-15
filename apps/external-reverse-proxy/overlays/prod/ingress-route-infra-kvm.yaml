@@ -17,3 +17,18 @@ spec:
           port: 443
           scheme: https
           serversTransport: traefik-transport-insecure@kubernetescrd
+  tls:
+    secretName: infra-kvm-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: infra-kvm-cert
+  namespace: infra
+spec:
+  secretName: infra-kvm-cert
+  dnsNames:
+    - infra-kvm.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -23,3 +23,18 @@ spec:
         - name: argocd-server
           port: http
           scheme: h2c
+  tls:
+    secretName: argocd-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: argocd-cert
+  namespace: argocd
+spec:
+  secretName: argocd-cert
+  dnsNames:
+    - argocd.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

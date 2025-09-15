@@ -15,3 +15,18 @@ spec:
       services:
         - name: mealie
           port: http
+  tls:
+    secretName: mealie-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: mealie-cert
+  namespace: mealie
+spec:
+  secretName: mealie-cert
+  dnsNames:
+    - mealie.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

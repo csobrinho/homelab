@@ -17,3 +17,18 @@ spec:
       services:
         - name: pihole-web
           port: http
+  tls:
+    secretName: pihole-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: pihole-cert
+  namespace: pihole
+spec:
+  secretName: pihole-cert
+  dnsNames:
+    - pihole.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

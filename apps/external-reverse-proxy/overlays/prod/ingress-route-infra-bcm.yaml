@@ -17,3 +17,18 @@ spec:
           port: 443
           scheme: https
           serversTransport: traefik-transport-insecure@kubernetescrd
+  tls:
+    secretName: infra-bcm-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: infra-bcm-cert
+  namespace: infra
+spec:
+  secretName: infra-bcm-cert
+  dnsNames:
+    - infra-bcm.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

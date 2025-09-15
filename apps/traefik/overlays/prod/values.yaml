@@ -87,6 +87,8 @@ ingressRoute:
     entryPoints:
       - websecure
       - websecure-ext
+    tls:
+      secretName: traefik-cert
 
 providers:
   kubernetesCRD:

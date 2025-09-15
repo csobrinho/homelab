@@ -16,6 +16,20 @@ spec:
         - name: plex
           port: main
   tls:
+    secretName: plex-cert
     options:
       name: mtls-none
       namespace: traefik
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: plex-cert
+  namespace: media
+spec:
+  secretName: plex-cert
+  dnsNames:
+    - plex.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -15,3 +15,18 @@ spec:
       services:
         - name: go-playground
           port: main
+  tls:
+    secretName: go-playground-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: go-playground-cert
+  namespace: tools
+spec:
+  secretName: go-playground-cert
+  dnsNames:
+    - gop.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -17,3 +17,18 @@ spec:
           port: main
           scheme: https
           serversTransport: traefik-transport-insecure@kubernetescrd
+  tls:
+    secretName: binner-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: binner-cert
+  namespace: binner
+spec:
+  secretName: binner-cert
+  dnsNames:
+    - binner.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

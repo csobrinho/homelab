@@ -15,3 +15,18 @@ spec:
       services:
         - name: sonarr
           port: main
+  tls:
+    secretName: sonarr-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: sonarr-cert
+  namespace: media
+spec:
+  secretName: sonarr-cert
+  dnsNames:
+    - sonarr.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

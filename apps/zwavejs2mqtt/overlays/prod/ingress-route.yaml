@@ -15,3 +15,18 @@ spec:
       services:
         - name: zwavejs2mqtt
           port: main
+  tls:
+    secretName: zwavejs2mqtt-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: zwavejs2mqtt-cert
+  namespace: home-assistant
+spec:
+  secretName: zwavejs2mqtt-cert
+  dnsNames:
+    - zwave.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

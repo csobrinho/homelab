@@ -15,3 +15,18 @@ spec:
       services:
         - name: it-tools
           port: main
+  tls:
+    secretName: it-tools-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: it-tools-cert
+  namespace: tools
+spec:
+  secretName: it-tools-cert
+  dnsNames:
+    - itt.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

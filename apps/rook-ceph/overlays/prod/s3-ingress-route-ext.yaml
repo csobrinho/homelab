@@ -17,6 +17,7 @@ spec:
         - name: rook-ceph-rgw-ceph-objectstore
           port: 80
   tls:
+    secretName: ceph-s3-cert
     options:
       name: mtls-none
       namespace: traefik

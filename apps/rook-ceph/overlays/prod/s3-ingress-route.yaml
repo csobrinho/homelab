@@ -14,3 +14,18 @@ spec:
       services:
         - name: rook-ceph-rgw-ceph-objectstore
           port: 80
+  tls:
+    secretName: ceph-s3-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: ceph-s3-cert
+  namespace: rook-ceph
+spec:
+  secretName: ceph-s3-cert
+  dnsNames:
+    - s3.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -15,3 +15,18 @@ spec:
       services:
         - name: readarr
           port: main
+  tls:
+    secretName: readarr-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: readarr-cert
+  namespace: media
+spec:
+  secretName: readarr-cert
+  dnsNames:
+    - readarr.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -104,6 +104,8 @@ spec:
       services:
         - name: middleware-auth-forward
           port: 4181
+  tls:
+    secretName: traefik-cert
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware

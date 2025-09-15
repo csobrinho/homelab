@@ -15,3 +15,18 @@ spec:
       services:
         - name: mqtt-explorer
           port: main
+  tls:
+    secretName: mqtt-explorer-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: mqtt-explorer-cert
+  namespace: mqtt-explorer
+spec:
+  secretName: mqtt-explorer-cert
+  dnsNames:
+    - mqtt.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
