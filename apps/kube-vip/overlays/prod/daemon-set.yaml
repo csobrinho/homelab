@@ -1,3 +1,17 @@
+# Based on https://kube-vip.io/docs/installation/daemonset/
+# export VIP=10.10.1.10
+# export KVVERSION=v1.0.0
+# alias kube-vip="sudo ctr image pull ghcr.io/kube-vip/kube-vip:$KVVERSION; sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:$KVVERSION vip /kube-vip"
+# kube-vip manifest daemonset \
+#     --address $VIP \
+#     --inCluster \
+#     --taint \
+#     --controlplane \
+#     --bgp \
+#     --localAS 65000 \
+#     --bgpRouterID 10.10.1.1 \
+#     --bgppeers 10.10.1.11:65000::false,10.10.1.12:65000::false,10.10.1.13:65000::false
+#
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -35,14 +49,14 @@ spec:
             - manager
           env:
             - name: vip_arp
-              value: "true"
+              value: "false"
             - name: port
               value: "6443"
             - name: vip_nodename
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: vip_cidr #                Used when advertising BGP addresses
+            - name: vip_subnet #              Used when advertising BGP addresses
               value: "32"
             - name: dns_mode
               value: first
@@ -50,20 +64,18 @@ spec:
               value: "true"
             - name: cp_namespace #            The namespace where the lease will reside
               value: kube-system
-            - name: svc_enable
-              value: "false" #                Disable for now until we migrate from metallb
-            - name: svc_leasename
-              value: plndr-svcs-lock
-            - name: vip_leaderelection #      Enables Kubernetes LeaderElection
+            - name: bgp_enable #              Enables BGP peering from kube-vip
               value: "true"
-            - name: vip_leasename
-              value: plndr-cp-lock
-            - name: vip_leaseduration #       Seconds a lease is held for
-              value: "5"
-            - name: vip_renewdeadline #       Seconds a leader can attempt to renew the lease
-              value: "3"
-            - name: vip_retryperiod #         Number of times the leader will hold the lease for
-              value: "1"
+            - name: bgp_routerid #            Typically the address of the local node
+              value: 10.10.1.1
+            - name: bgp_as #                  The AS we peer from
+              value: "65000"
+            - name: bgp_peeraddress #         Address of a single BGP Peer
+            - name: bgp_peerpass #            Password to work with a single BGP Peer 
+            - name: bgp_peeras #              AS of a single BGP Peer
+              value: "65000"
+            - name: bgp_peers #               Comma separated list of BGP peers, format: <address:AS:password:multihop>
+              value: 10.10.1.11:65000::false,10.10.1.12:65000::false,10.10.1.13:65000::false
             - name: address #                 VIP config: <IP Address> or <DNS name>. 
               value: 10.10.1.10
             - name: prometheus_server
@@ -77,6 +89,8 @@ spec:
               add:
                 - NET_ADMIN
                 - NET_RAW
+              drop:
+                - ALL
       hostNetwork: true
       serviceAccountName: kube-vip
       tolerations:
