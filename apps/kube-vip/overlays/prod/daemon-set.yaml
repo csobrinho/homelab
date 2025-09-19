@@ -64,10 +64,16 @@ spec:
               value: "true"
             - name: cp_namespace #            The namespace where the lease will reside
               value: kube-system
+            - name: svc_enable #              Enables kube-vip to watch Services of type LoadBalancer
+              value: "true"
+            - name: svc_leasename
+              value: plndr-svcs-lock
             - name: bgp_enable #              Enables BGP peering from kube-vip
               value: "true"
             - name: bgp_routerid #            Typically the address of the local node
-              value: 10.10.1.1
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: bgp_as #                  The AS we peer from
               value: "65000"
             - name: bgp_peeraddress #         Address of a single BGP Peer
