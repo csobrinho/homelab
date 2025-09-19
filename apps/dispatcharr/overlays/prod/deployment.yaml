@@ -18,7 +18,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
         - name: dispatcharr
-          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:ee41e42109e27244929ccd3001a5b4e5761731363002745aeb3aa7f24658f696
+          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:9514c8ac6733abad0f3371a04d030572d84198932d988a5a8744fb1681e5fbf6
           resources:
             limits:
               gpu.intel.com/i915: "1"
