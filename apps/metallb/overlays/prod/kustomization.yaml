@@ -4,8 +4,9 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - bgp-advertisement.yaml
+  - bgp-peer.yaml
   - ip-address-poll.yaml
-  - l2-advertisement.yaml
 
 helmCharts:
   - name: metallb

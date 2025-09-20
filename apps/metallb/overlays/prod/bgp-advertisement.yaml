@@ -1,5 +1,5 @@
 apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
+kind: BGPAdvertisement
 metadata:
   name: pool-infra-int
   namespace: metallb-system
@@ -8,7 +8,7 @@ spec:
     - pool-infra-int
 ---
 apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
+kind: BGPAdvertisement
 metadata:
   name: pool-infra-ext
   namespace: metallb-system
@@ -17,7 +17,7 @@ spec:
     - pool-infra-ext
 ---
 apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
+kind: BGPAdvertisement
 metadata:
   name: pool-infra-dns1
   namespace: metallb-system
@@ -26,7 +26,7 @@ spec:
     - pool-infra-dns1
 ---
 apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
+kind: BGPAdvertisement
 metadata:
   name: pool-infra-dns2
   namespace: metallb-system
