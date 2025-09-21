@@ -18,8 +18,8 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kube-vip-ds
-    # renovate: datasource=github-releases depName=kube-vip/kube-vip
-    app.kubernetes.io/version: v1.0.0
+    # renovate: depName=kube-vip/kube-vip
+    app.kubernetes.io/version: v0.9.0
   name: kube-vip-ds
   namespace: kube-system
 spec:
@@ -31,8 +31,8 @@ spec:
       creationTimestamp: null
       labels:
         app.kubernetes.io/name: kube-vip-ds
-        # renovate: datasource=github-releases depName=kube-vip/kube-vip
-        app.kubernetes.io/version: v1.0.0
+        # renovate: depName=kube-vip/kube-vip
+        app.kubernetes.io/version: v0.9.0
     spec:
       affinity:
         nodeAffinity:
@@ -73,12 +73,12 @@ spec:
             - name: bgp_as #                  The AS we peer from
               value: "65000"
             - name: bgp_peeraddress #         Address of a single BGP Peer
-            - name: bgp_peerpass #            Password to work with a single BGP Peer 
+            - name: bgp_peerpass #            Password to work with a single BGP Peer
             - name: bgp_peeras #              AS of a single BGP Peer
               value: "65000"
             - name: bgp_peers #               Comma separated list of BGP peers, format: <address:AS:password:multihop>
               value: 10.10.1.11:65000::false,10.10.1.12:65000::false,10.10.1.13:65000::false
-            - name: address #                 VIP config: <IP Address> or <DNS name>. 
+            - name: address #                 VIP config: <IP Address> or <DNS name>
               value: 10.10.1.10
             - name: prometheus_server
               value: :2112

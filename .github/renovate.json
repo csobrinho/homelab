@@ -1,13 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "assignees": ["csobrinho"],
+  "extends": [
+    "config:recommended"
+  ],
+  "assignees": [
+    "csobrinho"
+  ],
   "helm-values": {
-    "fileMatch": ["\\.ya?ml$"]
+    "fileMatch": [
+      "\\.ya?ml$"
+    ]
   },
   "kubernetes": {
-    "fileMatch": ["\\.ya?ml$"]
+    "fileMatch": [
+      "\\.ya?ml$"
+    ]
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.ya?ml$"],
+      "matchStrings": ["# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"],
+      "datasourceTemplate": "github-releases"
+    }
+  ],
   "automerge": true,
   "ignoreTests": true,
   "major": {
