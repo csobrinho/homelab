@@ -19,7 +19,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kube-vip-ds
     # renovate: depName=kube-vip/kube-vip
-    app.kubernetes.io/version: v0.9.2
+    app.kubernetes.io/version: v1.0.0
   name: kube-vip-ds
   namespace: kube-system
 spec:
@@ -32,7 +32,7 @@ spec:
       labels:
         app.kubernetes.io/name: kube-vip-ds
         # renovate: depName=kube-vip/kube-vip
-        app.kubernetes.io/version: v0.9.2
+        app.kubernetes.io/version: v1.0.0
     spec:
       affinity:
         nodeAffinity:
