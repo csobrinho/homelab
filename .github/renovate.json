@@ -7,20 +7,24 @@
     "csobrinho"
   ],
   "helm-values": {
-    "fileMatch": [
-      "\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
     ]
   },
   "kubernetes": {
-    "fileMatch": [
-      "\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
     ]
   },
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["\\.ya?ml$"],
-      "matchStrings": ["# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"],
+      "managerFilePatterns": [
+        "/\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"
+      ],
       "datasourceTemplate": "github-releases"
     }
   ],
