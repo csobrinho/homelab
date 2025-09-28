@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: node-red
     namespace: node-red
-    version: 22.7.0
+    version: 22.7.1
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
