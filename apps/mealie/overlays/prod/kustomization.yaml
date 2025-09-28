@@ -20,7 +20,7 @@ helmCharts:
             main:
               image:
                 repository: ghcr.io/mealie-recipes/mealie
-                tag: latest@sha256:322369a5b748eddb091417e708f0667d21994e6119278d1b8c509900ba41e54b
+                tag: latest@sha256:42a54cf1493269988eddbccfe71beaf136328e19da1a6b68c484cca4045a1c33
               env:
                 TZ: America/Los_Angeles
                 BASE_URL: mealie.sobrinho.pt
