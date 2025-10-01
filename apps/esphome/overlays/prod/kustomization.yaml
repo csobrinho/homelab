@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: esphome
     namespace: esphome
-    version: 23.10.2
+    version: 23.10.3
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
