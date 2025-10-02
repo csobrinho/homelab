@@ -49,7 +49,7 @@ helmCharts:
         proxy:
           enabled: true
           ports:
-            gluetun:
+            gluetun-proxy:
               enabled: true
               port: 8888
               protocol: "http"
