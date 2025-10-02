@@ -45,6 +45,16 @@ helmCharts:
         repository: ghcr.io/csobrinho/qbittorrent-port-forward-gluetun-server
         pullPolicy: IfNotPresent
         tag: master
+      service:
+        proxy:
+          enabled: true
+          ports:
+            gluetun:
+              enabled: true
+              port: 8888
+              protocol: "http"
+              targetPort: 8888
+          type: "ClusterIP"
       addons:
         gluetun:
           enabled: true
@@ -57,6 +67,7 @@ helmCharts:
               VPN_SERVICE_PROVIDER: custom
               FIREWALL: "on"
               FIREWALL_OUTBOUND_SUBNETS: "10.10.1.0/24"
+              FIREWALL_INPUT_PORTS: 10095,8888
               WIREGUARD_ENDPOINT_IP:
                 secretKeyRef:
                   name: vpn-secret
@@ -82,7 +93,9 @@ helmCharts:
                   name: vpn-secret
                   key: WIREGUARD_ADDRESSES
                   expandObjectName: false
-
+              HTTPPROXY: "on"
+              HTTPPROXY_LOG: "on"
+              HTTPPROXY_LISTENING_ADDRESS: ":8888"
 patches:
   - patch: |-
       - op: remove
