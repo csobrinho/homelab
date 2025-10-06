@@ -7,19 +7,12 @@ data:
   template.yaml: |
     version: v1
     volumePolicies:
-      - action:
-          type: fs-backup
-        conditions:
-          csi:
-            driver: rook-ceph.rbd.csi.ceph.com
+      # Skip NFS volumes (can't snapshot these)
       - action:
           type: skip
         conditions:
           nfs: {}
-      - action:
-          type: skip
-        conditions:
-          csi: {}
+      # Skip ephemeral volumes
       - action:
           type: skip
         conditions:
@@ -27,3 +20,4 @@ data:
             - emptyDir
             - downwardAPI
             - configmap
+            - secret
