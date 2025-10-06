@@ -68,9 +68,6 @@ helmCharts:
           useOwnerReferencesInBackup: false
           template:
             datamover: velero
-            resourcePolicy:
-              kind: configmap
-              name: resource-policy
             excludedNamespaces:
               - "llm" # Ignore the large XX GB language models.
             snapshotMoveData: true
