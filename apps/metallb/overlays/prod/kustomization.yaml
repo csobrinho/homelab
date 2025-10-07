@@ -4,8 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - bgp-advertisement.yaml
-  - bgp-peer.yaml
+  - l2-advertisement.yaml
   - ip-address-poll.yaml
 
 helmCharts:
