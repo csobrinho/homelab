@@ -34,3 +34,21 @@ metadata:
 spec:
   addresses:
     - 10.10.1.5/32
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: pool-infra-1-6
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.10.1.6/32
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: pool-infra-10-6
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.10.10.6/32
