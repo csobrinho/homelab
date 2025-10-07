@@ -15,10 +15,3 @@ helmCharts:
     namespace: metallb-system
     version: 0.15.2
     includeCRDs: true
-    valuesInline:
-      controller:
-        nodeSelector:
-          kubernetes.io/arch: arm64
-      speaker:
-        nodeSelector:
-          kubernetes.io/arch: arm64
