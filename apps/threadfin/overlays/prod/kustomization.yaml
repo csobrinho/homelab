@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: threadfin
     namespace: media
-    version: 2.7.1
+    version: 2.8.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
