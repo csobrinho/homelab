@@ -33,6 +33,7 @@ helmCharts:
         storageClass: ceph-block
         size: 2Gi
       serviceWeb:
+        externalTrafficPolicy: Cluster
         annotations:
         http:
           enabled: true
@@ -41,6 +42,7 @@ helmCharts:
           enabled: false
       webHttp: "81"
       serviceDns:
+        externalTrafficPolicy: Cluster
         annotations:
           lbipam.cilium.io/sharing-key: infra-dns1
         extraLabels:
