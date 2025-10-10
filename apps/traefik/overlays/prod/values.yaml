@@ -72,8 +72,9 @@ tolerations:
 
 service:
   annotations:
-    metallb.io/allow-shared-ip: infra-int
-    metallb.io/address-pool: pool-infra-int
+    lbipam.cilium.io/sharing-key: infra-int
+  labels:
+    io.cilium/lb-pool: pool-infra-int
 
 ingressRoute:
   dashboard:

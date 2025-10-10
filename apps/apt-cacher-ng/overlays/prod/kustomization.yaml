@@ -21,8 +21,9 @@ helmCharts:
       service:
         main:
           annotations:
-            metallb.io/address-pool: pool-infra-int
-            metallb.io/allow-shared-ip: infra-int
+            lbipam.cilium.io/sharing-key: infra-int
+          labels:
+            io.cilium/lb-pool: pool-infra-int
           type: LoadBalancer
           sharedKey: infra-int
       persistence:
