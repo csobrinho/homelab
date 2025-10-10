@@ -5,11 +5,10 @@ metadata:
   name: pool-infra-dns1
 spec:
   blocks:
-    - cidr: "10.10.10.2/32"
+    - cidr: "10.10.1.2/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-dns1
-
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
@@ -17,11 +16,10 @@ metadata:
   name: pool-infra-dns2
 spec:
   blocks:
-    - cidr: "10.10.10.3/32"
+    - cidr: "10.10.1.3/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-dns2
-
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
@@ -29,11 +27,10 @@ metadata:
   name: pool-infra-int
 spec:
   blocks:
-    - cidr: "10.10.10.4/32"
+    - cidr: "10.10.1.4/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-int
-
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
@@ -41,16 +38,26 @@ metadata:
   name: pool-infra-ext
 spec:
   blocks:
-    - cidr: "10.10.10.5/32"
+    - cidr: "10.10.1.5/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-ext
-
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: pool-infra-test
+spec:
+  blocks:
+    - cidr: "10.10.1.6/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-test
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-test10
 spec:
   blocks:
     - cidr: "10.10.10.6/32"
