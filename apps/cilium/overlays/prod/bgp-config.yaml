@@ -1,28 +1,25 @@
 ---
-apiVersion: "cilium.io/v2alpha1"
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpclusterconfig_v2.json
+apiVersion: "cilium.io/v2"
 kind: CiliumBGPClusterConfig
 metadata:
   name: cilium-bgp
 spec:
   bgpInstances:
-    - name: "instance-65001"
+    - name: "cilium"
       localASN: 65001
       peers:
-        - name: "udm-se-peer"
+        - name: "unifi"
           peerASN: 65000
           peerAddress: 10.10.1.1
           peerConfigRef:
             name: "cilium-peer"
-  # NOTE: For now allow all nodes to run BGP, later restrict to workers only.
-  # This would require the nodes to be labeled accordingly.
-  # $ kubectl label node infra{i} bgp-policy=worker
-  #
-  # nodeSelector:
-  #   matchLabels:
-  #     bgp-policy: worker
-
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: linux
 ---
-apiVersion: "cilium.io/v2alpha1"
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgppeerconfig_v2.json
+apiVersion: "cilium.io/v2"
 kind: CiliumBGPPeerConfig
 metadata:
   name: cilium-peer
@@ -35,10 +32,10 @@ spec:
       safi: unicast
       advertisements:
         matchLabels:
-          advertise: "bgp"
-
+          advertise: bgp
 ---
-apiVersion: "cilium.io/v2alpha1"
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpadvertisement_v2.json
+apiVersion: "cilium.io/v2"
 kind: CiliumBGPAdvertisement
 metadata:
   name: bgp-advertisements
@@ -46,13 +43,11 @@ metadata:
     advertise: bgp
 spec:
   advertisements:
-    - advertisementType: "PodCIDR"
+    # - advertisementType: "PodCIDR" -- Disable for now.
     - advertisementType: "Service"
       service:
         addresses:
           - LoadBalancerIP
-      selector: # Match all services.
+      selector:
         matchExpressions:
-          - key: somekey
-            operator: NotIn
-            values: ["never-used-value"]
+          - { key: somekey, operator: NotIn, values: ["never-used-value"] } # Match all services.
