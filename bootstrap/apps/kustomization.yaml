@@ -26,7 +26,6 @@ resources:
   - apps/kube-vip-app.yaml
   - apps/lidarr-app.yaml
   - apps/mealie-app.yaml
-  - apps/metallb-app.yaml
   - apps/mosquitto-app.yaml
   - apps/mqtt-explorer-app.yaml
   - apps/n8n-app.yaml
