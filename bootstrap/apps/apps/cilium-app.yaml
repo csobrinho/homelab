@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+spec:
+  destination:
+    namespace: cilium
+    name: in-cluster
+  project: default
+  source:
+    path: apps/cilium/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

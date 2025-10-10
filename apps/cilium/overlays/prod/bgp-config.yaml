@@ -1,0 +1,59 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+  bgpInstances:
+    - name: "instance-65001"
+      localASN: 65001
+      peers:
+        - name: "udm-se-peer"
+          peerASN: 65000
+          peerAddress: 10.10.1.1
+          peerConfigRef:
+            name: "cilium-peer"
+  # NOTE: For now allow all nodes to run BGP, later restrict to workers only.
+  # This would require the nodes to be labeled accordingly.
+  # $ kubectl label node infra{i} bgp-policy=worker
+  #
+  # nodeSelector:
+  #   matchLabels:
+  #     bgp-policy: worker
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPPeerConfig
+metadata:
+  name: cilium-peer
+spec:
+  authSecretRef: null
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 120
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "bgp"
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPAdvertisement
+metadata:
+  name: bgp-advertisements
+  labels:
+    advertise: bgp
+spec:
+  advertisements:
+    - advertisementType: "PodCIDR"
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector: # Match all services.
+        matchExpressions:
+          - key: somekey
+            operator: NotIn
+            values: ["never-used-value"]

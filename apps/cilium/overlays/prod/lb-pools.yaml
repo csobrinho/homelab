@@ -1,0 +1,59 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-dns1
+spec:
+  cidrs:
+    - cidr: "10.10.10.2/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-dns1
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-dns2
+spec:
+  cidrs:
+    - cidr: "10.10.10.3/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-dns2
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-int
+spec:
+  cidrs:
+    - cidr: "10.10.10.4/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-int
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-ext
+spec:
+  cidrs:
+    - cidr: "10.10.10.5/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-ext
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-test
+spec:
+  cidrs:
+    - cidr: "10.10.10.6/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-test

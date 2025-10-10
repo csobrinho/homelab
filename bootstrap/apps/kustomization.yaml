@@ -8,6 +8,7 @@ resources:
   - apps/bazarr-app.yaml
   - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
+  - apps/cilium-app.yaml
   - apps/cloudnative-pg-app.yaml
   - apps/cyberchef-app.yaml
   - apps/descheduler-app.yaml
