@@ -27,7 +27,6 @@ kind: CiliumBGPPeerConfig
 metadata:
   name: cilium-peer
 spec:
-  authSecretRef: null
   gracefulRestart:
     enabled: true
     restartTimeSeconds: 120
