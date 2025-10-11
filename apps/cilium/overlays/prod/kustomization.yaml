@@ -15,7 +15,7 @@ helmCharts:
     version: 1.18.2
     includeCRDs: true
     valuesInline:
-      k8sServiceHost: "10.10.1.10"
+      k8sServiceHost: "10.10.1.11"
       k8sServicePort: 6443
       kubeProxyReplacement: "true"
       bgpControlPlane:
@@ -42,4 +42,4 @@ helmCharts:
         serviceMonitor:
           enabled: true
           trustCRDsExist: true
-      routingMode: native
+      routingMode: tunnel # native
