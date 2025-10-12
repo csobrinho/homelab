@@ -51,10 +51,10 @@ spec:
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: pool-infra-test
+  name: pool-infra-apt
 spec:
   blocks:
     - cidr: "10.10.10.6/32"
   serviceSelector:
     matchLabels:
-      io.cilium/lb-pool: pool-infra-test
+      io.cilium/lb-pool: pool-infra-apt

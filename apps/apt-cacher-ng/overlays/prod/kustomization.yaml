@@ -20,11 +20,9 @@ helmCharts:
           kubernetes.io/arch: "amd64"
       service:
         main:
-          annotations:
-            lbipam.cilium.io/sharing-key: infra-int
-            lbipam.cilium.io/sharing-cross-namespace: "*"
+          externalTrafficPolicy: Local
           labels:
-            io.cilium/lb-pool: pool-infra-int
+            io.cilium/lb-pool: pool-infra-apt
           type: LoadBalancer
       persistence:
         apt-cacher-ng:
