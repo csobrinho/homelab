@@ -58,14 +58,15 @@ helmCharts:
             storageClass: "ceph-block"
           capacity: 5Gi
           homeMountPath: /home/jovyan
-          extraVolumeMounts:
-            - mountPath: /dev/bus/usb
-              name: dev-bus-usb
-          extraVolumes:
-            - hostPath:
-                path: /dev/bus/usb
-                type: Directory
-              name: dev-bus-usb
+          # Disable until the helm chart is fixed?
+          # extraVolumeMounts:
+          #   - mountPath: /dev/bus/usb
+          #     name: dev-bus-usb
+          # extraVolumes:
+          #   - hostPath:
+          #       path: /dev/bus/usb
+          #       type: Directory
+          #     name: dev-bus-usb
         nodeSelector:
           feature.node.kubernetes.io/usb-chipwhisperer.present: "true"
         image:
