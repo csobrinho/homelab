@@ -21,7 +21,6 @@ helmCharts:
         enabled: true
         bbr: true
       bpf:
-        datapathMode: netkit
         masquerade: true
         preallocateMaps: true
         tproxy: true
@@ -30,8 +29,6 @@ helmCharts:
         enabled: true
       dashboards:
         enabled: true
-      devices: bond+
-      enableIPv4BIGTCP: true
       endpointRoutes:
         enabled: true
       envoy:
@@ -41,7 +38,7 @@ helmCharts:
       ipam:
         mode: kubernetes
       ipv4NativeRoutingCIDR: 10.42.0.0/16
-      k8sServiceHost: 127.0.0.1
+      k8sServiceHost: 10.10.1.10
       k8sServicePort: 6443
       kubeProxyReplacement: "true"
       l2announcements:
