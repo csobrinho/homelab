@@ -40,7 +40,7 @@ helmCharts:
           server: infra1
           mountPath: /data
       plex:
-        additionalAdvertiseURL: "https://plex.sobrinho.pt"
+        additionalAdvertiseURL: "https://plex.sobrinho.pt:443,http://plex.media.svc.cluster.local:32400"
       portal:
         open:
           enabled: false
