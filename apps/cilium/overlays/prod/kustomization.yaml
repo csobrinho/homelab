@@ -16,6 +16,7 @@ helmCharts:
     includeCRDs: true
     # Based on: https://github.com/onedr0p/home-ops/blob/main/kubernetes/apps/kube-system/cilium/app/helmrelease.yaml
     valuesInline:
+      policyEnforcementMode: never # Disable for now.
       autoDirectNodeRoutes: true
       bandwidthManager:
         enabled: true
