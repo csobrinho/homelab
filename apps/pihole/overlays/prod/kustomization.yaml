@@ -42,7 +42,7 @@ helmCharts:
           enabled: false
       webHttp: "81"
       serviceDns:
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
         annotations:
           lbipam.cilium.io/sharing-key: infra-dns1
           lbipam.cilium.io/sharing-cross-namespace: "pihole"
