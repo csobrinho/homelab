@@ -45,6 +45,7 @@ helmCharts:
         externalTrafficPolicy: Cluster
         annotations:
           lbipam.cilium.io/sharing-key: infra-dns1
+          lbipam.cilium.io/sharing-cross-namespace: "pihole"
         extraLabels:
           io.cilium/lb-pool: pool-infra-dns1
         type: LoadBalancer
