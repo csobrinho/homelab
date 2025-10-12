@@ -39,8 +39,9 @@ helmCharts:
       ipam:
         mode: kubernetes
       ipv4NativeRoutingCIDR: 10.42.0.0/16
-      k8sServiceHost: 10.10.1.10
-      k8sServicePort: 6443
+      k8sServiceHost: auto
+      k8s:
+        apiServerURLs: "https://10.10.1.11:6443 https://10.10.1.12:6443 https://10.10.1.13:6443"
       kubeProxyReplacement: "true"
       l2announcements:
         enabled: false
