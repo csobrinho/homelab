@@ -1,33 +1,30 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpclusterconfig_v2.json
-apiVersion: "cilium.io/v2"
+apiVersion: cilium.io/v2
 kind: CiliumBGPClusterConfig
 metadata:
   name: cilium-bgp
 spec:
-  bgpInstances:
-    - name: "cilium"
-      localASN: 65001
-      peers:
-        - name: "unifi"
-          peerASN: 65000
-          peerAddress: 10.10.1.1
-          peerConfigRef:
-            name: "cilium-peer"
   nodeSelector:
     matchLabels:
       kubernetes.io/os: linux
       kubernetes.io/hostname: infra1
+  bgpInstances:
+    - name: cilium
+      localASN: 65001
+      peers:
+        - name: unifi
+          peerASN: 65000
+          peerAddress: 10.10.1.1
+          peerConfigRef:
+            name: cilium-peer
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgppeerconfig_v2.json
-apiVersion: "cilium.io/v2"
+apiVersion: cilium.io/v2
 kind: CiliumBGPPeerConfig
 metadata:
   name: cilium-peer
 spec:
-  gracefulRestart:
-    enabled: true
-    restartTimeSeconds: 120
   families:
     - afi: ipv4
       safi: unicast
@@ -36,7 +33,7 @@ spec:
           advertise: bgp
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpadvertisement_v2.json
-apiVersion: "cilium.io/v2"
+apiVersion: cilium.io/v2
 kind: CiliumBGPAdvertisement
 metadata:
   name: bgp-advertisements
@@ -44,11 +41,10 @@ metadata:
     advertise: bgp
 spec:
   advertisements:
-    - advertisementType: "PodCIDR"
-    - advertisementType: "Service"
+    - advertisementType: Service
       service:
         addresses:
           - LoadBalancerIP
       selector:
         matchExpressions:
-          - { key: somekey, operator: NotIn, values: ["never-used-value"] } # Match all services.
+          - { key: somekey, operator: NotIn, values: [never-used-value] } # Match all services.
