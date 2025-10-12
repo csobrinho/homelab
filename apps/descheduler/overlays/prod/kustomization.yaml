@@ -14,30 +14,22 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       kind: Deployment
-      replicas: 2
+      deschedulerPolicyAPIVersion: descheduler/v1alpha2
       deschedulerPolicy:
+        metricsProviders:
+          - source: KubernetesMetrics
         profiles:
-          - name: default
+          - name: Default
             pluginConfig:
               - name: DefaultEvictor
                 args:
                   evictFailedBarePods: true
                   evictLocalStoragePods: true
                   evictSystemCriticalPods: true
-              - name: RemoveDuplicates
-              - name: RemovePodsHavingTooManyRestarts
-                args:
-                  podRestartThreshold: 100
-                  includingInitContainers: true
-              - name: RemovePodsViolatingNodeAffinity
-                args:
-                  nodeAffinityType:
-                    - requiredDuringSchedulingIgnoredDuringExecution
-              - name: RemovePodsViolatingNodeTaints
-              - name: RemovePodsViolatingInterPodAntiAffinity
-              - name: RemovePodsViolatingTopologySpreadConstraint
               - name: LowNodeUtilization
                 args:
+                  metricsUtilization:
+                    source: KubernetesMetrics
                   thresholds:
                     cpu: 20
                     memory: 20
@@ -58,22 +50,21 @@ helmCharts:
                   excludeOwnerKinds:
                     - Job
                   minPodLifetimeSeconds: 1800
+              - name: RemovePodsViolatingInterPodAntiAffinity
+              - name: RemovePodsViolatingNodeAffinity
+                args:
+                  nodeAffinityType:
+                    - requiredDuringSchedulingIgnoredDuringExecution
+              - name: RemovePodsViolatingNodeTaints
+              - name: RemovePodsViolatingTopologySpreadConstraint
             plugins:
               balance:
                 enabled:
-                  - RemoveDuplicates
-                  - RemovePodsViolatingTopologySpreadConstraint
                   - LowNodeUtilization
+                  - RemovePodsViolatingTopologySpreadConstraint
               deschedule:
                 enabled:
-                  - RemovePodsHavingTooManyRestarts
-                  - RemovePodsViolatingNodeTaints
-                  - RemovePodsViolatingNodeAffinity
-                  - RemovePodsViolatingInterPodAntiAffinity
                   - RemoveFailedPods
-      service:
-        enabled: true
-      serviceMonitor:
-        enabled: true
-      leaderElection:
-        enabled: true
+                  - RemovePodsViolatingInterPodAntiAffinity
+                  - RemovePodsViolatingNodeAffinity
+                  - RemovePodsViolatingNodeTaints
