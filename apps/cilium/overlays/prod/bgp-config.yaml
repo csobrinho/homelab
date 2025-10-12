@@ -44,7 +44,7 @@ metadata:
     advertise: bgp
 spec:
   advertisements:
-    # - advertisementType: "PodCIDR" -- Disable for now.
+    - advertisementType: "PodCIDR"
     - advertisementType: "Service"
       service:
         addresses:
