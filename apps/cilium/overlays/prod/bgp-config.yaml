@@ -8,7 +8,6 @@ spec:
   nodeSelector:
     matchLabels:
       kubernetes.io/os: linux
-      kubernetes.io/hostname: infra1
   bgpInstances:
     - name: cilium
       localASN: 65001
