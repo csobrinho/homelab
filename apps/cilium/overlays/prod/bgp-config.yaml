@@ -24,6 +24,9 @@ kind: CiliumBGPPeerConfig
 metadata:
   name: cilium-peer
 spec:
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 15
   families:
     - afi: ipv4
       safi: unicast
@@ -40,6 +43,7 @@ metadata:
     advertise: bgp
 spec:
   advertisements:
+    - advertisementType: PodCIDR
     - advertisementType: Service
       service:
         addresses:
