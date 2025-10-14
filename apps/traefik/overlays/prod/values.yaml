@@ -13,16 +13,6 @@ logs:
 
 deployment:
   kind: DaemonSet
-  additionalVolumes:
-    - name: plugins-local
-      nfs:
-        path: /data/config/traefik
-        server: infra1
-        readOnly: true
-
-additionalVolumeMounts:
-  - name: plugins-local
-    mountPath: /plugins-local
 
 ports:
   web:
