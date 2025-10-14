@@ -7,4 +7,4 @@ id="$1"
 version="$2"
 [[ "$id" -ge 4 && "$id" -le 12 ]] || { echo "infra id must be between 4..12"; exit 1; }
 
-ssh infra$id "k3sup join --ip '10.10.1.1$id' --server-ip 10.10.1.10 --k3s-channel stable --k3s-version '$version' --user sobrinho --ssh-key '$HOME/.ssh/raspberrypi_id_rsa'"
+ssh infra$id "k3sup join --ip '10.10.2.1$id' --server-ip 10.10.2.10 --k3s-channel stable --k3s-version '$version' --user sobrinho --ssh-key '$HOME/.ssh/raspberrypi_id_rsa'"

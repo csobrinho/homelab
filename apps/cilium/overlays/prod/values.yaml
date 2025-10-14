@@ -1,0 +1,92 @@
+#
+# See https://docs.cilium.io/en/stable/helm-reference
+# Also based on: https://github.com/onedr0p/home-ops/blob/main/kubernetes/apps/kube-system/cilium/app/helmrelease.yaml
+#
+bgpControlPlane:                      # Routing with BGP
+  enabled: true
+routingMode: native                   # Use native routing with BGP
+autoDirectNodeRoutes: true            # Direct node-to-node routing
+ipv4NativeRoutingCIDR: 10.42.0.0/16   # Your pod CIDR
+policyEnforcementMode: never          # Don't use NetworkPolicies (faster)
+bpfClockProbe: true                   # Auto-detect best clock source
+
+# kube-proxy Replacement
+kubeProxyReplacement: true            # eBPF replaces iptables
+
+# Kubernetes config.
+k8s:
+  apiServerURLs: "https://10.10.1.11:6443 https://10.10.1.12:6443 https://10.10.1.13:6443 https://10.10.2.11:6443 https://10.10.2.12:6443 https://10.10.2.13:6443"
+
+# Datapath
+bpf:
+  masquerade: true                    # BPF-based masquerading (faster than iptables)
+  preallocateMaps: true               # Pre-allocate BPF maps (reduces latency spikes)
+  tproxy: true                        # Transparent proxy support.
+  # datapathMode: netkit              # Modern kernel interface (kernel 6.8+).
+  lbExternalClusterIP: false          # Unless you need external access to ClusterIPs
+
+# Load Balancer (choose based on network topology)
+loadBalancer:
+  mode: hybrid                        # DSR is performed for TCP and SNAT for UDP connections. 
+  dsrDispatch: opt                    # Or "ipip" for certain scenarios
+  algorithm: maglev                   # Better load distribution than random
+###  acceleration: best-effort        # XDP acceleration if NIC supports it. -- Keeps resetting the NIC!!
+                                      # Intel x710 should support it with i40e >= 4.13 driver.
+
+# Performance features
+bandwidthManager:
+  enabled: true                       # EDT-based pacing
+  bbr: true                           # BBR congestion control
+endpointRoutes:
+  enabled: true                       # Per-endpoint routes (better than veth pairs)
+###enableIPv4BIGTCP: true                # Larger GSO/GRO segments (kernel 5.19+)
+###pmtuDiscovery:
+###  enabled: true                       # Avoid fragmentation
+localRedirectPolicy: true             # Avoid extra hops for local services
+
+# Monitoring (enable only if needed)
+hubble:
+  enabled: false                      # Enable for debugging only
+prometheus:
+  enabled: true                       # Minimal overhead, useful metrics
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
+dashboards:                           # Grafana dashboards.
+  enabled: true
+
+# IP Address Management
+ipam:
+  mode: kubernetes
+
+# devices: (enp+|eth)                 # Devices to monitor
+
+# Disable unused features
+ipv6:
+  enable: false
+encryption:
+  enabled: false                      # WireGuard/IPsec adds overhead
+hostFirewall:
+  enabled: false
+envoy:
+  enabled: false
+l2announcements:
+  enabled: false
+
+# Socket LB bypass
+###socketLB:
+###  enabled: true                       # Socket-level load balancing
+###  hostNamespaceOnly: false            # Apply to all namespaces
+
+# Operator.
+operator:
+  dashboards:
+    enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  replicas: 2
+  rollOutPods: true
+
+rollOutCiliumPods: true               # Restart Cilium pods on config change

@@ -19,7 +19,7 @@ helmCharts:
       hostname: "pihole"
       virtualHost: pihole.sobrinho.pt
       hostNetwork: true
-      DNS1: 10.10.1.1
+      DNS1: 10.10.2.1
       DNS2: ""
       nodeSelector:
         kubernetes.io/arch: arm64

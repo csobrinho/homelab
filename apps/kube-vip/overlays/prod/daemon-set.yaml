@@ -1,5 +1,5 @@
 # Based on https://kube-vip.io/docs/installation/daemonset/
-# export VIP=10.10.1.10
+# export VIP=10.10.2.10
 # export KVVERSION=v1.0.0
 # alias kube-vip="sudo ctr image pull ghcr.io/kube-vip/kube-vip:$KVVERSION; sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:$KVVERSION vip /kube-vip"
 # kube-vip manifest daemonset \
@@ -9,8 +9,8 @@
 #     --controlplane \
 #     --bgp \
 #     --localAS 65000 \
-#     --bgpRouterID 10.10.1.1 \
-#     --bgppeers 10.10.1.11:65000::false,10.10.1.12:65000::false,10.10.1.13:65000::false
+#     --bgpRouterID 10.10.2.1 \
+#     --bgppeers 10.10.2.11:65000::false,10.10.2.12:65000::false,10.10.2.13:65000::false
 #
 apiVersion: apps/v1
 kind: DaemonSet
@@ -79,7 +79,7 @@ spec:
             - name: vip_retryperiod #         Number of times the leader will hold the lease for
               value: "1"
             - name: address #                 VIP config: <IP Address> or <DNS name>
-              value: 10.10.1.10
+              value: 10.10.2.10
             - name: prometheus_server
               value: :2112
           image: ghcr.io/kube-vip/kube-vip:v1.0.1

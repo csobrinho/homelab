@@ -29,7 +29,7 @@ Control plane should look like:
 ```
 ExecStart=/usr/local/bin/k3s \
     server \
-    '--server' 'https://10.10.1.10:6443' \
+    '--server' 'https://10.10.2.10:6443' \
     '--disable' 'servicelb,traefik' \
     '--embedded-registry' \
     '--flannel-backend' 'none' \
@@ -60,14 +60,8 @@ ip link show flannel.1  # Should return error
 ```sh
 export KUBECONFIG=~/.kube/config
 
-cilium install \
-  --set ipam.operator.clusterPoolIPv4PodCIDRList="10.42.0.0/16" \
-  --set bgpControlPlane.enabled=true \
-  --set k8sServiceHost=10.10.1.10 \
-  --set k8sServicePort=6443 \
-  --set kubeProxyReplacement=true
+cilium install --version 1.18.2 --values apps/cilium/overlays/prod/values.yaml
 
 # Wait for Cilium to be ready
 cilium status --wait
 ```
-
