@@ -15,7 +15,7 @@ kubeProxyReplacement: true            # eBPF replaces iptables
 
 # Kubernetes config.
 k8s:
-  apiServerURLs: "https://10.10.1.11:6443 https://10.10.1.12:6443 https://10.10.1.13:6443 https://10.10.2.11:6443 https://10.10.2.12:6443 https://10.10.2.13:6443"
+  apiServerURLs: "https://10.10.2.11:6443 https://10.10.2.12:6443 https://10.10.2.13:6443"
 
 # Datapath
 bpf:
