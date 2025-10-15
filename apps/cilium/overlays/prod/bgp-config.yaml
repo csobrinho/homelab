@@ -24,6 +24,9 @@ kind: CiliumBGPPeerConfig
 metadata:
   name: cilium-peer
 spec:
+  timers:
+    holdTimeSeconds: 9
+    keepAliveTimeSeconds: 3
   gracefulRestart:
     enabled: true
     restartTimeSeconds: 15
@@ -43,7 +46,7 @@ metadata:
     advertise: bgp
 spec:
   advertisements:
-    - advertisementType: PodCIDR
+    # - advertisementType: PodCIDR -- Disabled for now.
     - advertisementType: Service
       service:
         addresses:
