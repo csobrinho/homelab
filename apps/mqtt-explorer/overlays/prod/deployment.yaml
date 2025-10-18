@@ -19,6 +19,7 @@ spec:
       containers:
         - name: mqtt-explorer
           image: smeagolworms4/mqtt-explorer:latest@sha256:8c8a92b9727af767d840f484e22499e852203f2987f750ad384c3fc630c8b80b
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
               memory: 512Mi

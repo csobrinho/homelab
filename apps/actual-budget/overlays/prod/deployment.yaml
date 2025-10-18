@@ -19,6 +19,7 @@ spec:
       containers:
         - name: actual-budget
           image: ghcr.io/actualbudget/actual:25.10.0
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
               memory: 384Mi
