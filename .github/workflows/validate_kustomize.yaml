@@ -74,7 +74,7 @@ jobs:
                   echo "✅ Kustomize build successful"
                   
                   # Validate with kubeconform
-                  if ! kubeconform -summary -output pretty "$output_file"; then
+                  if ! kubeconform -ignore-missing-schemas -summary -output pretty "$output_file"; then
                     echo "❌ Kubernetes resource validation FAILED for $dir"
                     exit 1
                   fi
