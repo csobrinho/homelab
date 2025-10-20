@@ -96,11 +96,4 @@ jobs:
             echo "ℹ️  No Kustomize directories were modified in this PR"
           else
             echo "✅ All validations completed successfully!"
-          fi                fi
-                break
-              fi
-              dir=$(dirname "$dir")
-            done
-          done
-          
-          echo "✅ All validations completed!"
+          fi
