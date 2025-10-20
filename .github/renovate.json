@@ -51,7 +51,7 @@
     }
   ],
   "automerge": true,
-  "ignoreTests": true,
+  "ignoreTests": false,
   "major": {
     "automerge": false
   }
