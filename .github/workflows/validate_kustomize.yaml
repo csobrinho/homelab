@@ -15,7 +15,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -29,8 +29,11 @@ jobs:
         with:
           version: '3.19.0'
       
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v4
+      - name: Install kubeconform
+        run: |
+          wget https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar xf kubeconform-linux-amd64.tar.gz
+          sudo mv kubeconform /usr/local/bin/
       
       - name: Find and validate changed Kustomize directories
         run: |
@@ -43,6 +46,9 @@ jobs:
           echo "$changed_files"
           echo ""
           
+          # Track if we found any directories
+          found_dirs=false
+          
           # Find unique Kustomize directories
           declare -A seen_dirs
           
@@ -53,21 +59,44 @@ jobs:
               if [ -f "$dir/kustomization.yaml" ] || [ -f "$dir/kustomization.yml" ]; then
                 if [ -z "${seen_dirs[$dir]}" ]; then
                   seen_dirs[$dir]=1
+                  found_dirs=true
                   
                   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                   echo "🔍 Validating: $dir"
                   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                   
-                  # Build with Kustomize (helm repos auto-added)
+                  # Build with Kustomize
                   output_file="/tmp/$(echo $dir | tr '/' '_')-output.yaml"
-                  kustomize build --enable-helm "$dir" > "$output_file"
+                  if ! kustomize build --enable-helm "$dir" > "$output_file"; then
+                    echo "❌ Kustomize build FAILED for $dir"
+                    exit 1
+                  fi
                   echo "✅ Kustomize build successful"
                   
-                  # Validate with kubectl
-                  kubectl apply --dry-run=client -f "$output_file"
-                  echo "✅ kubectl dry-run successful"
+                  # Validate with kubeconform
+                  if ! kubeconform -summary -output pretty "$output_file"; then
+                    echo "❌ Kubernetes resource validation FAILED for $dir"
+                    exit 1
+                  fi
+                  echo "✅ Kubernetes validation successful"
+                  
+                  # Show stats
+                  echo "📊 Stats:"
+                  echo "   Lines: $(wc -l < $output_file)"
+                  echo "   Resources: $(grep -c '^kind:' $output_file || echo 0)"
                   echo ""
                 fi
+                break
+              fi
+              dir=$(dirname "$dir")
+            done
+          done
+          
+          if [ "$found_dirs" = false ]; then
+            echo "ℹ️  No Kustomize directories were modified in this PR"
+          else
+            echo "✅ All validations completed successfully!"
+          fi                fi
                 break
               fi
               dir=$(dirname "$dir")
