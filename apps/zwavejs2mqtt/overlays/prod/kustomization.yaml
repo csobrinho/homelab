@@ -29,7 +29,12 @@ helmCharts:
               nodePort: 30046
               targetPort: 3000
       securityContext:
-        privileged: true
+        container:
+          readOnlyRootFilesystem: true
+          privileged: true
+          runAsNonRoot: false
+          runAsGroup: 0
+          runAsUser: 0
       persistence:
         config:
           enabled: true
