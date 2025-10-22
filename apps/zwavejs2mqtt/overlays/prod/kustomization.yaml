@@ -38,6 +38,6 @@ helmCharts:
         usb-zwave:
           enabled: true
           type: hostPath
-          path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+          mountPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
           hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
           hostPathType: CharDevice
