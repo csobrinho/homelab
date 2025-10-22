@@ -28,6 +28,9 @@ helmCharts:
               enabled: true
               nodePort: 30046
               targetPort: 3000
+      podSecurityContext:
+        supplementalGroups:
+          - 20  # dialout group
       persistence:
         config:
           enabled: true
