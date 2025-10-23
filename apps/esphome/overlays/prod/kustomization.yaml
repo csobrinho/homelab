@@ -27,6 +27,13 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
+        platformio:
+          enabled: true
+          retain: true
+          mountPath: /root/.platformio
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+          size: 8Gi
         cache:
           enabled: true
           retain: true
