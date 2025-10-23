@@ -29,9 +29,18 @@ helmCharts:
           size: 256Mi
         cache:
           enabled: true
-          type: emptyDir
-          size: 5Gi
+          retain: true
+          storageClass: "ceph-block"
+          accessMode: ReadWriteOnce
+          size: 8Gi
         build:
           enabled: true
           type: emptyDir
           size: 8Gi
+      resources:
+        limits:
+          cpu: 3000m
+          memory: 1Gi
+        requests:
+          cpu: 75m
+          memory: 200Mi
