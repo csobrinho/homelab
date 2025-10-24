@@ -6,25 +6,43 @@
   "assignees": [
     "csobrinho"
   ],
-  "stabilityDays": 4,
+  "minimumReleaseAge": "4 days",
   "prConcurrentLimit": 0,
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["patch"],
-      "schedule": ["before 6am on saturday"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "schedule": [
+        "before 6am on saturday"
+      ],
       "automerge": true
     },
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["minor"],
-      "schedule": ["before 6am on saturday every 2 weeks"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "schedule": [
+        "before 6am on saturday every 2 weeks"
+      ],
       "automerge": true
     },
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
-      "schedule": ["before 6am on saturday"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "schedule": [
+        "before 6am on saturday"
+      ],
       "automerge": false
     }
   ],
