@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://tccr.io/truecharts
     releaseName: go-playground
     namespace: tools
-    version: 8.11.0
+    version: 8.11.1
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
