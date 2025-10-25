@@ -64,7 +64,7 @@ helmCharts:
       schedules:
         cluster-full-backup:
           disabled: false
-          schedule: "24 7,13,22 * * *"
+          schedule: "24 2 * * *"
           useOwnerReferencesInBackup: false
           template:
             datamover: velero
@@ -72,7 +72,7 @@ helmCharts:
               - "llm" # Ignore the large XX GB language models.
             snapshotMoveData: true
             snapshotVolumes: true
-            ttl: "480h0m0s" # 20 days.
+            ttl: "240h0m0s" # 10 days.
             uploaderConfig:
               parallelFilesUpload: 10
       nodeAgent:
