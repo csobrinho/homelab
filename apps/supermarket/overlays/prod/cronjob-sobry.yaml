@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: supermarket
-              image: ghcr.io/csobrinho/supermarket-api:main@sha256:cf26a21d514e45aaaf5687f1325d5f42ad8a32fff7a05683b117a1ea42336452
+              image: ghcr.io/csobrinho/supermarket-api:main@sha256:89bfae6cb8aae1cef3375a93f6003f6fd3f1983768590d57d719a7c0a19661c3
               imagePullPolicy: IfNotPresent
               resources:
                 limits:
