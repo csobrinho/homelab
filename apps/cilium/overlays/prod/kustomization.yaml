@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - bgp-config.yaml
+  - control-plane.yaml
   - lb-pools.yaml
 
 helmCharts:
