@@ -10,7 +10,7 @@ helmCharts:
     repo: https://kubernetes-sigs.github.io/descheduler/
     releaseName: descheduler
     namespace: kube-system
-    version: 0.33.0
+    version: 0.34.0
     includeCRDs: true
     valuesInline:
       kind: Deployment
