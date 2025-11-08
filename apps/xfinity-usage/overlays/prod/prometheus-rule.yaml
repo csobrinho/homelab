@@ -1,0 +1,69 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: xfinity-usage-alerts
+  namespace: tools
+spec:
+  groups:
+    - name: xfinity-usage
+      interval: 30s
+      rules:
+        # Alert when 3+ failures in last hour (warning)
+        - alert: XfinityUsageMultipleFailures
+          expr: increase(xfinity_usage_runs_total[1h]) - increase(xfinity_usage_runs_success_total[1h]) >= 3
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Xfinity usage has {{ $value }} failures in the last hour"
+            description: "The xfinity-usage job has failed {{ $value }} times in the last hour."
+
+        # Alert when 6+ failures in last 2 hours (critical)
+        - alert: XfinityUsageFrequentFailures
+          expr: increase(xfinity_usage_runs_total[2h]) - increase(xfinity_usage_runs_success_total[2h]) >= 6
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Xfinity usage has {{ $value }} failures in the last 2 hours"
+            description: "The xfinity-usage job has failed {{ $value }} times in the last 2 hours. Immediate attention required."
+
+        # Alert when no successful runs in 2 hours (critical)
+        - alert: XfinityUsageNoSuccessfulRuns
+          expr: increase(xfinity_usage_runs_success_total[2h]) == 0 and increase(xfinity_usage_runs_total[2h]) > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Xfinity usage has had no successful runs in 2 hours"
+            description: "The xfinity-usage job has attempted {{ $value }} runs but had zero successes in the last 2 hours."
+
+        # Alert when job hasn't run at all in 1 hour (critical - likely CronJob issue)
+        - alert: XfinityUsageJobStalled
+          expr: increase(xfinity_usage_runs_total[1h]) == 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Xfinity usage job appears stalled"
+            description: "The xfinity-usage CronJob hasn't executed at all in the last hour. Expected runs every 20 minutes."
+
+        # Alert on high token refresh error rate (3+ in 6 hours)
+        - alert: XfinityUsageTokenRefreshIssues
+          expr: increase(xfinity_usage_errors_total{category="token_refresh"}[6h]) >= 3
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Xfinity usage experiencing token refresh issues"
+            description: "Token refresh has failed {{ $value }} times in the last 6 hours. Credentials may need verification."
+
+        # Alert on high usage fetch error rate (3+ in 6 hours)
+        - alert: XfinityUsageDataFetchIssues
+          expr: increase(xfinity_usage_errors_total{category="usage_fetch"}[6h]) >= 3
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Xfinity usage experiencing data fetch issues"
+            description: "Usage data fetch has failed {{ $value }} times in the last 6 hours. Xfinity API may be having issues."

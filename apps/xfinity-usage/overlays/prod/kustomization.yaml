@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - ../../base
   - cronjob.yaml
+  - prometheus-rule.yaml
   - secrets/xfinity-usage-secret-enc.yaml
