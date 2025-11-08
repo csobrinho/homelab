@@ -25,6 +25,7 @@ helmCharts:
       # From https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-pushgateway/values.yaml
       serviceMonitor:
         enabled: true
+        namespace: prometheus
       resources:
         limits:
           cpu: 200m
