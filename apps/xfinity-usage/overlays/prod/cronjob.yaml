@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: xfinity-usage
-              image: ghcr.io/csobrinho/xfinity-usage:main@sha256:dd5d02757daf3e69b71731954e482781a6d8f6b26322eface459016e8f967e5d
+              image: ghcr.io/csobrinho/xfinity-usage:main@sha256:8b93f896e41014d03dc6f483d207cc0bb61e37184fa1a555a6f7130f2edc93a2
               imagePullPolicy: IfNotPresent
               resources:
                 limits:
@@ -30,6 +30,8 @@ spec:
                   value: America/Los_Angeles
                 - name: MQTT_URL
                   value: "mqtt://mosquitto.mosquitto.svc.cluster.local:1883"
+                - name: PROMETHEUS_ENDPOINT
+                  value: "http://kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
               envFrom:
                 - secretRef:
                     name: xfinity-usage-secret
