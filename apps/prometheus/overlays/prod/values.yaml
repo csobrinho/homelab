@@ -44,6 +44,7 @@ prometheus:
     walCompression: true
     additionalArgs:
       - name: storage.tsdb.no-lockfile # To avoid issues when the container is forced killed.
+    maximumStartupDurationSeconds: 1800 # 30 minutes to allow for WAL replay on large datasets.
     resources:
       limits:
         memory: 2.5Gi
