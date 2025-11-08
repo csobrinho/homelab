@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - gluetun-auth-config.yaml
   - ingress-route.yaml
   - secrets/vpn-secret-enc.yaml
 
@@ -37,6 +38,18 @@ helmCharts:
           path: /data
           server: infra1
           mountPath: /data
+        gluetun-auth:
+          enabled: true
+          type: configmap
+          objectName: gluetun-auth-config
+          expandObjectName: false
+          mountPath: /gluetun/auth
+          targetSelector:
+            main:
+              main:
+                enabled: false
+              gluetun:
+                enabled: true
       gluetunImage:
         repository: ghcr.io/qdm12/gluetun
         tag: v3.40

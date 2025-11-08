@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gluetun-auth-config
+  namespace: media
+data:
+  config.toml: |
+    [[roles]]
+    name = "public"
+    routes = ["GET /v1/openvpn/portforwarded"]
+    auth = "none"
