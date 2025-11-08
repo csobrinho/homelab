@@ -80,7 +80,7 @@ helmCharts:
               VPN_SERVICE_PROVIDER: custom
               FIREWALL: "on"
               FIREWALL_OUTBOUND_SUBNETS: "10.10.2.0/24"
-              FIREWALL_INPUT_PORTS: 10095,8888
+              FIREWALL_INPUT_PORTS: 10095,8888,8000
               WIREGUARD_ENDPOINT_IP:
                 secretKeyRef:
                   name: vpn-secret
