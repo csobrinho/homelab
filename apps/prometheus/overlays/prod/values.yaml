@@ -42,9 +42,11 @@ prometheus:
     retention: 2d
     enableAdminAPI: true
     walCompression: true
+    additionalArgs:
+      - name: storage.tsdb.no-lockfile # To avoid issues when the container is forced killed.
     resources:
       limits:
-        memory: 2Gi
+        memory: 2.5Gi
       requests:
         memory: 512Mi
     storageSpec:
