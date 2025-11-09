@@ -61,6 +61,11 @@ prometheus:
             requests:
               storage: 32Gi
 
+containers:
+  - name: prometheus
+    startupProbe:
+      failureThreshold: 1000 # To allow for WAL replay on large datasets.
+
 alertmanager:
   alertmanagerSpec:
     externalUrl: https://alertmanager.sobrinho.pt
