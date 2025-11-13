@@ -31,7 +31,7 @@ spec:
                 - name: MQTT_URL
                   value: "mqtt://mosquitto.mosquitto.svc.cluster.local:1883"
                 - name: PROMETHEUS_ENDPOINT
-                  value: "http://prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+                  value: "http://infra-prometheus:9091"
               envFrom:
                 - secretRef:
                     name: xfinity-usage-secret

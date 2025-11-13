@@ -25,6 +25,11 @@ spec:
       services:
         - name: kube-prometheus-stack-grafana
           port: 80
+    - match: Host(`pushgateway.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: prometheus-pushgateway
+          port: 9091
   tls:
     secretName: prometheus-cert
 ---
@@ -39,6 +44,7 @@ spec:
     - prometheus.sobrinho.pt
     - alertmanager.sobrinho.pt
     - grafana.sobrinho.pt
+    - pushgateway.sobrinho.pt
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

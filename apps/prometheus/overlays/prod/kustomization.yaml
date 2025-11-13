@@ -26,6 +26,10 @@ helmCharts:
       serviceMonitor:
         enabled: true
         namespace: prometheus
+      service:
+        type: LoadBalancer
+      serviceLabels:
+        io.cilium/lb-pool: pool-infra-prometheus
       resources:
         limits:
           cpu: 200m
