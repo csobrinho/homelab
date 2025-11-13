@@ -28,6 +28,8 @@ helmCharts:
         namespace: prometheus
       service:
         type: LoadBalancer
+      serviceAnnotations:
+        external-dns.alpha.kubernetes.io/hostname: infra-prometheus
       serviceLabels:
         io.cilium/lb-pool: pool-infra-prometheus
       resources:
