@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-api-proxy
+  namespace: kube-system
+spec:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: kube-api-proxy
+  template:
+    metadata:
+      labels:
+        app: kube-api-proxy
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: socat
+          image: alpine/socat:1.8.0.1
+          args:
+            - "TCP-LISTEN:6443,fork,reuseaddr"
+            - "TCP:kubernetes.default.svc.cluster.local:443"
+          ports:
+            - containerPort: 6443
+              name: https
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 6443
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 6443
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 100m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-api-proxy
+  namespace: kube-system
+  labels:
+    io.cilium/lb-pool: pool-infra-adm
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: kube-api-proxy
+  ports:
+    - name: https
+      port: 6443
+      protocol: TCP
+      targetPort: 6443
