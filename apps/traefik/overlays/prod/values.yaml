@@ -64,6 +64,7 @@ service:
   annotations:
     lbipam.cilium.io/sharing-key: infra-int
     lbipam.cilium.io/sharing-cross-namespace: "*"
+    external-dns.alpha.kubernetes.io/hostname: infra-int
   labels:
     io.cilium/lb-pool: pool-infra-int
 
