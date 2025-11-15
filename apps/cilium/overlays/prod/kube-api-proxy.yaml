@@ -24,7 +24,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: socat
-          image: alpine/socat:1.8.0.1
+          image: alpine/socat:1.8.0.3
           args:
             - "TCP-LISTEN:6443,fork,reuseaddr"
             - "TCP:kubernetes.default.svc.cluster.local:443"
