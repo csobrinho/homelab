@@ -22,10 +22,11 @@ helmCharts:
           - name: Default
             pluginConfig:
               - name: DefaultEvictor
-                args:
-                  evictFailedBarePods: true
-                  evictLocalStoragePods: true
-                  evictSystemCriticalPods: true
+                podProtections:
+                  defaultDisabled:
+                    - FailedBarePods
+                    - PodsWithLocalStorage
+                    - SystemCriticalPods
               - name: LowNodeUtilization
                 args:
                   metricsUtilization:
