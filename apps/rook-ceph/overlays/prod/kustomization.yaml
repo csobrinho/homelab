@@ -10,13 +10,14 @@ resources:
   - middleware-auth-s3.yaml
   - s3-ingress-route-ext.yaml
   - s3-ingress-route.yaml
+  - secrets/k3s-etcd-snapshot-secret-enc.yaml
 
 helmCharts:
   - name: rook-ceph
     releaseName: rook-ceph
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.18.7
+    version: v1.18.6
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph/values.yaml
     valuesInline:
