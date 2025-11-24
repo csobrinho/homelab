@@ -12,8 +12,11 @@ spec:
     path: apps/nvidia-gpu-operator/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
   ignoreDifferences:
-    - group: "nvidia.com"
+    - group: nvidia.com
       kind: ClusterPolicy
       name: cluster-policy
       jsonPointers:
         - /spec/migManager/config/name
+        # Remove CDI default configuration to avoid issues with argo-cd sync.
+        # See https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/release-notes.html#v25-10-0
+        - /spec/cdi/default
