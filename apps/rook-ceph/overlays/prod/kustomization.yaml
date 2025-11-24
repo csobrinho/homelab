@@ -10,7 +10,6 @@ resources:
   - middleware-auth-s3.yaml
   - s3-ingress-route-ext.yaml
   - s3-ingress-route.yaml
-  - secrets/k3s-etcd-snapshot-secret-enc.yaml
 
 helmCharts:
   - name: rook-ceph

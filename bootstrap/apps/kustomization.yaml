@@ -19,6 +19,7 @@ resources:
   # - apps/gitea-app.yaml
   - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
+  - apps/initial-setup-app.yaml
   - apps/intel-gpu-plugin-app.yaml
   - apps/ipmi-server-app.yaml
   - apps/it-tools-app.yaml
