@@ -49,14 +49,16 @@ spec:
                 secretKeyRef:
                   name: whatsapp-secret
                   key: API_KEY
-            - name: WHATSAPP_API_KEY_EXCLUDE_PATH
-              value: ping
-            - name: WAHA_DASHBOARD_PASSWORD #      Disable dashboard password until the 401 issue is resolved.
-            - name: WAHA_DASHBOARD_NO_PASSWORD
-              value: "True"
-            - name: WHATSAPP_SWAGGER_PASSWORD #    Disable swagger password until the 401 issue is resolved.
-            - name: WHATSAPP_SWAGGER_NO_PASSWORD
-              value: "True"
+            - name: WAHA_DASHBOARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: whatsapp-secret
+                  key: PASSWORD
+            - name: WHATSAPP_SWAGGER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: whatsapp-secret
+                  key: PASSWORD
           resources:
             limits:
               cpu: 300m
