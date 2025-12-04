@@ -70,3 +70,11 @@ patches:
       version: v1
       kind: StatefulSet
       name: home-assistant
+  - patch: |-
+      - op: add
+        path: /metadata/labels/io.cilium~1lb-pool
+        value: pool-infra-home-assistant
+    target:
+      version: v1
+      kind: Service
+      name: home-assistant

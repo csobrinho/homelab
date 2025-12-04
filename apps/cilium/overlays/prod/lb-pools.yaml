@@ -75,6 +75,18 @@ spec:
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
+  name: pool-infra-home-assistant
+spec:
+  blocks:
+    - cidr: "10.10.10.8/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-home-assistant
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
   name: pool-infra-adm
 spec:
   blocks:
