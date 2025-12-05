@@ -20,6 +20,8 @@ helmCharts:
       service:
         type: LoadBalancer
         port: 8123
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: infra-home-assistant
       hostPort:
         enabled: true
         port: 8123
