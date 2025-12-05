@@ -18,7 +18,7 @@ helmCharts:
         - name: TZ
           value: America/Los_Angeles
       service:
-        type: NodePort
+        type: LoadBalancer
         port: 8123
       hostPort:
         enabled: true
