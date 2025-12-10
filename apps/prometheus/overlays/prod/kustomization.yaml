@@ -19,7 +19,7 @@ helmCharts:
     repo: https://prometheus-community.github.io/helm-charts
     releaseName: prometheus-pushgateway
     namespace: prometheus
-    version: 3.5.0
+    version: 3.6.0
     includeCRDs: true
     valuesInline:
       # From https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-pushgateway/values.yaml
