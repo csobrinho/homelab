@@ -18,7 +18,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
         - name: dispatcharr
-          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:0798b03927e12ceef4a154c0dd28e044a3ca5196ecbe76c41cb45ff65d9163ce
+          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:430916afb02bc748cfba780bc331a80ffbc1b00eeb78919626e27a8652e03e3f
           imagePullPolicy: IfNotPresent
           command: ['sh', '-c']
           args:
