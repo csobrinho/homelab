@@ -35,13 +35,6 @@ helmCharts:
                       name: unpackerr-secret
                       key: UN_RADARR_0_API_KEY
                       expandObjectName: false
-                  UN_READARR_0_URL: https://readarr.sobrinho.pt
-                  UN_READARR_0_PATHS_0: /data/torrents/books
-                  UN_READARR_0_API_KEY:
-                    secretKeyRef:
-                      name: unpackerr-secret
-                      key: UN_READARR_0_API_KEY
-                      expandObjectName: false
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
