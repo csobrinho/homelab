@@ -52,7 +52,7 @@ helmCharts:
                 enabled: true
       gluetunImage:
         repository: ghcr.io/qdm12/gluetun
-        tag: v3.40
+        tag: v3.41
         pullPolicy: IfNotPresent
       qbitportforwardImage:
         repository: ghcr.io/csobrinho/qbittorrent-port-forward-gluetun-server
