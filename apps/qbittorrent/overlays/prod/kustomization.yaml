@@ -10,7 +10,7 @@ resources:
 
 helmCharts:
   - name: qbittorrent
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: qbittorrent
     namespace: media
     version: 24.2.7
@@ -54,10 +54,20 @@ helmCharts:
         repository: ghcr.io/qdm12/gluetun
         tag: v3.41
         pullPolicy: IfNotPresent
-      qbitportforwardImage:
-        repository: ghcr.io/csobrinho/qbittorrent-port-forward-gluetun-server
-        pullPolicy: IfNotPresent
-        tag: master
+      workload:
+        qbitportforward:
+          podSpec:
+            nodeSelector:
+              kubernetes.io/arch: "amd64"
+            containers:
+              qbitportforward:
+                resources:
+                  limits:
+                    memory: 256Mi
+                    cpu: 250m
+                  requests:
+                    memory: 128Mi
+                    cpu: 100m
       service:
         proxy:
           enabled: true
