@@ -42,10 +42,8 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
-            - name: DISPATCHARR_LOG_LEVEL
-              value: "info"
-            - name: CELERY_NICE_LEVEL
-              value: '5'
+            - name: DJANGO_SECRET_KEY
+              value: "123456"
           volumeMounts:
             - mountPath: /data
               name: data
