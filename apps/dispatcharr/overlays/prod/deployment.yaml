@@ -18,7 +18,7 @@ spec:
         kubernetes.io/arch: "amd64"
       containers:
         - name: dispatcharr
-          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:a095aff4160ce932ada009bdb75a0d5b06d6f7da05fa385589a080fc628e4983
+          image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:0798b03927e12ceef4a154c0dd28e044a3ca5196ecbe76c41cb45ff65d9163ce
           imagePullPolicy: IfNotPresent
           command: ['sh', '-c']
           args:
@@ -42,8 +42,10 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
-            - name: DJANGO_SECRET_KEY
-              value: "123456"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+            - name: CELERY_NICE_LEVEL
+              value: '5'
           volumeMounts:
             - mountPath: /data
               name: data
