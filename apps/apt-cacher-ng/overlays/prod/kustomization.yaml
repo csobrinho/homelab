@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: apt-cacher-ng
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: apt-cacher-ng
     namespace: tools
     version: 11.13.5

@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: plex
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: plex
     namespace: media
     version: 21.2.6

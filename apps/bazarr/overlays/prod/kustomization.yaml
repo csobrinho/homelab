@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: bazarr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: bazarr
     namespace: media
     version: 23.2.6

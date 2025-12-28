@@ -9,7 +9,7 @@ resources:
 
 helmCharts:
   - name: node-red
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: node-red
     namespace: node-red
     version: 22.14.6

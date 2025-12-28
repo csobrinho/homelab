@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: overseerr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: overseerr
     namespace: media
     version: 16.13.5

@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: radarr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: radarr
     namespace: media
     version: 26.3.6

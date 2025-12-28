@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: zwavejs2mqtt
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: zwavejs2mqtt
     namespace: home-assistant
     version: 24.18.3

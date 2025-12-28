@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: mosquitto
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: mosquitto
     namespace: mosquitto
     version: 17.13.5

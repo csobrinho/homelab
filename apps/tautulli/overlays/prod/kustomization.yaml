@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: tautulli
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: tautulli
     namespace: media
     version: 21.14.5

@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: ollama
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: ollama
     namespace: llm
     version: 8.15.0

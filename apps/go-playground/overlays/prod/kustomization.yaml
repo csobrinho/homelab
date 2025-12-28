@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: go-playground
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: go-playground
     namespace: tools
     version: 8.13.5

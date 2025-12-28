@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: sonarr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: sonarr
     namespace: media
     version: 25.2.6

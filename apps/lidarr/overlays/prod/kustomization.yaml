@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: lidarr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: lidarr
     namespace: media
     version: 28.3.8

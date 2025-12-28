@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: prowlarr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: prowlarr
     namespace: media
     version: 21.3.7

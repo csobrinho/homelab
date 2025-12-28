@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: unpackerr
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: unpackerr
     namespace: media
     version: 16.13.5

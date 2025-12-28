@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: it-tools
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: it-tools
     namespace: tools
     version: 8.13.5

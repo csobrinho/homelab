@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: gitea
-    repo: oci://tccr.io/truecharts
+    repo: oci://oci.trueforge.org/truecharts
     releaseName: gitea
     namespace: gitea
     version: 22.22.3
