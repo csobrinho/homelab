@@ -23,7 +23,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: teamarr
-          image: ghcr.io/teamarr/teamarr:main@sha256:f72771184704a2ba912097d20c3bd2c23762c79b925104cdcac11b09a49945d4
+          image: ghcr.io/egyptiangio/teamarr:main@sha256:f72771184704a2ba912097d20c3bd2c23762c79b925104cdcac11b09a49945d4
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
