@@ -49,5 +49,5 @@ helmCharts:
           cpu: 3000m
           memory: 1Gi
         requests:
-          cpu: 75m
+          cpu: 750m
           memory: 200Mi
