@@ -29,8 +29,6 @@ spec:
               gpu.intel.com/i915: "1"
               cpu: 250m
               memory: 256Mi
-          securityContext:
-            privileged: true
           ports:
             - containerPort: 9191
           env:
@@ -41,8 +39,6 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: data
-            - mountPath: /etc/profile.d
-              name: profile
       securityContext:
         supplementalGroups:
           - 105 # Add render group.
@@ -53,6 +49,3 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: dispatcharr-data
-        - name: profile
-          persistentVolumeClaim:
-            claimName: dispatcharr-profile
