@@ -20,12 +20,6 @@ spec:
         - name: dispatcharr
           image: ghcr.io/dispatcharr/dispatcharr:latest@sha256:0798b03927e12ceef4a154c0dd28e044a3ca5196ecbe76c41cb45ff65d9163ce
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c']
-          args:
-            - >
-              sed -i 's/$$(CELERY_NICE_LEVEL)/5/g' /app/docker/uwsgi.ini; egrep
-              '5|CELERY_NICE_LEVEL' /app/docker/uwsgi.ini;
-              /app/docker/entrypoint.sh
           resources:
             limits:
               gpu.intel.com/i915: "1"
@@ -42,10 +36,8 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
-            - name: DISPATCHARR_LOG_LEVEL
-              value: "info"
-            - name: CELERY_NICE_LEVEL
-              value: '5'
+            - name: DISPATCHARR_PORT
+              value: $(DISPATCHARR_SERVICE_PORT)
           volumeMounts:
             - mountPath: /data
               name: data
