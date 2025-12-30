@@ -39,11 +39,11 @@ helmCharts:
           retain: true
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
-          size: 8Gi
+          size: 24Gi
         build:
           enabled: true
           type: emptyDir
-          size: 8Gi
+          size: 12Gi
       resources:
         limits:
           cpu: 3000m
