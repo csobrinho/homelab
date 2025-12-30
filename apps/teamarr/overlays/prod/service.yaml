@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamarr
+  namespace: media
+spec:
+  selector:
+    app: teamarr
+  ports:
+    - name: main
+      port: 9195
+      targetPort: 9195
