@@ -47,7 +47,7 @@ spec:
             - name: TZ
               value: America/Los_Angeles
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /app/data
               name: data
             - mountPath: /tmp
               name: tmp
