@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://8gears.container-registry.com/library
     releaseName: n8n
     namespace: llm
-    version: 1.0.15
+    version: 2.0.1
     includeCRDs: true
     valuesInline:
       main:
