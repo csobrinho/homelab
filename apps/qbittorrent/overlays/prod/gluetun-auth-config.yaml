@@ -7,5 +7,5 @@ data:
   config.toml: |
     [[roles]]
     name = "public"
-    routes = ["GET /v1/openvpn/portforwarded"]
+    routes = ["GET /v1/portforward"]
     auth = "none"
