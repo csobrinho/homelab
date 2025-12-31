@@ -82,7 +82,7 @@ helmCharts:
           # Reduce the memory consuption so that they fit on 4 CPUs and 8GB ram.
           mgr:
             limits:
-              memory: 750Mi # Default: 1Gi
+              memory: 1Gi
             requests:
               cpu: 500m #     Default: 500m
               memory: 256Mi # Default: 512Mi
