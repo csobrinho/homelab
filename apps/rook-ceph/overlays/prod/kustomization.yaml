@@ -48,6 +48,7 @@ helmCharts:
           modules:
             - name: rook
               enabled: true
+        removeOSDsIfOutAndSafeToRemove: true
         storage:
           useAllNodes: false
           useAllDevices: false
