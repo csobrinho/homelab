@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bentopdf
+  namespace: argocd
+spec:
+  destination:
+    namespace: tools
+    name: in-cluster
+  project: default
+  source:
+    path: apps/bentopdf/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

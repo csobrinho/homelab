@@ -1,0 +1,45 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: bentopdf-ingress
+  namespace: tools
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`pdf.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: bentopdf-headers
+      services:
+        - name: bentopdf
+          port: http
+  tls:
+    secretName: bentopdf-cert
+---
+kind: Middleware
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: bentopdf-headers
+  namespace: tools
+spec:
+  headers:
+    customResponseHeaders:
+      Cross-Origin-Opener-Policy: same-origin
+      Cross-Origin-Embedder-Policy: require-corp
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: bentopdf-cert
+  namespace: tools
+spec:
+  secretName: bentopdf-cert
+  dnsNames:
+    - pdf.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

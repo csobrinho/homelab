@@ -6,6 +6,7 @@ resources:
   - apps/apt-cacher-ng-app.yaml
   - apps/argocd-app.yaml
   - apps/bazarr-app.yaml
+  - apps/bentopdf-app.yaml
   - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
   - apps/cilium-app.yaml
