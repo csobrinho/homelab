@@ -1,4 +1,5 @@
-# From https://github.com/truecharts/charts/blob/master/charts/stable/dispatcharr/values.yaml
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/library/common/values.yaml
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/stable/dispatcharr/values.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
