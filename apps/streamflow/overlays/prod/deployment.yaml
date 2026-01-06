@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamflow
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: streamflow
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: streamflow
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "arm64"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: streamflow
+          image: ghcr.io/krinkuto11/streamflow:latest@sha256:e96b771eaf740aede462966b1de737ce5953de871b25ac6472c7dc3403fb9aa5
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256Mi
+            requests:
+              cpu: 150m
+              memory: 128Mi
+          ports:
+            - name: main
+              containerPort: 5000
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+          volumeMounts:
+            - mountPath: /app/data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: streamflow-data
+        - name: tmp
+          emptyDir: {}

@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: streamflow
+  namespace: argocd
+spec:
+  destination:
+    namespace: media
+    name: in-cluster
+  project: default
+  source:
+    path: apps/streamflow/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
