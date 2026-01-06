@@ -26,6 +26,3 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 2Gi
-      portal:
-        open:
-          enabled: false

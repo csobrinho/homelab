@@ -34,9 +34,6 @@ helmCharts:
       metrics:
         main:
           enabled: false
-      portal:
-        open:
-          enabled: false
       configmap:
         dashboard:
           enabled: false

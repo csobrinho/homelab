@@ -42,9 +42,6 @@ helmCharts:
           mountPath: /data
       plex:
         additionalAdvertiseURL: "https://plex.sobrinho.pt:443,http://plex.media.svc.cluster.local:32400"
-      portal:
-        open:
-          enabled: false
       resources:
         limits:
           gpu.intel.com/i915: "1"

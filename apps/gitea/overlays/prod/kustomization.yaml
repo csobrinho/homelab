@@ -24,9 +24,6 @@ helmCharts:
           enabled: false
       memcached:
         enabled: false
-      portal:
-        open:
-          enabled: false
       metrics:
         main:
           enabled: false

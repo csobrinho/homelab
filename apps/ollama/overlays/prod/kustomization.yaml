@@ -58,6 +58,3 @@ helmCharts:
           retain: true
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
-      portal:
-        open:
-          enabled: false

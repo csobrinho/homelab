@@ -32,6 +32,3 @@ helmCharts:
           path: /data
           server: infra1
           mountPath: /data
-      portal:
-        open:
-          enabled: false
