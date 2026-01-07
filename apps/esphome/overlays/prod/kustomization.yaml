@@ -48,7 +48,7 @@ helmCharts:
       resources:
         limits:
           cpu: 3000m
-          memory: 1Gi
+          memory: 1.5Gi
         requests:
           cpu: 750m
           memory: 200Mi
