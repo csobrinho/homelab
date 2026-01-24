@@ -10,7 +10,7 @@ helmCharts:
     repo: https://prometheus-community.github.io/helm-charts
     releaseName: kube-prometheus-stack
     namespace: prometheus
-    version: 81.1.0
+    version: 81.2.0
     includeCRDs: true
     # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     valuesFile: values.yaml
