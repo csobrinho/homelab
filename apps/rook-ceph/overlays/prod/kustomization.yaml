@@ -32,7 +32,7 @@ helmCharts:
     releaseName: rook-release
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.18.9
+    version: v1.19.0
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph-cluster/values.yaml
     valuesInline:
