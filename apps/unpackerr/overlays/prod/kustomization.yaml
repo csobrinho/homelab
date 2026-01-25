@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: unpackerr
     namespace: media
-    version: 16.13.5
+    version: 16.13.13
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
