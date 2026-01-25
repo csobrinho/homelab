@@ -41,6 +41,8 @@ helmCharts:
         enabled: true
       monitoring:
         enabled: true
+      cephImage:
+        imagePullPolicy: IfNotPresent
       cephClusterSpec:
         mgr:
           count: 2
