@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: tautulli
     namespace: media
-    version: 21.14.5
+    version: 21.14.13
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
