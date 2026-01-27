@@ -27,27 +27,29 @@ ports:
         permanent: true
   websecure:
     port: 8443
-    http3:
-      enabled: true
-      advertisedPort: 443
     expose:
       default: true
     exposedPort: 443
-    tls:
-      enabled: true
-  websecure-ext:
-    port: 9443
+    http:
+      tls:
+        enabled: true
     http3:
       enabled: true
       advertisedPort: 443
+  websecure-ext:
+    port: 9443
     expose:
       default: false
     exposedPort: 443
-    tls:
+    http:
+      tls:
+        enabled: true
+        options: "traefik-mtls-required"
+      middlewares:
+        - traefik-middleware-auth-forward@kubernetescrd
+    http3:
       enabled: true
-      options: "traefik-mtls-required"
-    middlewares:
-      - traefik-middleware-auth-forward@kubernetescrd
+      advertisedPort: 443
   mqtt:
     port: 9883
     expose:
