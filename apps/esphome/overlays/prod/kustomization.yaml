@@ -45,6 +45,12 @@ helmCharts:
           enabled: true
           type: emptyDir
           size: 12Gi
+        dev:
+          enabled: true
+          type: nfs
+          path: /data/dev/esphome
+          server: infra1
+          mountPath: /development
       resources:
         limits:
           cpu: 3000m
