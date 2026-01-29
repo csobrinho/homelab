@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: qbittorrent
     namespace: media
-    version: 24.2.17
+    version: 24.2.20
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
