@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: apt-cacher-ng
     namespace: tools
-    version: 11.13.13
+    version: 11.13.15
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
