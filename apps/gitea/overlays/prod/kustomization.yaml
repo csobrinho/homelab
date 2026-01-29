@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: gitea
     namespace: gitea
-    version: 22.22.3
+    version: 22.27.29
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
