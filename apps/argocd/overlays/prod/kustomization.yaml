@@ -24,6 +24,7 @@ helmCharts:
           server.insecure: true
         cm:
           accounts.monitoring: apiKey
+          accounts.node-red: apiKey
           exec.enabled: true
           kustomize.buildOptions: --enable-helm --enable-alpha-plugins --enable-exec
           resource.customizations.ignoreDifferences.apps_Deployment: |
@@ -51,6 +52,13 @@ helmCharts:
 
             # Assign monitoring account to the role
             g, monitoring, role:monitoring-ro
+
+            # Allow node-red to restart its own deployment
+            p, role:node-red, applications, get, default/node-red, allow
+            p, role:node-red, applications, action/apps/Deployment/restart, default/node-red, allow
+
+            # Assign node-red account to the role
+            g, node-red, role:node-red
       controller:
         metrics:
           enabled: true
