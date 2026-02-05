@@ -6,4 +6,4 @@ resources:
   - ../../base
   - cronjob.yaml
   - secrets/xfinity-usage-secret-enc.yaml
-  - https://github.com/csobrinho/xfinity-usage//prometheus?ref=f336a628ed60b223422fa9432cf736f7f2fb935a
+  - https://github.com/csobrinho/xfinity-usage//prometheus?ref=b2e9ad537b5db9e06f2f29ae723ae68740c9cf71
