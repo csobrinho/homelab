@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: prowlarr
     namespace: media
-    version: 21.3.19
+    version: 21.3.20
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
