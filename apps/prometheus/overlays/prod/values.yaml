@@ -1,3 +1,4 @@
+# From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
 nameOverride: prometheus
 
 defaultRules:
@@ -78,7 +79,77 @@ alertmanager:
           resources:
             requests:
               storage: 5Gi
+  config:
+    route:
+      group_by: ["alertname", "severity"]
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 4h
+      receiver: "webhook-general"
+      routes:
+        # Critical alerts - immediate notification.
+        - match:
+            severity: critical
+          receiver: "webhook-critical"
+          group_wait: 10s
+          repeat_interval: 30m
+        # Warning alerts - less frequent.
+        - match:
+            severity: warning
+          receiver: "webhook-warning"
+          group_wait: 5m
+          repeat_interval: 12h
+    receivers:
+      - name: "webhook-critical"
+        webhook_configs:
+          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/critical"
+            send_resolved: true
+            http_config:
+              follow_redirects: true
+      - name: "webhook-warning"
+        webhook_configs:
+          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/warning"
+            send_resolved: true
+            http_config:
+              follow_redirects: true
+      - name: "webhook-general"
+        webhook_configs:
+          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/general"
+            send_resolved: true
+            http_config:
+              follow_redirects: true
+    inhibit_rules:
+      # Existing rules from https://github.com/prometheus-community/helm-charts/blob/e383011a042d4abf70b0163a1fa95589d57f1298/charts/kube-prometheus-stack/values.yaml#L512-L533
+      - source_matchers:
+          - 'severity = critical'
+        target_matchers:
+          - 'severity =~ warning|info'
+        equal:
+          - 'namespace'
+          - 'alertname'
+      - source_matchers:
+          - 'severity = warning'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - 'namespace'
+          - 'alertname'
+      - source_matchers:
+          - 'alertname = InfoInhibitor'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - 'namespace'
+      - target_matchers:
+          - 'alertname = InfoInhibitor'
 
+      # Added rules.
+      # Suppress detailed alerts when top-level cluster health fails.
+      - source_match:
+          alertname: "CephHealthError"
+          severity: "critical"
+        target_match_re:
+          alertname: "^Ceph(OSD|PG|Mon|Pool).*"
 grafana:
   defaultDashboardsTimezone: America/Los_Angeles
 
