@@ -8,3 +8,4 @@ resources:
   - secrets/supermarket-secret-enc.yaml
   - secrets/supermarket-user-judy-secret-enc.yaml
   - secrets/supermarket-user-sobry-secret-enc.yaml
+  - https://github.com/csobrinho/supermarket-api//prometheus?ref=89095914e4d1e831d8c7617651108207f4508235
