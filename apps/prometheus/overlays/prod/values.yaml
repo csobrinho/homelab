@@ -12,17 +12,13 @@ defaultRules:
     kubeApiserverBurnrate: true
     kubeApiserverHistogram: true
     kubeApiserverSlos: true
-    kubeControllerManager: true
     kubelet: true
-    kubeProxy: true
     kubePrometheusGeneral: true
     kubePrometheusNodeRecording: true
     kubernetesApps: true
     kubernetesResources: true
     kubernetesStorage: true
     kubernetesSystem: true
-    kubeSchedulerAlerting: true
-    kubeSchedulerRecording: true
     kubeStateMetrics: true
     network: true
     node: true
@@ -30,6 +26,11 @@ defaultRules:
     nodeExporterRecording: true
     prometheus: true
     prometheusOperator: true
+    # Disabled.
+    kubeControllerManager: false
+    kubeProxy: false
+    kubeSchedulerAlerting: false
+    kubeSchedulerRecording: false
 
 prometheus:
   prometheusSpec:
@@ -103,3 +104,12 @@ prometheus-node-exporter:
       effect: NoExecute
       operator: Exists
       tolerationSeconds: 60
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
