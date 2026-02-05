@@ -41,6 +41,7 @@ helmCharts:
         enabled: true
       monitoring:
         enabled: true
+        createPrometheusRules: true
       cephImage:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
