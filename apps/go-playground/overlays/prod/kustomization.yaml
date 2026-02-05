@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: go-playground
     namespace: tools
-    version: 8.13.16
+    version: 8.13.17
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
