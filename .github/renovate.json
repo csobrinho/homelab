@@ -8,6 +8,7 @@
   ],
   "minimumReleaseAge": "4 days",
   "prConcurrentLimit": 0,
+  "fetchReleaseNotes": "pr",
   "packageRules": [
     {
       "matchDatasources": [
