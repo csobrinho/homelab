@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: plex
     namespace: media
-    version: 21.3.1
+    version: 21.3.2
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
