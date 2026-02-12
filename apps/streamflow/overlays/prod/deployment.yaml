@@ -23,7 +23,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: streamflow
-          image: ghcr.io/krinkuto11/streamflow:latest@sha256:f19581f320e180a52747e58705f076f357a1961fb83f98b775882484c7289eb9
+          image: ghcr.io/krinkuto11/streamflow:latest@sha256:538b81344d4abfa98ead167ef0e2ac0ebeec9f63ed9087b009430c23d734d29f
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
