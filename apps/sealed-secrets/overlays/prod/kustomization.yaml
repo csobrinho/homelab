@@ -10,7 +10,7 @@ helmCharts:
     repo: https://bitnami-labs.github.io/sealed-secrets
     releaseName: sealed-secrets
     namespace: kube-system
-    version: 2.18.0
+    version: 2.18.1
     includeCRDs: true
     valuesInline:
       podOptions:
