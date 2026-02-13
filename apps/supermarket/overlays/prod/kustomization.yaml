@@ -2,10 +2,20 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
-  - cronjob-judy.yaml
-  - cronjob-sobry.yaml
   - secrets/supermarket-secret-enc.yaml
-  - secrets/supermarket-user-judy-secret-enc.yaml
-  - secrets/supermarket-user-sobry-secret-enc.yaml
   - https://github.com/csobrinho/supermarket-api//prometheus?ref=7205249d1ee50e950859b1f61ba3eef966c769a7
+
+helmCharts:
+  - name: supermarket
+    releaseName: supermarket
+    namespace: tools
+    valuesInline:
+      image: ghcr.io/csobrinho/supermarket-api:main@sha256:ccd0808c5a7613b3cb10506684c221d6f47a3997a1f1b87a5e742829334832e0
+      users:
+        - name: sobry
+          schedule: "0 * * * *"
+        - name: judy
+          schedule: "2 * * * *"
+
+helmGlobals:
+  chartHome: helm

@@ -1,0 +1,3 @@
+image: ghcr.io/csobrinho/supermarket-api:main
+secret: supermarket-secret
+users: []
