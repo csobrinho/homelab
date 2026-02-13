@@ -1,9 +1,10 @@
 {{- range $i, $user := .Values.users }}
+{{- $name := printf "supermarket-%s" $user.name }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: supermarket-{{ $user.name }}
+  name: {{ $name }}
 spec:
   schedule: {{ $user.schedule | quote }}
   concurrencyPolicy: Replace
@@ -30,15 +31,15 @@ spec:
                 - name: TZ
                   value: America/Los_Angeles
                 - name: USER_AGENT
-                  value: okhttp/4.12.0
+                  value: {{ $.Values.userAgent }}
                 - name: CLIP_ALL
                   value: "true"
                 - name: APP_VERSION
-                  value: "2025.12.0"
+                  value: {{ $.Values.appVersion | quote }}
                 - name: PROMETHEUS_ENDPOINT
                   value: "http://infra-prometheus:9091"
                 - name: PROMETHEUS_JOB
-                  value: supermarket-{{ $user.name }}
+                  value: {{ $name }}
                 - name: CLIENT_ID
                   valueFrom:
                     secretKeyRef:
