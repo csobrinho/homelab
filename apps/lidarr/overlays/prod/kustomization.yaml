@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: lidarr
     namespace: media
-    version: 28.4.2
+    version: 28.4.3
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
