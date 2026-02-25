@@ -15,6 +15,11 @@ spec:
       services:
         - name: esphome
           port: main
+    - match: Host(`esphome.cs.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: esphome-codeserver
+          port: codeserver
   tls:
     secretName: esphome-cert
 ---
@@ -27,6 +32,7 @@ spec:
   secretName: esphome-cert
   dnsNames:
     - esphome.sobrinho.pt
+    - esphome.cs.sobrinho.pt
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

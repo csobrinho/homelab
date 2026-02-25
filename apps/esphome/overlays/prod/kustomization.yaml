@@ -58,3 +58,6 @@ helmCharts:
         requests:
           cpu: 750m
           memory: 200Mi
+      addons:
+        codeserver:
+          enabled: true
