@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: xfinity-usage
-              image: ghcr.io/csobrinho/xfinity-usage:0.3.1@sha256:d95b0065b9d95fca48a1a14c2186738273398bdbef0a3b551af02381cd663511
+              image: ghcr.io/csobrinho/xfinity-usage:0.3.2@sha256:1b7a7f04194a796d07f2e68159345ad260274e7c70a795061f987baeecb3bb99
               imagePullPolicy: IfNotPresent
               resources:
                 limits:
