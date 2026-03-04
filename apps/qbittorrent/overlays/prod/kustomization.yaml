@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - gluetun-auth-config.yaml
   - ingress-route.yaml
   - secrets/vpn-secret-enc.yaml
 
@@ -21,10 +20,6 @@ helmCharts:
         defaultAffinity: false
         nodeSelector:
           kubernetes.io/arch: "arm64"
-      qbitportforward:
-        enabled: true
-        QBT_USERNAME: ""
-        QBT_PASSWORD: ""
       persistence:
         config:
           enabled: true
@@ -38,36 +33,10 @@ helmCharts:
           path: /data
           server: infra1
           mountPath: /data
-        gluetun-auth:
-          enabled: true
-          type: configmap
-          objectName: gluetun-auth-config
-          expandObjectName: false
-          mountPath: /gluetun/auth
-          targetSelector:
-            main:
-              main:
-                enabled: false
-              gluetun:
-                enabled: true
       gluetunImage:
         repository: ghcr.io/qdm12/gluetun
         tag: v3.41
         pullPolicy: IfNotPresent
-      workload:
-        qbitportforward:
-          podSpec:
-            nodeSelector:
-              kubernetes.io/arch: "amd64"
-            containers:
-              qbitportforward:
-                resources:
-                  limits:
-                    memory: 256Mi
-                    cpu: 250m
-                  requests:
-                    memory: 128Mi
-                    cpu: 100m
       service:
         proxy:
           enabled: true
@@ -84,48 +53,15 @@ helmCharts:
           container:
             env:
               DNS_KEEP_NAMESERVER: off
-              VPN_PORT_FORWARDING_PROVIDER: protonvpn
-              VPN_PORT_FORWARDING: on
+              VPN_SERVICE_PROVIDER: surfshark
               VPN_TYPE: wireguard
-              VPN_SERVICE_PROVIDER: custom
               FIREWALL: "on"
               FIREWALL_OUTBOUND_SUBNETS: "10.10.2.0/24"
               FIREWALL_INPUT_PORTS: 10095,8888,8000
-              WIREGUARD_ENDPOINT_IP:
-                secretKeyRef:
-                  name: vpn-secret
-                  key: WIREGUARD_ENDPOINT_IP
-                  expandObjectName: false
-              WIREGUARD_ENDPOINT_PORT:
-                secretKeyRef:
-                  name: vpn-secret
-                  key: WIREGUARD_ENDPOINT_PORT
-                  expandObjectName: false
-              WIREGUARD_PUBLIC_KEY:
-                secretKeyRef:
-                  name: vpn-secret
-                  key: WIREGUARD_PUBLIC_KEY
-                  expandObjectName: false
-              WIREGUARD_PRIVATE_KEY:
-                secretKeyRef:
-                  name: vpn-secret
-                  key: WIREGUARD_PRIVATE_KEY
-                  expandObjectName: false
-              WIREGUARD_ADDRESSES:
-                secretKeyRef:
-                  name: vpn-secret
-                  key: WIREGUARD_ADDRESSES
-                  expandObjectName: false
               HTTPPROXY: "on"
               HTTPPROXY_LOG: "on"
               HTTPPROXY_LISTENING_ADDRESS: ":8888"
-patches:
-  - patch: |-
-      - op: remove
-        path: /spec/jobTemplate/spec/template/spec/hostUsers
-        value: true
-    target:
-      group: batch
-      version: v1
-      kind: CronJob
-      name: qbittorrent-qbitportforward
+            envFrom:
+              - secretRef:
+                  name: vpn-secret
+                  expandObjectName: false
