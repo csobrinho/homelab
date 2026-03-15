@@ -9,6 +9,7 @@ resources:
   - apps/bentopdf-app.yaml
   - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
+  - apps/changedetection-app.yaml
   - apps/cilium-app.yaml
   - apps/cloudnative-pg-app.yaml
   - apps/cyberchef-app.yaml
