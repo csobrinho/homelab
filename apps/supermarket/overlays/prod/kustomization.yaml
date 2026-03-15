@@ -10,7 +10,7 @@ helmCharts:
     releaseName: supermarket
     namespace: tools
     valuesInline:
-      image: ghcr.io/csobrinho/supermarket-api:main@sha256:d1759a17cf765a5b0d5ae6155c73d25bf5c4abd8a244b81c85150ded6f191882
+      image: ghcr.io/csobrinho/supermarket-api:main@sha256:c3a4f023ce302b616909a5e5a0ec5637916029b985a711cd218e0fabc2d0fe72
       users:
         - name: sobry
           schedule: "0 * * * *"
