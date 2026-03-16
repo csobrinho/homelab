@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: changedetection-io
     namespace: tools
-    version: 5.20.3
+    version: 5.20.4
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
