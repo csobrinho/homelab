@@ -6,7 +6,7 @@
   "assignees": [
     "csobrinho"
   ],
-  "minimumReleaseAge": "4 days",
+  "minimumReleaseAge": "3 days",
   "prConcurrentLimit": 0,
   "fetchChangeLogs": "pr",
   "packageRules": [
@@ -30,7 +30,7 @@
         "minor"
       ],
       "schedule": [
-        "before 6am on saturday every 2 weeks"
+        "before 6am on saturday"
       ],
       "automerge": true
     },
