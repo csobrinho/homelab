@@ -25,7 +25,7 @@ jobs:
           kustomize-version: "5.7.1"
       
       - name: Setup Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
         with:
           version: '3.19.0'
       
