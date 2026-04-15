@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: overseerr
     namespace: media
-    version: 17.0.1
+    version: 17.0.2
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
