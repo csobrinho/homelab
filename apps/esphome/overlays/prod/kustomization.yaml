@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: esphome
     namespace: esphome
-    version: 25.0.3
+    version: 25.0.5
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
