@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - ../../base
   - chrome.yaml
+  - chromium.yaml
   - ingress-route.yaml
 
 helmCharts:
@@ -35,4 +36,4 @@ helmCharts:
             containers:
               main:
                 env:
-                  PLAYWRIGHT_DRIVER_URL: "ws://chrome:3000"
+                  PLAYWRIGHT_DRIVER_URL: "ws://chromium:3000"

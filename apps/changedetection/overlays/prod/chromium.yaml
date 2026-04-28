@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chrome
+  name: chromium
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: chrome
+      app: chromium
   template:
     metadata:
       labels:
-        app: chrome
+        app: chromium
     spec:
       nodeSelector:
-        kubernetes.io/arch: amd64
+        kubernetes.io/arch: arm64
       containers:
-        - name: chrome
-          image: ghcr.io/browserless/chrome:v2.48.0@sha256:d7c2931b77472603d7e16a0626edbb78eee2c9c6e006cd2ada8fe5df2290b11b
+        - name: chromium
+          image: ghcr.io/browserless/chromium:v2.48.0@sha256:fcb6b9f2c0e9940c025dd07eebf8fb389ec65a26e128489096ee65474f82cd15
           ports:
             - containerPort: 3000
           env:
@@ -26,16 +26,12 @@ spec:
               value: "1024"
             - name: SCREEN_DEPTH
               value: "16"
-            - name: MAX_CONCURRENT_CHROME_PROCESSES
-              value: "10"
             - name: MAX_CONCURRENT_SESSIONS
               value: "5"
             - name: CONNECTION_TIMEOUT
               value: "300000"
             - name: ENABLE_DEBUGGER
               value: "false"
-            - name: PREBOOT_CHROME
-              value: "true"
           resources:
             requests:
               memory: 512Mi
@@ -47,10 +43,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: chrome
+  name: chromium
 spec:
   selector:
-    app: chrome
+    app: chromium
   ports:
     - port: 3000
       targetPort: 3000
