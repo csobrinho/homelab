@@ -5,6 +5,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - chrome.yaml
   - ingress-route.yaml
 
 helmCharts:
@@ -13,6 +14,7 @@ helmCharts:
     releaseName: changedetection-io
     namespace: tools
     version: 6.1.2
+    kubeVersion: "1.33"
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
@@ -27,3 +29,10 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 8Gi
           storageClass: "ceph-block"
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  PLAYWRIGHT_DRIVER_URL: "ws://chrome:3000"
