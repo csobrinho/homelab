@@ -32,6 +32,23 @@ spec:
               value: "300000"
             - name: ENABLE_DEBUGGER
               value: "false"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          securityContext:
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              add: null
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           resources:
             requests:
               memory: 512Mi
