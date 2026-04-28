@@ -36,4 +36,6 @@ helmCharts:
             containers:
               main:
                 env:
+                  WEBDRIVER_URL: "http://chromium:3000/wd/hub"
                   PLAYWRIGHT_DRIVER_URL: "ws://chromium:3000"
+
