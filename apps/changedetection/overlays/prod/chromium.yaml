@@ -34,12 +34,22 @@ spec:
               value: "false"
           livenessProbe:
             httpGet:
-              path: /
+              path: /pressure
               port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /pressure
               port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /pressure
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 2
           securityContext:
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
