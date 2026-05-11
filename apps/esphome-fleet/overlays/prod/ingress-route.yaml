@@ -1,0 +1,32 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: esphome-fleet-ingress
+  namespace: esphome
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`esphome2.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: esphome-fleet
+          port: main
+  tls:
+    secretName: esphome-fleet-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: esphome-fleet-cert
+  namespace: esphome
+spec:
+  secretName: esphome-fleet-cert
+  dnsNames:
+    - esphome2.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

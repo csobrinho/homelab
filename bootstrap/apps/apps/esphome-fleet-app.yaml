@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: esphome-fleet
+  namespace: argocd
+spec:
+  destination:
+    namespace: esphome
+    name: in-cluster
+  project: default
+  source:
+    path: apps/esphome-fleet/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

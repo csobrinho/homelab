@@ -1,0 +1,31 @@
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/library/common/values.yaml
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/stable/esphome-fleet/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: esphome-fleet
+    releaseName: esphome-fleet
+    namespace: esphome
+    valuesInline:
+      TZ: America/Los_Angeles
+      podOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+      workload:
+        main:
+          env:
+            - name: SERVER_URL
+              value: https://esphome2.sobrinho.pt
+          envFrom:
+            - name: SERVER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: esphome-fleet-secret
+
+helmGlobals:
+  chartHome: helm

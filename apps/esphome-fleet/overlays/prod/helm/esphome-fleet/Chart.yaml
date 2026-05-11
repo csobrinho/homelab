@@ -1,0 +1,21 @@
+apiVersion: v2
+appVersion: 0.1.0
+dependencies:
+  - name: common
+    version: 29.3.4
+    repository: oci://oci.trueforge.org/truecharts
+    condition: ""
+    alias: ""
+    tags: []
+    import-values: []
+description: Fleet for ESPHome - service for managing fleets of ESPHome devices including distributed compile workers, version pinning, scheduled upgrades, fleet tags, and config history.
+home: https://github.com/weirded/fleet-for-esphome
+icon: https://raw.githubusercontent.com/weirded/fleet-for-esphome/refs/heads/main/logo.svg
+keywords:
+  - esphome
+  - fleet-for-esphome
+name: esphome-fleet
+sources:
+  - https://github.com/weirded/fleet-for-esphome
+type: application
+version: 1.7.1

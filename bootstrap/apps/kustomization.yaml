@@ -16,6 +16,7 @@ resources:
   - apps/descheduler-app.yaml
   - apps/dispatcharr-app.yaml
   - apps/esphome-app.yaml
+  - apps/esphome-fleet-app.yaml
   - apps/external-dns-app.yaml
   - apps/external-reverse-proxy-app.yaml
   # - apps/gitea-app.yaml
