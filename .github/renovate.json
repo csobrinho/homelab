@@ -3,69 +3,41 @@
   "extends": [
     "config:recommended"
   ],
-  "assignees": [
-    "csobrinho"
-  ],
-  "minimumReleaseAge": "3 days",
+  "assignees": ["csobrinho"],
+  "minimumReleaseAge": "48 hours",
   "prConcurrentLimit": 0,
   "fetchChangeLogs": "pr",
   "packageRules": [
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "schedule": [
-        "before 6am on saturday"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "schedule": ["before 6am"],
       "automerge": true
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "schedule": [
-        "before 6am on saturday"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "schedule": ["before 6am"],
       "automerge": true
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "schedule": [
-        "before 6am on saturday"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "schedule": ["before 6am"],
       "automerge": false
     }
   ],
   "helm-values": {
-    "managerFilePatterns": [
-      "/\\.ya?ml$/"
-    ]
+    "managerFilePatterns": ["/\\.ya?ml$/"]
   },
   "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.ya?ml$/"
-    ]
+    "managerFilePatterns": ["/\\.ya?ml$/"]
   },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"
-      ],
+      "managerFilePatterns": ["/\\.ya?ml$/"],
+      "matchStrings": ["# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"],
       "datasourceTemplate": "github-releases"
     }
   ],
