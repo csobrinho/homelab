@@ -116,5 +116,6 @@ spec:
   forwardAuth:
     address: http://middleware-auth-forward:4181
     trustForwardHeader: true
+    maxResponseBodySize: 2097152
     authResponseHeaders:
       - X-Forwarded-User
