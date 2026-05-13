@@ -1,31 +1,86 @@
-# From https://github.com/trueforge-org/truecharts/blob/master/charts/library/common/values.yaml
-# From https://github.com/trueforge-org/truecharts/blob/master/charts/stable/esphome-fleet/values.yaml
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
   - ../../base
   - ingress-route.yaml
+  - secrets/esphome-fleet-secret-enc.yaml
 
 helmCharts:
-  - name: esphome-fleet
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: esphome-fleet
+    version: 5.0.0
     namespace: esphome
+    valuesFile: values-empty.yaml
     valuesInline:
-      TZ: America/Los_Angeles
-      podOptions:
+      defaultPodOptions:
+        hostNetwork: true
         nodeSelector:
           kubernetes.io/arch: "arm64"
-      workload:
+        securityContext:
+          fsGroup: &uid 568
+          fsGroupChangePolicy: OnRootMismatch
+          supplementalGroups:
+            - *uid
+      controllers:
         main:
-          env:
-            - name: SERVER_URL
-              value: https://esphome2.sobrinho.pt
-          envFrom:
-            - name: SERVER_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: esphome-fleet-secret
-
-helmGlobals:
-  chartHome: helm
+          strategy: Recreate
+          defaultContainerOptions:
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: false
+              runAsGroup: *uid
+              runAsNonRoot: true
+              runAsUser: *uid
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            main:
+              image:
+                repository: ghcr.io/weirded/esphome-dist-server
+                tag: 1.7.0@sha256:5181773d77c01e8251622b117c3ba02e3da8137df8940c2d49a5a0331d0720ba
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                HA_MODE: standalone
+              envFrom:
+                - secretRef:
+                    name: esphome-fleet-secret
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: HTTP
+                  path: /ui/api/server-info
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+      service:
+        main:
+          controller: main
+          ports:
+            main:
+              port: 8765
+      persistence:
+        config:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 256Mi
+          storageClass: ceph-block
+          retain: true
+          globalMounts:
+            - path: /config/esphome
+        data:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 8Gi
+          storageClass: ceph-block
+          retain: true
+          globalMounts:
+            - path: /data
