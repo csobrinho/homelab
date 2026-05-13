@@ -79,8 +79,14 @@ helmCharts:
         data:
           type: persistentVolumeClaim
           accessMode: ReadWriteOnce
-          size: 8Gi
+          size: 20Gi
           storageClass: ceph-block
           retain: true
           globalMounts:
             - path: /data
+        development:
+          type: nfs
+          server: infra1
+          path: /data/dev/esphome/components
+          globalMounts:
+            - path: /development/components
