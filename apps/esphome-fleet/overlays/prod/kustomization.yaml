@@ -49,6 +49,7 @@ helmCharts:
               env:
                 TZ: America/Los_Angeles
                 HA_MODE: standalone
+                GIT_CONFIG_PARAMETERS: "'safe.directory=/config/esphome'"
               envFrom:
                 - secretRef:
                     name: esphome-fleet-secret
