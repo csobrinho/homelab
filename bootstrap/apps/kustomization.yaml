@@ -27,6 +27,7 @@ resources:
   - apps/ipmi-server-app.yaml
   - apps/it-tools-app.yaml
   - apps/jupyter-app.yaml
+  - apps/keda-app.yaml
   - apps/lidarr-app.yaml
   - apps/mealie-app.yaml
   - apps/mosquitto-app.yaml

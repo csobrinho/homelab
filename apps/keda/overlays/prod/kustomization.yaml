@@ -1,0 +1,42 @@
+# From https://github.com/kedacore/charts/blob/main/keda/values.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: keda
+    repo: https://kedacore.github.io/charts
+    releaseName: keda
+    namespace: keda
+    version: 2.16.1
+    includeCRDs: true
+    valuesInline:
+      image:
+        pullPolicy: IfNotPresent
+      operator:
+        revisionHistoryLimit: 2
+      nodeSelector:
+        kubernetes.io/arch: "arm64"
+      env:
+        - name: TZ
+          value: America/Los_Angeles
+      prometheus:
+        metricServer:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+        operator:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+          prometheusRules:
+            enabled: true
+        webhooks:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+          prometheusRules:
+            enabled: true
+      enableServiceLinks: false
