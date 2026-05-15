@@ -82,9 +82,9 @@ helmCharts:
             - path: /config/esphome
         data:
           type: persistentVolumeClaim
-          accessMode: ReadWriteOnce
-          size: 20Gi
-          storageClass: ceph-block
+          accessMode: ReadWriteMany
+          size: 32Gi
+          storageClass: ceph-filesystem
           retain: true
           globalMounts:
             - path: /data
