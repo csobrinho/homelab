@@ -110,9 +110,12 @@ helmCharts:
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
 
-      cephFileSystems: []
+      # cephFileSystems:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#filesystem-settings for available configuration
-      # Disabled for now.
+      cephFileSystemVolumeSnapshotClass:
+        enabled: true
+        annotations:
+          velero.io/csi-volumesnapshot-class: "true"
 
       # cephObjectStores:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
@@ -132,6 +135,13 @@ patches:
       reclaimPolicy: Retain
       allowVolumeExpansion: true
   - patch: |-
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: ceph-filesystem
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+  - patch: |-
       apiVersion: ceph.rook.io/v1
       kind: CephObjectStore
       metadata:
@@ -145,3 +155,17 @@ patches:
             requests:
               cpu: 750m #     Default: 1000m
               memory: 256Mi # Default: 1Gi
+  - patch: |-
+      apiVersion: ceph.rook.io/v1
+      kind: CephFilesystem
+      metadata:
+        name: ceph-filesystem
+        namespace: rook-ceph
+      spec:
+        metadataServer:
+          resources:
+            limits:
+              memory: 512Mi # Default: 4Gi
+            requests:
+              cpu: 500m #     Default: 1000m
+              memory: 256Mi # Default: 4Gi
