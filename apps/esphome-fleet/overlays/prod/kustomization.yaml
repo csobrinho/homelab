@@ -51,7 +51,7 @@ helmCharts:
               env:
                 TZ: America/Los_Angeles
                 HA_MODE: standalone
-                UV_CACHE_DIR: /tmp/.uv
+                UV_CACHE_DIR: /data/.cache/.uv
                 GIT_CONFIG_PARAMETERS: "'safe.directory=/config/esphome'"
               envFrom:
                 - secretRef:
