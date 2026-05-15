@@ -12,17 +12,11 @@ spec:
   routes:
     - match: Host(`qbt.sobrinho.pt`)
       kind: Rule
-      middlewares:
-        - name: middleware-auth-basic
-          namespace: traefik
       services:
         - name: qbittorrent
           port: main
   tls:
     secretName: qbittorrent-cert
-    options:
-      name: mtls-none
-      namespace: traefik
 ---
 kind: Certificate
 apiVersion: cert-manager.io/v1
