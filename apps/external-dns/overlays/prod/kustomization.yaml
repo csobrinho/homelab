@@ -1,4 +1,5 @@
 # From https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 

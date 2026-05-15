@@ -1,4 +1,5 @@
 # From https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 

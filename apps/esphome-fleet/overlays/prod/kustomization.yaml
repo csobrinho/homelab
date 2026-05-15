@@ -1,4 +1,5 @@
 # From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -15,6 +16,7 @@ helmCharts:
     namespace: esphome
     valuesFile: values-empty.yaml
     valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
       defaultPodOptions:
         hostNetwork: true
         nodeSelector:

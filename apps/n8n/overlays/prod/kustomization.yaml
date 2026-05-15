@@ -1,4 +1,6 @@
 # From https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1n.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 

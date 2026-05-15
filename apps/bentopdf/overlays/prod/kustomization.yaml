@@ -1,4 +1,5 @@
 # From https://github.com/kriegalex/k8s-charts/blob/main/charts/bentopdf/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 

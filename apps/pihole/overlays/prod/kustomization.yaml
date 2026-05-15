@@ -1,4 +1,6 @@
 # From https://github.com/MoJo2600/pihole-kubernetes/blob/main/charts/pihole/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1n.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
