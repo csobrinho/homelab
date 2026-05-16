@@ -16,7 +16,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: chrome
-          image: ghcr.io/browserless/chrome:v2.48.3@sha256:28323ea43f00a15694d554d67aaea6ba92fe3e8039d6a65f77f5b9b738d1548c
+          image: ghcr.io/browserless/chrome:v2.49.0@sha256:4c727be1aad1c3a7059e6710b7d0040fd3e1dbb069010aa182d1134b9f87a4cc
           ports:
             - containerPort: 3000
           env:
