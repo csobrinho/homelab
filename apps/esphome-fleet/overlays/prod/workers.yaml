@@ -1,0 +1,132 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome-fleet-worker
+  namespace: esphome
+spec:
+  selector:
+    matchLabels:
+      app: esphome-fleet-worker
+      app.kubernetes.io/managed-by: helm
+  template:
+    metadata:
+      labels:
+        app: esphome-fleet-worker
+        app.kubernetes.io/managed-by: helm
+    spec:
+      serviceAccountName: esphome-fleet-worker
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+      terminationGracePeriodSeconds: 600
+      containers:
+        - name: worker
+          image: ghcr.io/weirded/esphome-dist-client:1.7.1@sha256:c5d93060295ca52a509aace710a98d2cf80cd6c48322b450c5e1c76e33e17cef
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_URL
+              value: http://esphome-fleet.esphome:8765
+            - name: UV_CACHE_DIR
+              value: /data/.cache/.uv
+            - name: SERVER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: esphome-fleet-secret
+                  key: SERVER_TOKEN
+            - name: MAX_PARALLEL_JOBS
+              value: "1"
+            - name: POLL_INTERVAL
+              value: "1"
+            - name: HEARTBEAT_INTERVAL
+              value: "10"
+            - name: JOB_TIMEOUT
+              value: "600"
+            - name: OTA_TIMEOUT
+              value: "120"
+            - name: MIN_FREE_DISK_PCT
+              value: "10"
+            - name: WORKER_TAGS
+              value: "k8s,os:linux,arch:arm64"
+            - name: PLATFORM
+              value: linux
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - mountPath: /esphome-versions
+              subPath: workers/esphome-versions
+              name: versions
+            - mountPath: /development/components
+              name: development
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 512Mi
+      volumes:
+        - name: versions
+          persistentVolumeClaim:
+            claimName: esphome-fleet-data
+        - name: development
+          nfs:
+            path: /data/dev/esphome/components
+            server: infra1
+      nodeSelector:
+        kubernetes.io/arch: arm64
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: esphome-fleet-worker
+  namespace: esphome
+spec:
+  scaleTargetRef:
+    name: esphome-fleet-worker
+  minReplicaCount: 0
+  maxReplicaCount: 3
+  cooldownPeriod: 600
+  pollingInterval: 30
+  triggers:
+    - type: metrics-api
+      metadata:
+        targetValue: "2"
+        url: "http://esphome-fleet.esphome:8765/api/v1/status"
+        valueLocation: "queue_size"
+        authMode: "bearer"
+        unsafeSsl: "true"
+      authenticationRef:
+        name: esphome-fleet-worker
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: esphome-fleet-worker
+  namespace: esphome
+spec:
+  secretTargetRef:
+    - parameter: token
+      name: esphome-fleet-secret
+      key: SERVER_TOKEN
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: esphome-fleet-worker
+  namespace: esphome
