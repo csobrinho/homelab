@@ -20,7 +20,6 @@ resources:
   - apps/esphome-fleet-app.yaml
   - apps/external-dns-app.yaml
   - apps/external-reverse-proxy-app.yaml
-  # - apps/gitea-app.yaml
   - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
   - apps/initial-setup-app.yaml
