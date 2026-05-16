@@ -19,6 +19,7 @@ helmCharts:
       TZ: America/Los_Angeles
       workload:
         main:
+          replicas: 0 # Off for now.
           podSpec:
             containers:
               main:
@@ -42,6 +43,7 @@ helmCharts:
                 operator: Exists
                 effect: NoSchedule
         ui:
+          replicas: 0 # Off for now.
           podSpec:
             containers:
               ui:
