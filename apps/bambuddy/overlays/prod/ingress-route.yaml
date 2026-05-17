@@ -1,0 +1,32 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: bambuddy-ingress
+  namespace: tools
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`3dprint.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: bambuddy
+          port: main
+  tls:
+    secretName: bambuddy-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: bambuddy-cert
+  namespace: tools
+spec:
+  secretName: bambuddy-cert
+  dnsNames:
+    - 3dprint.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -6,6 +6,7 @@ resources:
   - apps/actual-budget-app.yaml
   - apps/apt-cacher-ng-app.yaml
   - apps/argocd-app.yaml
+  - apps/bambuddy-app.yaml
   - apps/bazarr-app.yaml
   - apps/bentopdf-app.yaml
   - apps/binner-app.yaml

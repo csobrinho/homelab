@@ -1,0 +1,95 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: bambuddy
+    version: 5.0.1
+    namespace: tools
+    valuesFile: values-empty.yaml
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+      defaultPodOptions:
+        nodeSelector:
+          kubernetes.io/arch: "arm64"
+        securityContext:
+          fsGroup: &uid 568
+          fsGroupChangePolicy: OnRootMismatch
+          supplementalGroups:
+            - *uid
+      service:
+        main:
+          controller: main
+          ports:
+            main:
+              port: &port 8000
+              # 3000          Virtual printer bind/detect
+              # 3002          Virtual printer bind/detect
+              # 8883          Virtual printer MQTT
+              # 990           Virtual printer FTP control
+              # 6000          Virtual printer file transfer tunnel
+              # 322           Virtual printer RTSP camera (X1/H2/P2; proxy mode + non-proxy modes with a target printer)
+              # 2024-2026     Virtual printer proprietary ports (A1/P1S)
+              # 50000-50100   Virtual printer FTP passive data
+      controllers:
+        main:
+          strategy: Recreate
+          defaultContainerOptions:
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - NET_BIND_SERVICE
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: false
+              runAsGroup: *uid
+              runAsNonRoot: true
+              runAsUser: *uid
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            main:
+              image:
+                repository: ghcr.io/maziggy/bambuddy
+                tag: 0.2.4.1@sha256:6df5b0ff67fcadf791f1018f34e23af8ce1ff5bd068e552e8a22ac84d2e457b7
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                PUID: *uid
+                PGID: *uid
+                PORT: *port
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: HTTP
+                  path: /health
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 10Gi
+          storageClass: ceph-block
+          retain: true
+          globalMounts:
+            - path: /app/data
+        logs:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 512Mi
+          storageClass: ceph-block
+          retain: true
+          globalMounts:
+            - path: /app/logs
