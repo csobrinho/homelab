@@ -18,6 +18,7 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       main:
+        replicaCount: 0 # Off for now.
         config:
           n8n:
             editor:
@@ -72,6 +73,7 @@ helmCharts:
       # https://artifacthub.io/packages/helm/bitnami/valkey
       valkey:
         enabled: true
+        replicaCount: 0 # Off for now.
         architecture: standalone
         sentinel:
           enabled: false
