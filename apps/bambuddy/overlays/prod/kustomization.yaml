@@ -38,6 +38,11 @@ helmCharts:
               # 322           Virtual printer RTSP camera (X1/H2/P2; proxy mode + non-proxy modes with a target printer)
               # 2024-2026     Virtual printer proprietary ports (A1/P1S)
               # 50000-50100   Virtual printer FTP passive data
+        bambustudio:
+          controller: slicers
+          ports:
+            main:
+              port: &bsport 3000
       controllers:
         main:
           strategy: Recreate
@@ -71,11 +76,41 @@ helmCharts:
                 liveness: &probe
                   enabled: true
                   type: HTTP
+                  port: *port
                   path: /health
                 readiness:
                   <<: *probe
                 startup:
                   <<: *probe
+        slicers:
+          strategy: Recreate
+          pod:
+            nodeSelector:
+              kubernetes.io/arch: "amd64"
+          defaultContainerOptions:
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: false
+              runAsGroup: *uid
+              runAsNonRoot: true
+              runAsUser: *uid
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            bambustudio:
+              image:
+                repository: ghcr.io/csobrinho/slicers-api
+                tag: bambu-v02.06.00.51@sha256:da71b2b2d9957299bb3bdec32bad4d1ca878c7e0cb9d182f36c17233bab3bdfe
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                PUID: *uid
+                PGID: *uid
+                PORT: *bsport
       persistence:
         data:
           type: persistentVolumeClaim
@@ -83,13 +118,17 @@ helmCharts:
           size: 10Gi
           storageClass: ceph-block
           retain: true
-          globalMounts:
-            - path: /app/data
+          advancedMounts:
+            main:
+              main:
+                - path: /app/data
         logs:
           type: persistentVolumeClaim
           accessMode: ReadWriteOnce
           size: 512Mi
           storageClass: ceph-block
           retain: true
-          globalMounts:
-            - path: /app/logs
+          advancedMounts:
+            main:
+              main:
+                - path: /app/logs
