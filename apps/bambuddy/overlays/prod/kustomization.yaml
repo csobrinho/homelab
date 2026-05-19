@@ -72,6 +72,9 @@ helmCharts:
                 PUID: *uid
                 PGID: *uid
                 PORT: *port-main
+                DEBUG: true
+                LOG_LEVEL: debug
+                HA_URL: https://homeassistant.sobrinho.pt
               probes:
                 liveness: &probe-main
                   enabled: true
@@ -82,6 +85,12 @@ helmCharts:
                   <<: *probe-main
                 startup:
                   <<: *probe-main
+              resources: &limits
+                limits:
+                  memory: 2Gi
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
         slicers:
           strategy: Recreate
           pod:
@@ -121,6 +130,12 @@ helmCharts:
                   <<: *probe-bs
                 startup:
                   <<: *probe-bs
+              resources:
+                limits:
+                  memory: 1Gi
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
       persistence:
         data:
           type: persistentVolumeClaim
