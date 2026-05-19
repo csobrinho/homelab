@@ -13,7 +13,7 @@ spec:
     - match: Host(`3dprint.sobrinho.pt`)
       kind: Rule
       services:
-        - name: bambuddy
+        - name: bambuddy-main
           port: main
   tls:
     secretName: bambuddy-cert

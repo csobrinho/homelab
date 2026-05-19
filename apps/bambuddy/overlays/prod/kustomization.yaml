@@ -29,7 +29,7 @@ helmCharts:
           controller: main
           ports:
             main:
-              port: &port 8000
+              port: &port-main 8000
               # 3000          Virtual printer bind/detect
               # 3002          Virtual printer bind/detect
               # 8883          Virtual printer MQTT
@@ -42,7 +42,7 @@ helmCharts:
           controller: slicers
           ports:
             main:
-              port: &bsport 3000
+              port: &port-bs 3000
       controllers:
         main:
           strategy: Recreate
@@ -71,17 +71,17 @@ helmCharts:
                 TZ: America/Los_Angeles
                 PUID: *uid
                 PGID: *uid
-                PORT: *port
+                PORT: *port-main
               probes:
-                liveness: &probe
+                liveness: &probe-main
                   enabled: true
                   type: HTTP
-                  port: *port
+                  port: *port-main
                   path: /health
                 readiness:
-                  <<: *probe
+                  <<: *probe-main
                 startup:
-                  <<: *probe
+                  <<: *probe-main
         slicers:
           strategy: Recreate
           pod:
@@ -104,13 +104,23 @@ helmCharts:
             bambustudio:
               image:
                 repository: ghcr.io/csobrinho/slicers-api
-                tag: bambu-v02.06.00.51@sha256:da71b2b2d9957299bb3bdec32bad4d1ca878c7e0cb9d182f36c17233bab3bdfe
+                tag: bambu-v02.06.00.51@sha256:9d589bc3e1a2eb87a2ecc5266f123728ee42c60d8a3bf03aad661425a7c9104f
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
                 PUID: *uid
                 PGID: *uid
-                PORT: *bsport
+                PORT: *port-bs
+              probes:
+                liveness: &probe-bs
+                  enabled: true
+                  type: HTTP
+                  port: *port-bs
+                  path: /health
+                readiness:
+                  <<: *probe-bs
+                startup:
+                  <<: *probe-bs
       persistence:
         data:
           type: persistentVolumeClaim
@@ -132,3 +142,13 @@ helmCharts:
             main:
               main:
                 - path: /app/logs
+        data-bambustudio:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 4Gi
+          storageClass: ceph-block
+          retain: true
+          advancedMounts:
+            slicers:
+              bambustudio:
+                - path: /app/data
