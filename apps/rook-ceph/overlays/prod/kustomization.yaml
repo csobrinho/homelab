@@ -28,7 +28,7 @@ helmCharts:
         enabled: true
       monitoring:
         enabled: true
-        
+
   - name: rook-ceph-cluster
     releaseName: rook-release
     namespace: rook-ceph
@@ -62,6 +62,12 @@ helmCharts:
             - name: infra1
               devices:
                 - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X152103W-part3"
+              resources:
+                limits:
+                  memory: 3Gi # Default: 4Gi
+                requests:
+                  cpu: 750m #     Default: 1000m
+                  memory: 750Mi # Default: 4Gi
             - name: infra2
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_860_PRO_1TB_S45ENF0M201675D-part3"
