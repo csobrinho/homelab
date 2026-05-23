@@ -1,36 +1,37 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: esphome-fleet-worker
   namespace: esphome
+  labels:
+    app.kubernetes.io/instance: esphome-fleet-worker
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: esphome-fleet-worker
 spec:
+  replicas: 0
   selector:
     matchLabels:
-      app: esphome-fleet-worker
-      app.kubernetes.io/managed-by: helm
+      app.kubernetes.io/instance: esphome-fleet-worker
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: esphome-fleet-worker
+  serviceName: esphome-fleet-worker
   template:
     metadata:
       labels:
-        app: esphome-fleet-worker
-        app.kubernetes.io/managed-by: helm
+        app.kubernetes.io/instance: esphome-fleet-worker
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: esphome-fleet-worker
     spec:
-      serviceAccountName: esphome-fleet-worker
-      securityContext:
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups:
-          - 568
-      terminationGracePeriodSeconds: 600
       containers:
-        - name: worker
+        - name: esphome-fleet-worker
           image: ghcr.io/weirded/esphome-dist-client:1.7.1@sha256:c5d93060295ca52a509aace710a98d2cf80cd6c48322b450c5e1c76e33e17cef
           imagePullPolicy: IfNotPresent
           env:
             - name: SERVER_URL
               value: http://esphome-fleet.esphome:8765
             - name: UV_CACHE_DIR
-              value: /data/.cache/.uv
+              value: /esphome-versions/slots/1/.cache/.uv
             - name: SERVER_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -58,8 +59,7 @@ spec:
                   fieldPath: metadata.name
           volumeMounts:
             - mountPath: /esphome-versions
-              subPath: workers/esphome-versions
-              name: versions
+              name: esphome-fleet-worker-data
             - mountPath: /development/components
               name: development
           securityContext:
@@ -80,16 +80,34 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
+      serviceAccountName: esphome-fleet-worker
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+      terminationGracePeriodSeconds: 600
       volumes:
-        - name: versions
-          persistentVolumeClaim:
-            claimName: esphome-fleet-data
         - name: development
           nfs:
             path: /data/dev/esphome/components
             server: infra1
       nodeSelector:
         kubernetes.io/arch: arm64
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: esphome-fleet-worker-data
+      annotations:
+        helm.sh/resource-policy: keep
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi
+      storageClassName: ceph-block
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -99,10 +117,11 @@ metadata:
 spec:
   scaleTargetRef:
     name: esphome-fleet-worker
+    kind: StatefulSet
   minReplicaCount: 0
-  maxReplicaCount: 3
+  maxReplicaCount: 4
   cooldownPeriod: 600
-  pollingInterval: 30
+  pollingInterval: 15
   triggers:
     - type: metrics-api
       metadata:
