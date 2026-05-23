@@ -8,6 +8,7 @@ resources:
   - ../../base
   - ingress-route.yaml
   - secrets/node-red-secret-enc.yaml
+  - middleware-go-redirect.yaml
 
 helmCharts:
   - name: node-red

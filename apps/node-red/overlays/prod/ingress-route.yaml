@@ -15,6 +15,13 @@ spec:
       services:
         - name: node-red
           port: main
+    - match: Host(`go.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: go-redirect
+      services:
+        - name: noop@internal # redirect happens before hitting a service
+          kind: TraefikService
   tls:
     secretName: node-red-cert
 ---
@@ -27,6 +34,7 @@ spec:
   secretName: node-red-cert
   dnsNames:
     - node-red.sobrinho.pt
+    - go.sobrinho.pt
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

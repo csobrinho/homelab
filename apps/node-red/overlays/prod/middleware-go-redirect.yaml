@@ -1,0 +1,11 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: go-redirect
+  namespace: node-red
+spec:
+  redirectRegex:
+    regex: "^https?://go\\.sobrinho\\.pt/(.*)"
+    replacement: "https://node-red.sobrinho.pt/go/${1}"
+    permanent: true
