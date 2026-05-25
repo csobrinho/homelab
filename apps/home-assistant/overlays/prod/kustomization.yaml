@@ -37,7 +37,7 @@ helmCharts:
         enabled: true
         retain: true
         accessMode: ReadWriteOnce
-        size: 8Gi
+        size: 12Gi
         storageClass: "ceph-block"
       additionalVolumes:
         - hostPath:
