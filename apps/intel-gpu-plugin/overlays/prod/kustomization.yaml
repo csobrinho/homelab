@@ -19,7 +19,7 @@ helmCharts:
     repo: https://intel.github.io/helm-charts
     releaseName: intel-device-plugins-gpu
     namespace: infra
-    version: 0.35.0
+    version: 0.36.0
     includeCRDs: true
     valuesInline:
       sharedDevNum: 3
