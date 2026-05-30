@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: zwavejs2mqtt
     namespace: home-assistant
-    version: 25.7.0
+    version: 25.8.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
