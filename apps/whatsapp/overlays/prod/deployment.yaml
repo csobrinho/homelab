@@ -20,7 +20,7 @@ spec:
         kubernetes.io/arch: arm64
       containers:
         - name: whatsapp
-          image: devlikeapro/waha:noweb-arm@sha256:890944358ed7883ff6887e6acb3cff65a6c9483bfcc71021718d032ee2a1a0b0
+          image: devlikeapro/waha:noweb-arm@sha256:4da7bd0f2ef54f8fd02c9423fe0aec7794030d60997d2401603f8b1e653e0f66
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
