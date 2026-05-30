@@ -12,7 +12,7 @@ helmCharts:
     repo: https://argoproj.github.io/argo-helm
     releaseName: argocd
     namespace: argocd
-    version: 9.5.16
+    version: 9.5.17
     includeCRDs: true
     valuesInline:
       global:
