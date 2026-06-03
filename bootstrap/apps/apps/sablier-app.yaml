@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sablier
+  namespace: argocd
+spec:
+  destination:
+    namespace: infra
+    name: in-cluster
+  project: default
+  source:
+    path: apps/sablier/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab

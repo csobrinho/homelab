@@ -47,6 +47,7 @@ resources:
   - apps/qbittorrent-app.yaml
   - apps/radarr-app.yaml
   - apps/rook-ceph-app.yaml
+  - apps/sablier-app.yaml
   - apps/sealed-secrets-app.yaml
   - apps/snapshot-controller-app.yaml
   - apps/sonarr-app.yaml
