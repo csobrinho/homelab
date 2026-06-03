@@ -17,6 +17,23 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
+      workload:
+        main:
+          labels:
+            sablier.enable: "true"
+            sablier.group: cyberchef
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+
+components:
+  - ../../../../components/managed-sablier
+
+patches:
+  - target:
+      kind: Middleware
+      name: middleware-sablier
+    patch: |-
+      - op: replace
+        path: /spec/plugin/sablier/group
+        value: cyberchef
