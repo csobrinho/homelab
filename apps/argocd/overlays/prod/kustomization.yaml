@@ -70,3 +70,30 @@ helmCharts:
           enabled: true
           serviceMonitor:
             enabled: true
+        # Install custom tools for argocd-server to use.
+        initContainers:
+          - name: download-tools
+            image: alpine:3
+            command: [sh, -c]
+            args:
+              - |
+                ARCH=$(uname -m)
+                VERSION="v4.53.2"
+                case "$ARCH" in
+                  x86_64)  YQ_ARCH="amd64" ;;
+                  aarch64) YQ_ARCH="arm64" ;;
+                  *)       echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
+                esac &&
+                wget -qO /custom-tools/yq "https://github.com/mikefarah/yq/releases/download/${VERSION}/yq_linux_${YQ_ARCH}" &&
+                chmod +x /custom-tools/yq
+            volumeMounts:
+              - name: custom-tools
+                mountPath: /custom-tools
+        volumeMounts:
+          - mountPath: /usr/local/bin/yq
+            name: custom-tools
+            subPath: yq
+            readOnly: true
+        volumes:
+          - name: custom-tools
+            emptyDir: {}
