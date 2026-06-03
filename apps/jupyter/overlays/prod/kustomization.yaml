@@ -73,3 +73,6 @@ helmCharts:
         image:
           name: ghcr.io/csobrinho/jupyter-singleuser-hardware
           tag: main
+
+components:
+  - ../../../../components/managed-sablier

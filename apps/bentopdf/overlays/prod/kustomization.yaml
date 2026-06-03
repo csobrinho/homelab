@@ -61,3 +61,6 @@ patches:
       metadata:
         name: bentopdf-test-connection
       $patch: delete
+
+components:
+  - ../../../../components/managed-sablier

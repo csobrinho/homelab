@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: overseerr
   namespace: argocd
+  labels:
+    sablier.managed: "true"
 spec:
   destination:
     namespace: media
@@ -11,3 +13,4 @@ spec:
   source:
     path: apps/overseerr/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

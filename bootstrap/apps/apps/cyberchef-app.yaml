@@ -13,3 +13,4 @@ spec:
   source:
     path: apps/cyberchef/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

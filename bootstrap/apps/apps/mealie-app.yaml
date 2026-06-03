@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: mealie
   namespace: argocd
+  labels:
+    sablier.managed: "true"
 spec:
   destination:
     namespace: mealie
@@ -11,3 +13,4 @@ spec:
   source:
     path: apps/mealie/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

@@ -11,3 +11,4 @@ spec:
   source:
     path: apps/n8n/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

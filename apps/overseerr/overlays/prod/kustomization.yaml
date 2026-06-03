@@ -27,3 +27,6 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 2Gi
+
+components:
+  - ../../../../components/managed-sablier

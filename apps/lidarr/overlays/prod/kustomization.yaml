@@ -43,3 +43,6 @@ helmCharts:
       metrics:
         main:
           enabled: false # Disabled until pvc reusage due to exportarr is fixed.
+
+components:
+  - ../../../../components/managed-sablier

@@ -20,3 +20,6 @@ helmCharts:
       podOptions:
         nodeSelector:
           kubernetes.io/arch: "arm64"
+
+components:
+  - ../../../../components/managed-sablier

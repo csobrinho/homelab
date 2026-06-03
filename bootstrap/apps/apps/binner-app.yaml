@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: binner
   namespace: argocd
+  labels:
+    sablier.managed: "true"
 spec:
   destination:
     namespace: binner
@@ -11,3 +13,4 @@ spec:
   source:
     path: apps/binner/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

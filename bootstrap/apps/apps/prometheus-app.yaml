@@ -11,3 +11,4 @@ spec:
   source:
     path: apps/prometheus/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

@@ -11,3 +11,4 @@ spec:
   source:
     path: apps/rook-ceph/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

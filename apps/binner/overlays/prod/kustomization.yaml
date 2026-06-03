@@ -10,3 +10,6 @@ resources:
   - ingress-route.yaml
   - pvc.yaml
   - service.yaml
+
+components:
+  - ../../../../components/managed-sablier

@@ -11,3 +11,4 @@ spec:
   source:
     path: apps/actual-budget/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

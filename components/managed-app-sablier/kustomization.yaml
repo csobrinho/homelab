@@ -9,13 +9,16 @@ patches:
       labelSelector: "sablier.managed=true"
     patch: |-
       - op: add
-        path: /spec/ignoreDifferences
+        path: /spec/ignoreDifferences/-
         value:
-          - group: apps
-            kind: Deployment
-            jsonPointers:
-              - /spec/replicas
-          - group: apps
-            kind: StatefulSet
-            jsonPointers:
-              - /spec/replicas
+          group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
+      - op: add
+        path: /spec/ignoreDifferences/-
+        value:
+          group: apps
+          kind: StatefulSet
+          jsonPointers:
+            - /spec/replicas

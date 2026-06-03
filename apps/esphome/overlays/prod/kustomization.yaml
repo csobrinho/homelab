@@ -59,3 +59,6 @@ helmCharts:
         requests:
           cpu: 500m
           memory: 200Mi
+
+components:
+  - ../../../../components/managed-sablier

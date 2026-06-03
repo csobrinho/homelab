@@ -38,3 +38,6 @@ helmCharts:
               main: # the container with the "main" identifier
                 - path: /app/data/
                   readOnly: false
+
+components:
+  - ../../../../components/managed-sablier
