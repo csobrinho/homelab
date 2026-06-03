@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+patches:
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: Application
+    patch: |-
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: irrelevant # ignored.
+      spec:
+        source:
+          targetRevision: main
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+          retry:
+            limit: 3
+            backoff:
+              duration: 1m
+              factor: 2
+              maxDuration: 5m
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+            - ApplyOutOfSyncOnly=true
+            - RespectIgnoreDifferences=true

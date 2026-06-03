@@ -61,7 +61,5 @@ resources:
   - apps/xfinity-usage-app.yaml
   - apps/zwavejs2mqtt-app.yaml
 
-patches:
-  - path: patches/app.yaml
-    target:
-      kind: Application
+components:
+  - ../../components/application-sync-policy
