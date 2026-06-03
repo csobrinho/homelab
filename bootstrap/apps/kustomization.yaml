@@ -64,3 +64,4 @@ resources:
 
 components:
   - ../../components/application-sync-policy
+  - ../../components/managed-app-sablier
