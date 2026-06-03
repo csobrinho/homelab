@@ -13,21 +13,19 @@ name=$(echo "$input" | yq '
 ' | head -1 | tr -d '"')
 
 echo "$input" | yq '
-  .items[] |= (
-    if (
-      .kind == "Deployment" or
-      .kind == "StatefulSet" or
-      .kind == "DaemonSet"
-    ) then
-      .metadata.labels["sablier.group"] = "'"$name"'" |
-      .metadata.labels["sablier.enable"] = "true"
-    elif (
-      .kind == "Middleware" and
-      .metadata.name == "middleware-sablier"
-    ) then
-      .spec.plugin.sablier.group = "'"$name"'"
-    else
-      .
-    end
-  )
+  (.items[] | select(
+    .kind == "Deployment" or
+    .kind == "StatefulSet" or
+    .kind == "DaemonSet"
+  )) |= (
+    .metadata.labels["sablier.group"] = "'"$name"'" |
+    .metadata.labels["sablier.enable"] = "true"
+  ) |
+  (.items[] | select(
+    .kind == "Middleware" and
+    .metadata.name == "middleware-sablier"
+  )).spec.plugin.sablier.group = "'"$name"'" |
+  (.items[] | select(
+    .kind == "IngressRoute"
+  )).spec.routes[0].middlewares += [{"name": "middleware-sablier"}]
 '
