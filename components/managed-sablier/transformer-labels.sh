@@ -12,6 +12,8 @@ name=$(echo "$input" | yq '
   .metadata.labels["app.kubernetes.io/instance"]
 ' | head -1 | tr -d '"')
 
+middleware_name="middleware-sablier-$name"
+
 echo "$input" | yq '
   (.items[] | select(
     .kind == "Deployment" or
@@ -24,8 +26,11 @@ echo "$input" | yq '
   (.items[] | select(
     .kind == "Middleware" and
     .metadata.name == "middleware-sablier"
-  )).spec.plugin.sablier.group = "'"$name"'" |
+  )) |= (
+    .metadata.name = "'"$middleware_name"'" |
+    .spec.plugin.sablier.group = "'"$name"'"
+  ) |
   (.items[] | select(
     .kind == "IngressRoute"
-  )).spec.routes[0].middlewares += [{"name": "middleware-sablier"}]
+  )).spec.routes[0].middlewares += [{"name": "'"$middleware_name"'"}]
 '
