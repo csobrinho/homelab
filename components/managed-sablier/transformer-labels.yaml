@@ -1,0 +1,8 @@
+apiVersion: sobrinho.pt/v1alpha1
+kind: TransformerLabels
+metadata:
+  name: transformer-labels
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ./transformer-labels.sh

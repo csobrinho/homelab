@@ -15,9 +15,6 @@ spec:
       services:
         - name: cyberchef
           port: main
-      middlewares:
-        - name: middleware-sablier
-          namespace: cyberchef
   tls:
     secretName: cyberchef-cert
 ---

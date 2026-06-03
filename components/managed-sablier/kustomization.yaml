@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
-  - middleware-sablier.yaml
+  - middleware.yaml
 
 patches:
   - target:
@@ -11,3 +11,25 @@ patches:
     patch: |-
       - op: remove
         path: /spec/replicas
+  - target:
+      group: apps
+      kind: StatefulSet
+    patch: |-
+      - op: remove
+        path: /spec/replicas
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: IngressRoute
+    patch: |-
+      apiVersion: traefik.io/v1alpha1
+      kind: IngressRoute
+      metadata:
+        name: ignore
+      spec:
+        routes:
+          - middlewares:
+              - name: middleware-sablier
+
+transformers:
+  - transformer-labels.yaml

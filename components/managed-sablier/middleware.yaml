@@ -6,7 +6,7 @@ spec:
   plugin:
     sablier:
       sablierUrl: http://sablier.sablier.svc.cluster.local:10000
-      group: PLACEHOLDER
+      # group: PLACEHOLDER set by transformer-labels.yaml
       sessionDuration: 10m
       blocking:
         timeout: 30s
