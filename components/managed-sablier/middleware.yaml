@@ -8,5 +8,7 @@ spec:
       sablierUrl: http://sablier-sablier.infra.svc.cluster.local:10000
       # group: PLACEHOLDER set by transformer-labels.yaml
       sessionDuration: 10m
-      blocking:
-        timeout: 30s
+      dynamic:
+        refreshFrequency: 2s
+        showDetails: true
+        theme: ghost
