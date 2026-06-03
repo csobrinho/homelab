@@ -90,6 +90,7 @@ providers:
   kubernetesCRD:
     allowExternalNameServices: true
     allowCrossNamespace: true
+    allowEmptyServices: true
 
 tlsStore:
   default:
@@ -100,3 +101,9 @@ metrics:
   prometheus:
     serviceMonitor:
       enabled: true
+
+experimental:
+  plugins:
+    sablier:
+      moduleName: "github.com/sablierapp/sablier-traefik-plugin"
+      version: "v1.3.0"
