@@ -9,14 +9,16 @@ patches:
       group: apps
       kind: Deployment
     patch: |-
-      - op: remove
+      - op: add
         path: /spec/replicas
+        value: 0
   - target:
       group: apps
       kind: StatefulSet
     patch: |-
-      - op: remove
+      - op: add
         path: /spec/replicas
+        value: 0
 
 transformers:
   - transformer-labels.yaml
