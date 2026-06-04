@@ -9,7 +9,7 @@ name=$(echo "$input" | yq '
     .kind == "StatefulSet" or
     .kind == "DaemonSet"
   ) |
-  .metadata.labels["app.kubernetes.io/instance"]
+  .metadata.labels["app.kubernetes.io/instance"] // .metadata.name
 ' | head -1 | tr -d '"')
 
 middleware_name="middleware-sablier-$name"
