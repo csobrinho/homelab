@@ -93,22 +93,22 @@ helmCharts:
           # Reduce the memory consuption so that they fit on 4 CPUs and 8GB ram.
           mgr:
             limits:
-              memory: 1Gi
+              memory: 2Gi
             requests:
-              cpu: 500m #     Default: 500m
-              memory: 256Mi # Default: 512Mi
+              cpu: 500m #      Default: 500m
+              memory: 512Mi #  Default: 512Mi
           mon:
             limits:
-              memory: 1Gi #   Default: 2Gi
+              memory: 1250Mi # Default: 2Gi
             requests:
-              cpu: 750m #     Default: 1000m
-              memory: 500Mi # Default: 1Gi
+              cpu: 750m #      Default: 1000m
+              memory: 500Mi #  Default: 1Gi
           osd:
             limits:
-              memory: 2Gi # Default: 4Gi
+              memory: 2Gi #    Default: 4Gi
             requests:
-              cpu: 500m #   Default: 1000m
-              memory: 1Gi # Default: 4Gi
+              cpu: 500m #      Default: 1000m
+              memory: 1Gi #    Default: 4Gi
 
       # cephBlockPools:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
