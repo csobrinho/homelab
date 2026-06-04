@@ -29,6 +29,37 @@ helmCharts:
       monitoring:
         enabled: true
 
+  - name: ceph-csi-drivers
+    releaseName: ceph-csi-drivers
+    namespace: rook-ceph
+    repo: https://ceph.github.io/ceph-csi-operator
+    version: 1.0.1
+    # From https://github.com/ceph/ceph-csi-operator/blob/main/deploy/charts/ceph-csi-drivers/values.yaml
+    valuesInline:
+      drivers:
+        # RBD — block storage.
+        rbd:
+          enabled: true
+          name: "rook-ceph.rbd.csi.ceph.com"
+          nodePlugin:
+            priorityClassName: system-node-critical
+            # No affinity/nodeSelector here — DaemonSet must run on ALL nodes
+            # including infra1 (x86) and infra2/infra4 (arm64 workers)
+          controllerPlugin:
+            replicas: 2 # you have 2 mgr nodes
+        # CephFS — filesystem storage.
+        cephfs:
+          enabled: true
+          name: "rook-ceph.cephfs.csi.ceph.com"
+          nodePlugin:
+            priorityClassName: system-node-critical
+          controllerPlugin:
+            replicas: 2
+        nvmeof:
+          enabled: false
+        nfs:
+          enabled: false
+
   - name: rook-ceph-cluster
     releaseName: rook-release
     namespace: rook-ceph
