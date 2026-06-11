@@ -67,7 +67,7 @@ jobs:
                   
                   # Build with Kustomize
                   output_file="/tmp/$(echo $dir | tr '/' '_')-output.yaml"
-                  if ! kustomize build --enable-helm "$dir" > "$output_file"; then
+                  if ! kustomize build --enable-helm --enable-alpha-plugins --enable-exec "$dir" > "$output_file"; then
                     echo "❌ Kustomize build FAILED for $dir"
                     exit 1
                   fi
