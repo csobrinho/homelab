@@ -43,7 +43,9 @@
     {
       "customType": "regex",
       "description": "kustomize version in validate_kustomize.yaml",
-      "fileMatch": ["\\.github/workflows/validate_kustomize\\.yaml"],
+      "managerFilePatterns": [
+        "/\\.github/workflows/validate_kustomize\\.yaml/"
+      ],
       "matchStrings": ["kustomize-version:\\s+\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
