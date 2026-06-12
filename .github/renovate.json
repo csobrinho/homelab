@@ -39,6 +39,15 @@
       "managerFilePatterns": ["/\\.ya?ml$/"],
       "matchStrings": ["# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"],
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "kustomize version in validate_kustomize.yaml",
+      "fileMatch": ["\\.github/workflows/validate_kustomize\\.yaml"],
+      "matchStrings": ["kustomize-version:\\s+\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "kubernetes-sigs/kustomize",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
     }
   ],
   "automerge": true,
