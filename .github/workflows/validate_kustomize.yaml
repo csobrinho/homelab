@@ -6,8 +6,8 @@ on:
       - main
       - master
     paths:
-      - '**.yaml'
-      - '**.yml'
+      - "**.yaml"
+      - "**.yml"
 
 jobs:
   validate:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v5
         with:
-          version: '4.2.0'
+          version: "4.2.0"
       
       - name: Install kubeconform
         run: |
