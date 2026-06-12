@@ -22,7 +22,7 @@ jobs:
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v3
         with:
-          kustomize-version: "5.7.1"
+          kustomize-version: "5.8.1"
       
       - name: Setup Helm
         uses: azure/setup-helm@v5
