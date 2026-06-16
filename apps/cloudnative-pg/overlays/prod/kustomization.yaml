@@ -5,6 +5,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - cluster.yaml
 
 helmCharts:
   - name: cloudnative-pg

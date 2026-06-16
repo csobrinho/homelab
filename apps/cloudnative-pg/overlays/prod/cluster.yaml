@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cluster
+  namespace: cnpg-system
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.10
+  postgresql:
+    parameters:
+      timezone: America/Los_Angeles
+  storage:
+    size: 5Gi
+    storageClass: ceph-block
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1536Mi
