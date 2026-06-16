@@ -1,9 +1,19 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/main/charts/cloudnative-pg/values.schema.json
+crds:
+  create: true
 additionalEnv:
   - name: TZ
     value: America/Los_Angeles
 nodeSelector:
   kubernetes.io/arch: "arm64"
+replicaCount: 1
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  limits:
+    cpu: 200m
+    memory: 200Mi
 monitoring:
   grafanaDashboard:
     create: true
