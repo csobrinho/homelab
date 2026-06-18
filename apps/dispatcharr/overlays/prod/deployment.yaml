@@ -67,23 +67,23 @@ spec:
             #     secretKeyRef:
             #       name: dispatcharr-postgres-secret
             #       key: postgres-password
-            # - name: REDIS_HOST
-            #   value: "dispatcharr-redis-master"
-            # - name: REDIS_PORT
-            #   value: "6379"
-            # - name: REDIS_DB
-            #   value: "0"
-            # - name: DJANGO_SETTINGS_MODULE
-            #   value: "dispatcharr.settings"
-            # - name: PYTHONUNBUFFERED
-            #   value: "1"
-            # - name: DISPATCHARR_LOG_LEVEL
-            #   value: "info"
-            # - name: SECRET_KEY
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: dispatcharr-app-secret
-            #       key: secret-key
+            - name: REDIS_HOST
+              value: "valkey.infra.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "0"
+            - name: DJANGO_SETTINGS_MODULE
+              value: "dispatcharr.settings"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: SECRET_KEY
           volumeMounts:
             - mountPath: /data
               name: data
@@ -91,7 +91,7 @@ spec:
             httpGet:
               path: /api/core/version/
               port: main
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 3
           livenessProbe:
