@@ -2,49 +2,92 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dispatcharr-celery
+  labels:
+    app.kubernetes.io/instance: dispatcharr-celery
+    app.kubernetes.io/name: dispatcharr-celery
   namespace: media
 spec:
-  selector:
-    matchLabels:
-      app: dispatcharr-celery
+  replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dispatcharr-celery
+      app.kubernetes.io/name: dispatcharr-celery
   template:
     metadata:
       labels:
-        app: dispatcharr-celery
+        app.kubernetes.io/instance: dispatcharr-celery
+        app.kubernetes.io/name: dispatcharr-celery
     spec:
       nodeSelector:
         kubernetes.io/arch: "amd64"
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: dispatcharr
+                  app.kubernetes.io/name: dispatcharr
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done"]
+        - name: wait-for-redis
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for redis; sleep 2; done"]
       containers:
-        - name: dispatcharr-celery
-          image: ghcr.io/dispatcharr/dispatcharr:0.26.0@sha256:9275b0c1f5319a84b412af6839a1364ef25b61d8d6ff0d2130a6c2b2504a8b07
-          imagePullPolicy: IfNotPresent
-          resources:
-            limits:
-              gpu.intel.com/i915: "1"
-              cpu: 1000m
-              memory: 2Gi
-            requests:
-              gpu.intel.com/i915: "1"
-              cpu: 250m
-              memory: 256Mi
-          ports:
-            - containerPort: 9191
+        - name: celery
+          image: ghcr.io/dispatcharr/dispatcharr:0.26.0
+          command: ["/app/docker/entrypoint.celery.sh"]
           env:
             - name: TZ
               value: America/Los_Angeles
+            - name: DISPATCHARR_ENV
+              value: "modular"
             - name: DISPATCHARR_PORT
               value: $(DISPATCHARR_SERVICE_PORT)
+            - name: POSTGRES_HOST
+              value: "cluster-rw.cnpg-system.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "dispatcharr"
+            - name: POSTGRES_USER
+              value: "dispatcharr"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_HOST
+              value: "valkey.infra.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "0"
+            - name: DJANGO_SETTINGS_MODULE
+              value: "dispatcharr.settings"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: SECRET_KEY
           volumeMounts:
-            - mountPath: /data
-              name: data
-      securityContext:
-        supplementalGroups:
-          - 105 # Add render group.
-          - 44
-          - 107
-          - 568
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 50m
+            limits:
+              memory: 4Gi
+              cpu: 1000m
       volumes:
         - name: data
           persistentVolumeClaim:

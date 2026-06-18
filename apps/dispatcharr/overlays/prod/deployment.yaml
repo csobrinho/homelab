@@ -50,23 +50,21 @@ spec:
               value: America/Los_Angeles
             - name: DISPATCHARR_PORT
               value: $(DISPATCHARR_SERVICE_PORT)
-            # - name: DISPATCHARR_ENV
-            #   value: "modular"
-            # - name: DISPATCHARR_PORT
-            #   value: "9191"
-            # - name: POSTGRES_HOST
-            #   value: "dispatcharr-postgresql"
-            # - name: POSTGRES_PORT
-            #   value: "5432"
-            # - name: POSTGRES_DB
-            #   value: "dispatcharr"
-            # - name: POSTGRES_USER
-            #   value: "dispatcharr"
-            # - name: POSTGRES_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: dispatcharr-postgres-secret
-            #       key: postgres-password
+            - name: DISPATCHARR_ENV
+              value: "modular"
+            - name: POSTGRES_HOST
+              value: "cluster-rw.cnpg-system.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "dispatcharr"
+            - name: POSTGRES_USER
+              value: "dispatcharr"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: POSTGRES_PASSWORD
             - name: REDIS_HOST
               value: "valkey.infra.svc.cluster.local"
             - name: REDIS_PORT

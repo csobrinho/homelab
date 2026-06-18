@@ -7,7 +7,9 @@ kind: Kustomization
 resources:
   - ../../base
   - deployment.yaml
+  - deployment-celery.yaml
   - ingress-route.yaml
+  - postgresql-database.yaml
   - pvc.yaml
   - service.yaml
   - secrets/dispatcharr-secret-enc.yaml
