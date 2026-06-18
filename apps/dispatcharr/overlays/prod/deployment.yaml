@@ -21,26 +21,26 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: "amd64"
-      # initContainers:
-      #   - name: wait-for-postgres
-      #     image: busybox:1.36
-      #     command: ["sh", "-c", "until nc -z dispatcharr-postgresql 5432; do echo waiting for postgres; sleep 2; done"]
-      #   - name: wait-for-redis
-      #     image: busybox:1.36
-      #     command: ["sh", "-c", "until nc -z dispatcharr-redis-master 6379; do echo waiting for redis; sleep 2; done"]
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done"]
+        - name: wait-for-redis
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
       containers:
         - name: dispatcharr
           image: ghcr.io/dispatcharr/dispatcharr:0.26.0@sha256:9275b0c1f5319a84b412af6839a1364ef25b61d8d6ff0d2130a6c2b2504a8b07
           imagePullPolicy: IfNotPresent
           resources:
+            requests:
+              gpu.intel.com/i915: "1"
+              cpu: 500m
+              memory: 1Gi
             limits:
               gpu.intel.com/i915: "1"
               cpu: 1000m
               memory: 2Gi
-            requests:
-              gpu.intel.com/i915: "1"
-              cpu: 250m
-              memory: 256Mi
           ports:
             - containerPort: 9191
               name: main
