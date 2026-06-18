@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - ../../base
   - cluster.yaml
+  - secrets/dispatcharr-secret-enc.yaml
 
 helmCharts:
   - name: cloudnative-pg

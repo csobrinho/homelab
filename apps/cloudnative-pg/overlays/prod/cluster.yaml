@@ -20,3 +20,12 @@ spec:
     limits:
       cpu: 1000m
       memory: 1536Mi
+  managed:
+    roles:
+      - name: dispatcharr
+        passwordSecret:
+          name: dispatcharr-secret
+        login: true
+        connectionLimit: -1
+        ensure: present
+        inherit: true
