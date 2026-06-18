@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispatcharr-celery
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: dispatcharr-celery
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dispatcharr-celery
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      containers:
+        - name: dispatcharr-celery
+          image: ghcr.io/dispatcharr/dispatcharr:0.26.0@sha256:9275b0c1f5319a84b412af6839a1364ef25b61d8d6ff0d2130a6c2b2504a8b07
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              gpu.intel.com/i915: "1"
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              gpu.intel.com/i915: "1"
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 9191
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: DISPATCHARR_PORT
+              value: $(DISPATCHARR_SERVICE_PORT)
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      securityContext:
+        supplementalGroups:
+          - 105 # Add render group.
+          - 44
+          - 107
+          - 568
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dispatcharr-data

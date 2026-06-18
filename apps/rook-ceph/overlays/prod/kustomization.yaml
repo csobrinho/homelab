@@ -9,7 +9,6 @@ resources:
   - bucket-obdisian.yaml
   - ingress-route.yaml
   - middleware-auth-s3.yaml
-  - s3-ingress-route-ext.yaml
   - s3-ingress-route.yaml
 
 helmCharts:

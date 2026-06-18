@@ -5,8 +5,10 @@ metadata:
   namespace: media
 spec:
   selector:
-    app: dispatcharr
+    app.kubernetes.io/instance: dispatcharr
+    app.kubernetes.io/name: dispatcharr
   ports:
     - name: main
       port: 9191
+      protocol: TCP
       targetPort: main
