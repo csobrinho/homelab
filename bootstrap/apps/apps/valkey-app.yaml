@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: valkey
+  namespace: argocd
+spec:
+  destination:
+    namespace: infra
+    name: in-cluster
+  project: default
+  source:
+    path: apps/valkey/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []
