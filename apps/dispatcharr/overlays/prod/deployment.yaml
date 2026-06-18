@@ -21,6 +21,13 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: "amd64"
+      # initContainers:
+      #   - name: wait-for-postgres
+      #     image: busybox:1.36
+      #     command: ["sh", "-c", "until nc -z dispatcharr-postgresql 5432; do echo waiting for postgres; sleep 2; done"]
+      #   - name: wait-for-redis
+      #     image: busybox:1.36
+      #     command: ["sh", "-c", "until nc -z dispatcharr-redis-master 6379; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: dispatcharr
           image: ghcr.io/dispatcharr/dispatcharr:0.26.0@sha256:9275b0c1f5319a84b412af6839a1364ef25b61d8d6ff0d2130a6c2b2504a8b07
@@ -44,36 +51,56 @@ spec:
             - name: DISPATCHARR_PORT
               value: $(DISPATCHARR_SERVICE_PORT)
             # - name: DISPATCHARR_ENV
-            #   value: modular
+            #   value: "modular"
+            # - name: DISPATCHARR_PORT
+            #   value: "9191"
             # - name: POSTGRES_HOST
-            #   value: "xxx.namespace.svc.cluster.local"
+            #   value: "dispatcharr-postgresql"
+            # - name: POSTGRES_PORT
+            #   value: "5432"
+            # - name: POSTGRES_DB
+            #   value: "dispatcharr"
+            # - name: POSTGRES_USER
+            #   value: "dispatcharr"
             # - name: POSTGRES_PASSWORD
-            #   value: ""
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: dispatcharr-postgres-secret
+            #       key: postgres-password
+            # - name: REDIS_HOST
+            #   value: "dispatcharr-redis-master"
+            # - name: REDIS_PORT
+            #   value: "6379"
+            # - name: REDIS_DB
+            #   value: "0"
+            # - name: DJANGO_SETTINGS_MODULE
+            #   value: "dispatcharr.settings"
+            # - name: PYTHONUNBUFFERED
+            #   value: "1"
+            # - name: DISPATCHARR_LOG_LEVEL
+            #   value: "info"
+            # - name: SECRET_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: dispatcharr-app-secret
+            #       key: secret-key
           volumeMounts:
             - mountPath: /data
               name: data
           readinessProbe:
+            httpGet:
+              path: /api/core/version/
+              port: main
+            initialDelaySeconds: 10
+            periodSeconds: 10
             failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: main
-            timeoutSeconds: 1
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /api/core/version/
               port: main
-            failureThreshold: 5
-            initialDelaySeconds: 180
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 10
-          startupProbe:
-            failureThreshold: 30
-            periodSeconds: 5
-            successThreshold: 1
-            tcpSocket:
-              port: main
-            timeoutSeconds: 1
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
       securityContext:
         supplementalGroups:
           - 105 # Add render group.
