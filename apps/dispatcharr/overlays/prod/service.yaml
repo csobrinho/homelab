@@ -9,4 +9,4 @@ spec:
   ports:
     - name: main
       port: 9191
-      targetPort: 9191
+      targetPort: main

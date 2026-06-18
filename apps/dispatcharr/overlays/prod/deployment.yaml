@@ -1,18 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app.kubernetes.io/instance: dispatcharr
+    app.kubernetes.io/name: dispatcharr
   name: dispatcharr
   namespace: media
 spec:
   selector:
     matchLabels:
-      app: dispatcharr
+      app.kubernetes.io/instance: dispatcharr
+      app.kubernetes.io/name: dispatcharr
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: dispatcharr
+        app.kubernetes.io/instance: dispatcharr
+        app.kubernetes.io/name: dispatcharr
     spec:
       nodeSelector:
         kubernetes.io/arch: "amd64"
@@ -31,14 +36,44 @@ spec:
               memory: 256Mi
           ports:
             - containerPort: 9191
+              name: main
+              protocol: TCP
           env:
             - name: TZ
               value: America/Los_Angeles
             - name: DISPATCHARR_PORT
               value: $(DISPATCHARR_SERVICE_PORT)
+            # - name: DISPATCHARR_ENV
+            #   value: modular
+            # - name: POSTGRES_HOST
+            #   value: "xxx.namespace.svc.cluster.local"
+            # - name: POSTGRES_PASSWORD
+            #   value: ""
           volumeMounts:
             - mountPath: /data
               name: data
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: main
+            timeoutSeconds: 1
+          livenessProbe:
+            tcpSocket:
+              port: main
+            failureThreshold: 5
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: main
+            timeoutSeconds: 1
       securityContext:
         supplementalGroups:
           - 105 # Add render group.
