@@ -39,7 +39,7 @@ spec:
           command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
       containers:
         - name: celery
-          image: ghcr.io/dispatcharr/dispatcharr:0.26.0
+          image: ghcr.io/dispatcharr/dispatcharr:0.27.0
           command: ["/app/docker/entrypoint.celery.sh"]
           env:
             - name: TZ
