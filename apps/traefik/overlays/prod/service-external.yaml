@@ -22,3 +22,4 @@ spec:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
   type: LoadBalancer
+  externalTrafficPolicy: Local

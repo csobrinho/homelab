@@ -63,6 +63,16 @@ tolerations:
     operator: Exists
     tolerationSeconds: 60
 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: DoesNotExist
+            - key: node-role.kubernetes.io/master
+              operator: DoesNotExist
+
 service:
   annotations:
     lbipam.cilium.io/sharing-key: infra-int
@@ -70,6 +80,8 @@ service:
     external-dns.alpha.kubernetes.io/hostname: infra-int
   labels:
     io.cilium/lb-pool: pool-infra-int
+  spec:
+    externalTrafficPolicy: Local
 
 ingressRoute:
   dashboard:
