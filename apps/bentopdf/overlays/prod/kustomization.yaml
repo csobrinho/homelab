@@ -46,15 +46,20 @@ patches:
       kind: Deployment
       name: bentopdf
     patch: |-
-      - op: add
-        path: /spec/template/spec/nodeSelector
-        value:
-          kubernetes.io/arch: "arm64"
-      - op: add
-        path: /spec/template/spec/containers/0/env/-
-        value:
-          name: TZ
-          value: "America/Los_Angeles"
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: bentopdf
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              kubernetes.io/arch: "arm64"
+            containers:
+              - name: bentopdf
+                env:
+                  - name: TZ
+                    value: "America/Los_Angeles"
   - patch: |-
       apiVersion: v1
       kind: Pod
