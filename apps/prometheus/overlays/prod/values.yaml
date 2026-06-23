@@ -5,14 +5,14 @@ defaultRules:
   create: true
   rules:
     alertmanager: true
-    etcd: true
+    etcd: false
     configReloaders: true
     general: true
     k8s: true
-    kubeApiserverAvailability: true
-    kubeApiserverBurnrate: true
-    kubeApiserverHistogram: true
-    kubeApiserverSlos: true
+    kubeApiserverAvailability: false
+    kubeApiserverBurnrate: false
+    kubeApiserverHistogram: false
+    kubeApiserverSlos: false
     kubelet: true
     kubePrometheusGeneral: true
     kubePrometheusNodeRecording: true
@@ -184,4 +184,10 @@ kubeScheduler:
   enabled: false
 
 kubeProxy:
+  enabled: false
+
+kubeApiServer:
+  enabled: false
+
+kubeEtcd:
   enabled: false
