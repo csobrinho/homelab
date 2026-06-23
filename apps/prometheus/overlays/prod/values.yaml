@@ -1,4 +1,14 @@
 # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+.affinity:
+  avoidControlPlane: &avoidControlPlane
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: DoesNotExist
+
 nameOverride: prometheus
 
 defaultRules:
@@ -36,6 +46,7 @@ defaultRules:
 prometheus:
   prometheusSpec:
     externalUrl: https://prometheus.sobrinho.pt
+    affinity: *avoidControlPlane
     replicas: 1
     ruleSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
@@ -71,6 +82,7 @@ containers:
 alertmanager:
   alertmanagerSpec:
     externalUrl: https://alertmanager.sobrinho.pt
+    affinity: *avoidControlPlane
     storage:
       volumeClaimTemplate:
         spec:
@@ -161,6 +173,7 @@ kube-state-metrics:
 cleanPrometheusOperatorObjectNames: true
 
 prometheusOperator:
+  affinity: *avoidControlPlane
   # Disable linkerd injection for admission webhooks jobs
   admissionWebhooks:
     patch:
