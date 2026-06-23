@@ -7,6 +7,7 @@ metadata:
   name: dispatcharr
   namespace: media
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app.kubernetes.io/instance: dispatcharr
@@ -46,8 +47,6 @@ spec:
               name: main
               protocol: TCP
           env:
-            - name: TZ
-              value: America/Los_Angeles
             - name: DISPATCHARR_PORT
               value: $(DISPATCHARR_SERVICE_PORT)
             - name: DISPATCHARR_ENV
