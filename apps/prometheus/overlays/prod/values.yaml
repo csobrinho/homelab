@@ -3,7 +3,14 @@
   avoidControlPlane: &avoidControlPlane
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
+        - weight: 100 # Prefer to schedule on infra1, which is the node with the most resources.
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - infra1
+        - weight: 50 # Prefer to avoid scheduling on control-plane nodes.
           preference:
             matchExpressions:
               - key: node-role.kubernetes.io/control-plane
