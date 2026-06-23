@@ -161,6 +161,7 @@ kube-state-metrics:
 cleanPrometheusOperatorObjectNames: true
 
 prometheusOperator:
+  revisionHistoryLimit: 0
   # Disable linkerd injection for admission webhooks jobs
   admissionWebhooks:
     patch:
