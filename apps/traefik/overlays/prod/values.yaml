@@ -7,7 +7,7 @@ env:
   - name: TZ
     value: America/Los_Angeles
 
-logs:
+log:
   general:
     level: INFO
 
