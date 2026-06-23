@@ -13,3 +13,6 @@ resources:
   - pvc.yaml
   - service.yaml
   - secrets/dispatcharr-secret-enc.yaml
+
+components:
+  - ../../../../components/disable-revision-history

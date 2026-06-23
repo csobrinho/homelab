@@ -16,10 +16,8 @@ helmCharts:
     valuesInline:
       image:
         pullPolicy: IfNotPresent
-      operator:
-        revisionHistoryLimit: 2
       nodeSelector:
-        kubernetes.io/arch: "arm64"
+        kubernetes.io/arch: arm64
       env:
         - name: TZ
           value: America/Los_Angeles
@@ -41,3 +39,6 @@ helmCharts:
           prometheusRules:
             enabled: true
       enableServiceLinks: false
+
+components:
+  - ../../../../components/disable-revision-history

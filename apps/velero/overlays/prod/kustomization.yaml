@@ -17,7 +17,6 @@ helmCharts:
     version: 12.0.3
     includeCRDs: true
     valuesInline:
-      revisionHistoryLimit: 1
       initContainers:
         - name: velero-plugin-for-aws
           image: velero/velero-plugin-for-aws:v1.14.1
@@ -88,3 +87,6 @@ helmCharts:
             operator: Exists
             effect: NoExecute
             tolerationSeconds: 300
+
+components:
+  - ../../../../components/disable-revision-history

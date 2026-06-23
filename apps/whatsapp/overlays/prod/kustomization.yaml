@@ -11,3 +11,6 @@ resources:
   - pvc.yaml
   - service.yaml
   - secrets/whatsapp-secret-enc.yaml
+
+components:
+  - ../../../../components/disable-revision-history

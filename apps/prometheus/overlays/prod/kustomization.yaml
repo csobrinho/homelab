@@ -40,3 +40,6 @@ helmCharts:
         requests:
           cpu: 100m
           memory: 30Mi
+
+components:
+  - ../../../../components/disable-revision-history
