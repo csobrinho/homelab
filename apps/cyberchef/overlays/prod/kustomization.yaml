@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: cyberchef
     namespace: cyberchef
-    version: 13.6.0
+    version: 14.0.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
