@@ -42,8 +42,6 @@ spec:
           image: ghcr.io/dispatcharr/dispatcharr:0.27.0
           command: ["/app/docker/entrypoint.celery.sh"]
           env:
-            - name: TZ
-              value: America/Los_Angeles
             - name: DISPATCHARR_ENV
               value: "modular"
             - name: DISPATCHARR_PORT
