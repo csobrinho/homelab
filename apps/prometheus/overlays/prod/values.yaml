@@ -209,7 +209,21 @@ kubeProxy:
   enabled: false
 
 kubeApiServer:
-  enabled: false
+  enabled: true
+  serviceMonitor:
+    metricRelabelings:
+      - regex: apiserver_request_duration_seconds_bucket
+        sourceLabels: [__name__]
+        action: drop
+      - regex: apiserver_request_sli_duration_seconds_bucket
+        sourceLabels: [__name__]
+        action: drop
+      - regex: apiserver_request_body_size_bytes_bucket
+        sourceLabels: [__name__]
+        action: drop
+      - regex: etcd_request_duration_seconds_bucket
+        sourceLabels: [__name__]
+        action: drop
 
 kubeEtcd:
   enabled: false
@@ -218,63 +232,63 @@ kubelet:
   serviceMonitor:
     metricRelabelings:
       # Reduce bucket cardinality of kubelet storage operations.
-      - action: drop
-        sourceLabels: [__name__, le]
-        regex: (csi_operations|storage_operation_duration)_seconds_bucket;(0.25|2.5|15|25|120|600)(\.0)?
+      - regex: (csi_operations|storage_operation_duration)_seconds_bucket
+        sourceLabels: [__name__]
+        action: drop
       # Drop workqueue histogram buckets — only workqueue_adds_total and
       # workqueue_depth are used in default rules/alerts, not the bucket series.
-      - sourceLabels: [__name__]
+      - regex: "workqueue_(queue|work)_duration_seconds_bucket"
+        sourceLabels: [__name__]
         action: drop
-        regex: "workqueue_(queue|work)_duration_seconds_bucket"
       # Drop kubelet runtime operation duration buckets — not used in default rules/alerts.
-      - sourceLabels: [__name__]
+      - regex: "kubelet_runtime_operations_duration_seconds_bucket"
+        sourceLabels: [__name__]
         action: drop
-        regex: "kubelet_runtime_operations_duration_seconds_bucket"
       # Drop prober duration buckets — not used in default rules/alerts.
       # (KubeletPodStartUpLatencyHigh uses kubelet_pod_worker_duration_seconds_bucket, not this.)
-      - sourceLabels: [__name__]
+      - regex: "prober_probe_duration_seconds_bucket"
+        sourceLabels: [__name__]
         action: drop
-        regex: "prober_probe_duration_seconds_bucket"
 
     cAdvisorMetricRelabelings:
       # Drop less useful container CPU metrics.
-      - sourceLabels: [__name__]
+      - regex: "container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)"
       # Drop less useful container / always zero filesystem metrics.
-      - sourceLabels: [__name__]
+      - regex: "container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)"
       # Drop less useful / always zero container memory metrics.
       # NOTE: container_memory_working_set_bytes and container_memory_rss are kept
       # intentionally — use these for pod resource sizing decisions.
-      - sourceLabels: [__name__]
+      - regex: "container_memory_(mapped_file|swap)"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_memory_(mapped_file|swap)"
       # Drop less useful container process metrics.
-      - sourceLabels: [__name__]
+      - regex: "container_(file_descriptors|tasks_state|threads_max)"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_(file_descriptors|tasks_state|threads_max)"
       # Drop container_memory_failures_total{scope="hierarchy"} metrics,
       # we only need the container scope.
-      - sourceLabels: [__name__, scope]
+      - regex: "container_memory_failures_total;hierarchy"
+        sourceLabels: [__name__, scope]
         action: drop
-        regex: "container_memory_failures_total;hierarchy"
       # Drop container_network_... metrics that match various interfaces that
       # correspond to CNI and similar interfaces. This avoids capturing network
       # metrics for host network containers.
-      - sourceLabels: [__name__, interface]
+      - regex: "container_network_.*;(cali|cilium|cni|lxc|nodelocaldns|tunl).*"
+        sourceLabels: [__name__, interface]
         action: drop
-        regex: "container_network_.*;(cali|cilium|cni|lxc|nodelocaldns|tunl).*"
       # Drop container spec metrics that overlap with kube-state-metrics.
-      - sourceLabels: [__name__]
+      - regex: "container_spec.*"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_spec.*"
       # Drop cgroup metrics with no pod.
-      - sourceLabels: [id, pod]
+      - regex: ".+;"
+        sourceLabels: [id, pod]
         action: drop
-        regex: ".+;"
       # Drop block I/O per-device stats — high cardinality, not in any default dashboard/alert.
-      - sourceLabels: [__name__]
+      - regex: "container_blkio_device_usage_total"
+        sourceLabels: [__name__]
         action: drop
-        regex: "container_blkio_device_usage_total"
