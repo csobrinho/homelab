@@ -7,9 +7,6 @@ metadata:
 spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.10
-  postgresql:
-    parameters:
-      timezone: America/Los_Angeles
   storage:
     size: 5Gi
     storageClass: ceph-block
