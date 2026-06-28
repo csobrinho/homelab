@@ -15,7 +15,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: node-red
     namespace: node-red
-    version: 24.1.0
+    version: 24.2.0
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
