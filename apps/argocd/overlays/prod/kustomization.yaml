@@ -20,6 +20,11 @@ helmCharts:
         env:
           - name: TZ
             value: America/Los_Angeles
+      redis:
+        enabled: false
+      externalRedis:
+        enabled: true
+        host: valkey.infra.svc.cluster.local
       configs:
         params:
           server.insecure: true
