@@ -121,7 +121,7 @@ spec:
     name: esphome-fleet-worker
     kind: StatefulSet
   minReplicaCount: 0
-  maxReplicaCount: 4
+  maxReplicaCount: 3
   cooldownPeriod: 600
   pollingInterval: 15
   triggers:
