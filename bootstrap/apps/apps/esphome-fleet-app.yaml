@@ -11,4 +11,10 @@ spec:
   source:
     path: apps/esphome-fleet/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
-  ignoreDifferences: []
+  ignoreDifferences:
+    - group: "apps"
+      kind: "StatefulSet"
+      name: "esphome-fleet-worker"
+      namespace: "esphome"
+      jsonPointers:
+        - "/spec/replicas"
