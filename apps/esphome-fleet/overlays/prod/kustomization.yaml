@@ -83,12 +83,20 @@ helmCharts:
             - path: /config/esphome
         data:
           type: persistentVolumeClaim
-          accessMode: ReadWriteMany
-          size: 32Gi
-          storageClass: ceph-filesystem
+          accessMode: ReadWriteOnce
+          size: 2Gi
+          storageClass: ceph-block
           retain: true
           globalMounts:
             - path: /data
+        esphome-versions:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 24Gi
+          storageClass: ceph-block
+          retain: true
+          globalMounts:
+            - path: /data/esphome-versions
         development:
           type: nfs
           server: infra1
