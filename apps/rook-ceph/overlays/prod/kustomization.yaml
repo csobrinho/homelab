@@ -191,10 +191,10 @@ patches:
         gateway:
           resources:
             limits:
-              memory: 512Mi # Default: 2Gi
+              memory: 768Mi # Default: 2Gi
             requests:
               cpu: 750m #     Default: 1000m
-              memory: 256Mi # Default: 1Gi
+              memory: 512Mi # Default: 1Gi
   - patch: |-
       apiVersion: ceph.rook.io/v1
       kind: CephFilesystem
@@ -205,7 +205,7 @@ patches:
         metadataServer:
           resources:
             limits:
-              memory: 512Mi # Default: 4Gi
+              memory: 1536Mi # Default: 4Gi
             requests:
-              cpu: 500m #     Default: 1000m
-              memory: 256Mi # Default: 4Gi
+              cpu: 750m #      Default: 1000m
+              memory: 768Mi #  Default: 4Gi
