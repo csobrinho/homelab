@@ -47,14 +47,8 @@ helmCharts:
             # including infra1 (x86) and infra2/infra4 (arm64 workers)
           controllerPlugin:
             replicas: 2 # you have 2 mgr nodes
-        # CephFS — filesystem storage.
         cephfs:
-          enabled: true
-          name: "rook-ceph.cephfs.csi.ceph.com"
-          nodePlugin:
-            priorityClassName: system-node-critical
-          controllerPlugin:
-            replicas: 2
+          enabled: false
         nvmeof:
           enabled: false
         nfs:
@@ -149,14 +143,6 @@ helmCharts:
         labels:
           velero.io/csi-volumesnapshot-class: "true"
 
-      # cephFileSystems:
-      # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#filesystem-settings for available configuration
-      cephFileSystemVolumeSnapshotClass:
-        enabled: true
-        isDefault: true
-        labels:
-          velero.io/csi-volumesnapshot-class: "true"
-
       # cephObjectStores:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
 
@@ -175,13 +161,6 @@ patches:
       reclaimPolicy: Retain
       allowVolumeExpansion: true
   - patch: |-
-      apiVersion: storage.k8s.io/v1
-      kind: StorageClass
-      metadata:
-        name: ceph-filesystem
-      reclaimPolicy: Retain
-      allowVolumeExpansion: true
-  - patch: |-
       apiVersion: ceph.rook.io/v1
       kind: CephObjectStore
       metadata:
@@ -195,17 +174,3 @@ patches:
             requests:
               cpu: 750m #     Default: 1000m
               memory: 512Mi # Default: 1Gi
-  - patch: |-
-      apiVersion: ceph.rook.io/v1
-      kind: CephFilesystem
-      metadata:
-        name: ceph-filesystem
-        namespace: rook-ceph
-      spec:
-        metadataServer:
-          resources:
-            limits:
-              memory: 1536Mi # Default: 4Gi
-            requests:
-              cpu: 750m #      Default: 1000m
-              memory: 768Mi #  Default: 4Gi
