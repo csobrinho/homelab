@@ -14,9 +14,6 @@ helmCharts:
     version: 2.19.0
     includeCRDs: true
     valuesInline:
-      podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "arm64"
       metrics:
         serviceMonitor:
           enabled: true

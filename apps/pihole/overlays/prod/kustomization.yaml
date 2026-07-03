@@ -23,8 +23,6 @@ helmCharts:
       hostNetwork: true
       DNS1: 10.10.2.1
       DNS2: ""
-      nodeSelector:
-        kubernetes.io/arch: arm64
       admin:
         enabled: true
         existingSecret: api-secret

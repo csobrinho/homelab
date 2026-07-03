@@ -19,7 +19,6 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         nodeSelector:
-          kubernetes.io/arch: "arm64"
           feature.node.kubernetes.io/usb-zwave.present: "true"
       service:
         ws:
