@@ -11,7 +11,7 @@ helmCharts:
     repo: https://utkuozdemir.org/helm-charts
     releaseName: nvidia-gpu-exporter
     namespace: infra
-    version: 1.0.0
+    version: 1.0.2
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
