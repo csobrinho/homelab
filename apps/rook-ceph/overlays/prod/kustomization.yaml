@@ -71,6 +71,9 @@ helmCharts:
       cephImage:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
+        dashboard:
+          enabled: true
+          prometheusEndpoint: "http://kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
         mgr:
           count: 2
           allowMultiplePerNode: false
