@@ -136,9 +136,10 @@ spec:
           livenessProbe:
             exec:
               command: ["celery", "-A", "dispatcharr", "inspect", "ping"]
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 4
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
