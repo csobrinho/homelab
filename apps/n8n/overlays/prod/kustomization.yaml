@@ -1,6 +1,5 @@
 # From https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1n.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -13,12 +12,12 @@ helmCharts:
   - name: n8n
     repo: oci://8gears.container-registry.com/library
     releaseName: n8n
-    namespace: llm
+    namespace: n8n
     version: 2.0.1
     includeCRDs: true
     valuesInline:
       main:
-        replicaCount: 0 # Off for now.
+        replicaCount: 1
         config:
           n8n:
             editor:
@@ -39,16 +38,17 @@ helmCharts:
                 active: true
             bull:
               redis:
-                host: n8n-valkey-primary
+                host: valkey.infra.svc.cluster.local
                 port: 6379
+                db: 2 # See apps/valkey/overlays/prod/kustomization.yaml
         persistence:
           enabled: true
           type: dynamic
           storageClass: "ceph-block"
           accessModes:
             - ReadWriteOnce
-          size: 8Gi
-        extraEnv: &extraEnv
+          size: 4Gi
+        extraEnv:
           EXECUTIONS_MODE:
             value: "regular"
           N8N_PROXY_HOPS:
@@ -58,40 +58,18 @@ helmCharts:
               secretKeyRef:
                 name: n8n-secret
                 key: encryption-key
-        resources: &limits
+        resources:
           limits:
             cpu: 750m
             memory: 768Mi
           requests:
             cpu: 100m
             memory: 128Mi
-        nodeSelector: &nodeSelector
+        nodeSelector:
           kubernetes.io/arch: arm64
       worker:
         enabled: false
       webhook:
         enabled: false
-      # Bitnami Valkey configuration
-      # https://artifacthub.io/packages/helm/bitnami/valkey
       valkey:
-        enabled: true
-        replicaCount: 0 # Off for now.
-        architecture: standalone
-        sentinel:
-          enabled: false
-        auth:
-          enabled: false
-        primary:
-          kind: Deployment
-          persistence:
-            enabled: true
-            type: dynamic
-            storageClass: "ceph-block"
-            accessModes:
-              - ReadWriteOnce
-            size: 2Gi
-          resources:
-            requests:
-              memory: 256Mi
-              cpu: 100m
-          nodeSelector: *nodeSelector
+        enabled: false
