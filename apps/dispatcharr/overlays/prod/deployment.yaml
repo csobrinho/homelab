@@ -116,7 +116,7 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_DB
-              value: "0"
+              value: "1" # See apps/valkey/overlays/prod/kustomization.yaml
             - name: DJANGO_SETTINGS_MODULE
               value: "dispatcharr.settings"
             - name: PYTHONUNBUFFERED
