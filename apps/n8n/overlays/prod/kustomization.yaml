@@ -28,8 +28,6 @@ helmCharts:
               base_url: https://n8n.sobrinho.pt/
             templates:
               enabled: "true"
-            runners:
-              enabled: "true"
             enforce:
               settings_file_permissions: "true"
           db:
