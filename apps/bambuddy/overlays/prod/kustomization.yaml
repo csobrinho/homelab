@@ -117,6 +117,7 @@ helmCharts:
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
+                NODE_ENV: development
                 PUID: *uid
                 PGID: *uid
                 PORT: *port-bs
