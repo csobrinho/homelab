@@ -20,13 +20,39 @@ helmCharts:
       postgresql:
         enabled: false
       windmill:
-        baseUrl: https://windmill.sobrinho.pt
-        frontendReplicas: 2
-        workerReplicas: 4
-        lspReplicas: 2
+        baseDomain: windmill.sobrinho.pt
+        baseProtocol: https
+        appReplicas: 1
+        frontendReplicas: 1
+        workerReplicas: 1
+        lspReplicas: 1
         databaseUrlSecretName: "windmill-secret"
         databaseUrlSecretKey: url
+        app:
+          nodeSelector:
+            kubernetes.io/arch: "amd64"
+        windmillExtra:
+          nodeSelector:
+            kubernetes.io/arch: "amd64"
+
       ingress:
         enabled: false
       enterprise:
         enabled: false
+
+# Force amd64 since jemalloc does not support arm64 16k page size.
+patches:
+  - target:
+      kind: Deployment
+      name: "windmill-workers-.*"
+      labelSelector: "app.kubernetes.io/name=windmill-workers"
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ignored
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              kubernetes.io/arch: "amd64"
