@@ -52,6 +52,7 @@ patches:
       metadata:
         name: ignored
       spec:
+        replicas: 1
         template:
           spec:
             nodeSelector:
