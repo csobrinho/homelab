@@ -1,0 +1,32 @@
+# From https://github.com/windmill-labs/windmill-helm-charts/blob/main/charts/windmill/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+  - postgresql-database.yaml
+  - secrets/windmill-secret-enc.yaml
+
+helmCharts:
+  - name: windmill
+    repo: https://windmill-labs.github.io/windmill-helm-charts/
+    releaseName: windmill
+    namespace: windmill
+    version: 4.0.204
+    includeCRDs: true
+    valuesInline:
+      postgresql:
+        enabled: false
+      windmill:
+        baseUrl: https://windmill.sobrinho.pt
+        frontendReplicas: 2
+        workerReplicas: 4
+        lspReplicas: 2
+        databaseUrlSecretName: "windmill-secret"
+        databaseUrlSecretKey: url
+      ingress:
+        enabled: false
+      enterprise:
+        enabled: false

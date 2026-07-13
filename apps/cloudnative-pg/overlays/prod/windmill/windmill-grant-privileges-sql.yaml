@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: windmill-grant-privileges-sql
+  namespace: cnpg-system
+data:
+  grant.sql: |
+    GRANT ALL
+    ON ALL TABLES IN SCHEMA public 
+    TO windmill_user;
+
+    GRANT ALL PRIVILEGES 
+    ON ALL SEQUENCES IN SCHEMA public 
+    TO windmill_user;
+
+    ALTER DEFAULT PRIVILEGES 
+        IN SCHEMA public
+        GRANT ALL ON TABLES TO windmill_user;
+
+    ALTER DEFAULT PRIVILEGES 
+        IN SCHEMA public
+        GRANT ALL ON SEQUENCES TO windmill_user;

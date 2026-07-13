@@ -17,6 +17,7 @@ spec:
     limits:
       cpu: 1000m
       memory: 1536Mi
+  enableSuperuserAccess: true
   managed:
     roles:
       - name: dispatcharr
@@ -26,3 +27,26 @@ spec:
         connectionLimit: -1
         ensure: present
         inherit: true
+      - name: windmill_user
+        login: false
+        connectionLimit: -1	
+        ensure: present	
+        inherit: true
+      - name: windmill_admin
+        login: false
+        connectionLimit: -1	
+        ensure: present	
+        inherit: true
+        bypassrls: true
+        inRoles:
+          - windmill_user
+      - name: windmill
+        passwordSecret:
+          name: windmill-secret
+        login: true
+        connectionLimit: -1
+        ensure: present
+        inherit: true
+        inRoles:
+          - windmill_admin
+          - windmill_user

@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: windmill
+  namespace: argocd
+spec:
+  destination:
+    namespace: windmill
+    name: in-cluster
+  project: default
+  source:
+    path: apps/windmill/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: windmill-grant-privileges
+  namespace: cnpg-system
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 86400 # auto-clean the completed pod after a day
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: psql
+          image: ghcr.io/cloudnative-pg/postgresql:17.10
+          env:
+            - name: PGHOST
+              value: cluster-rw
+            - name: PGDATABASE
+              value: windmill
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: cluster-superuser
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cluster-superuser
+                  key: password
+          command: ["psql", "-v", "ON_ERROR_STOP=1", "-f", "/sql/grant.sql"]
+          volumeMounts:
+            - name: sql
+              mountPath: /sql
+      volumes:
+        - name: sql
+          configMap:
+            name: windmill-grant-privileges-sql

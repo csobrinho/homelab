@@ -7,6 +7,9 @@ resources:
   - ../../base
   - cluster.yaml
   - secrets/dispatcharr-secret-enc.yaml
+  - secrets/windmill-secret-enc.yaml
+  - windmill/windmill-grant-privileges-sql.yaml
+  - windmill/windmill-grant-privileges.yaml
 
 helmCharts:
   - name: cloudnative-pg
