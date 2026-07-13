@@ -51,6 +51,8 @@ helmCharts:
         extraEnv: &extraEnv
           EXECUTIONS_MODE:
             value: "regular"
+          N8N_PROXY_HOPS:
+            value: "1"
           N8N_ENCRYPTION_KEY:
             valueFrom:
               secretKeyRef:
