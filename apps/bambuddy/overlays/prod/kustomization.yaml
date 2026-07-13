@@ -42,7 +42,7 @@ helmCharts:
           controller: slicers
           ports:
             main:
-              port: &port-bs 3000
+              port: &port-bs 3001
       controllers:
         main:
           strategy: Recreate
@@ -85,7 +85,7 @@ helmCharts:
                   <<: *probe-main
                 startup:
                   <<: *probe-main
-              resources: &limits
+              resources:
                 limits:
                   memory: 2Gi
                 requests:
@@ -112,8 +112,8 @@ helmCharts:
           containers:
             bambustudio:
               image:
-                repository: ghcr.io/csobrinho/slicers-api
-                tag: bambu-v02.06.00.51@sha256:9d589bc3e1a2eb87a2ecc5266f123728ee42c60d8a3bf03aad661425a7c9104f
+                repository: ghcr.io/maziggy/bambu-studio-api
+                tag: bambuddy-0.2.4.9@sha256:28816c1373a4e95be315852aa1c6aa689924bb835ab23e5dc1b0cd683609876b
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
