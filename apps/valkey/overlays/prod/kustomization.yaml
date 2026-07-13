@@ -6,6 +6,23 @@ kind: Kustomization
 resources:
   - ../../base
 
+# Database IDs
+# 0:  argocd (default)
+# 1:  dispatcharr
+# 2:  n8n
+# 3:
+# 4:
+# 5:
+# 6:
+# 7:
+# 8:
+# 9:
+# 10:
+# 11:
+# 12:
+# 13:
+# 14:
+# 15:
 helmCharts:
   - name: valkey
     repo: https://valkey.io/valkey-helm/
