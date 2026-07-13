@@ -47,7 +47,7 @@ spec:
               protocol: TCP
           env:
             - name: DISPATCHARR_PORT
-              value: $(DISPATCHARR_SERVICE_PORT)
+              value: "9191"
             - name: DISPATCHARR_ENV
               value: "modular"
             - name: POSTGRES_HOST
@@ -98,8 +98,6 @@ spec:
           env:
             - name: DISPATCHARR_ENV
               value: "modular"
-            - name: DISPATCHARR_PORT
-              value: $(DISPATCHARR_SERVICE_PORT)
             - name: POSTGRES_HOST
               value: "cluster-rw.cnpg-system.svc.cluster.local"
             - name: POSTGRES_PORT
@@ -135,7 +133,12 @@ spec:
             limits:
               memory: 2Gi
               cpu: 750m
-
+          livenessProbe:
+            exec:
+              command: ["celery", "-A", "dispatcharr", "inspect", "ping"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
