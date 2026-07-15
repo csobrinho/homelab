@@ -30,3 +30,10 @@ helmCharts:
           path: /data
           server: infra1
           mountPath: /data
+      resources:
+        limits:
+          cpu: 500m
+          memory: 450Mi
+        requests:
+          cpu: 100m
+          memory: 200Mi
