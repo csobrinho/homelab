@@ -11,7 +11,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: psql
-          image: ghcr.io/cloudnative-pg/postgresql:17.10
+          image: ghcr.io/cloudnative-pg/postgresql:18.4
           env:
             - name: PGHOST
               value: cluster-rw
