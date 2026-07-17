@@ -12,8 +12,6 @@ spec:
       labels:
         app: chromium
     spec:
-      nodeSelector:
-        kubernetes.io/arch: arm64
       containers:
         - name: chromium
           image: ghcr.io/browserless/chromium:v2.54.2@sha256:8da772c56e5b64937a48447e988d1d42319809dd562098b0d08ee3c0f259d619

@@ -14,8 +14,6 @@ spec:
       labels:
         app: binner
     spec:
-      nodeSelector:
-        kubernetes.io/arch: arm64
       containers:
         - name: binner
           image: ghcr.io/csobrinho/binner-docker:main

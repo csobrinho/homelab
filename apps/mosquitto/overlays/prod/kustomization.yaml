@@ -17,9 +17,6 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
-      podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "arm64"
       service:
         websockets:
           enabled: false

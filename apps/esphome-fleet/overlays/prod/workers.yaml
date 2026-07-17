@@ -50,7 +50,7 @@ spec:
             - name: MIN_FREE_DISK_PCT
               value: "10"
             - name: WORKER_TAGS
-              value: "k8s,os:linux,arch:arm64"
+              value: "k8s,os:linux"
             - name: PLATFORM
               value: linux
             - name: HOSTNAME
@@ -92,8 +92,6 @@ spec:
           nfs:
             path: /data/dev/esphome/components
             server: infra1
-      nodeSelector:
-        kubernetes.io/arch: arm64
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim

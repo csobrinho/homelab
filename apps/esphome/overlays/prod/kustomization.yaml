@@ -18,8 +18,6 @@ helmCharts:
     valuesInline:
       TZ: America/Los_Angeles
       podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "arm64"
         hostNetwork: true
       persistence:
         config:

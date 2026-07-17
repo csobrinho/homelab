@@ -53,8 +53,6 @@ patches:
       spec:
         template:
           spec:
-            nodeSelector:
-              kubernetes.io/arch: "arm64"
             containers:
               - name: bentopdf
                 env:

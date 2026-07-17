@@ -24,8 +24,6 @@ helmCharts:
           value: "true" # Ignore TLS spec in Ingress resources.
         - name: EXTERNAL_DNS_TRAEFIK_DISABLE_LEGACY
           value: "true" # Disable listeners on Resources under traefik.containo.us.
-      nodeSelector:
-        kubernetes.io/arch: arm64
       logLevel: &logLevel info
       interval: 10m
       provider:

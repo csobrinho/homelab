@@ -34,9 +34,6 @@ helmCharts:
         container:
           runAsUser: 1000
           runAsGroup: 568
-      podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "arm64"
       persistence:
         data:
           enabled: true

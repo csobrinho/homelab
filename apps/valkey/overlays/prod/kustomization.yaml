@@ -32,8 +32,6 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       architecture: standalone # Deploy as a single standalone node (no cluster sharding or replication overhead)
-      nodeSelector:
-        kubernetes.io/arch: arm64
       resources:
         requests:
           cpu: 100m

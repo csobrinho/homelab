@@ -67,8 +67,6 @@ helmCharts:
           requests:
             cpu: 100m
             memory: 128Mi
-        nodeSelector:
-          kubernetes.io/arch: arm64
       worker:
         enabled: false
       webhook:
