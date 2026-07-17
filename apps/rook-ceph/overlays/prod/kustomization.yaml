@@ -137,6 +137,12 @@ helmCharts:
             requests:
               cpu: 500m #      Default: 1000m
               memory: 1Gi #    Default: 4Gi
+        placement:
+          all:
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: PreferNoSchedule
 
       # -- A list of CephFileSystem configurations to deploy
       # @default -- See [below](#ceph-file-systems)
@@ -157,7 +163,6 @@ helmCharts:
 
       # cephObjectStores:
       # See https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
-
 patches:
   - patch: |-
       apiVersion: storage.k8s.io/v1
