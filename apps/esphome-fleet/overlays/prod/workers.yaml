@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: esphome-fleet-worker
-          image: ghcr.io/weirded/esphome-dist-client:1.7.1@sha256:c5d93060295ca52a509aace710a98d2cf80cd6c48322b450c5e1c76e33e17cef
+          image: ghcr.io/weirded/esphome-dist-client:1.7.2@sha256:8a5f04d94977adf6046d0f499017af105ec4b4acf703fd42e6796a6406c56ec2
           imagePullPolicy: IfNotPresent
           env:
             - name: SERVER_URL
