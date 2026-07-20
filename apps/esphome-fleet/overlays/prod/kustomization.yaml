@@ -45,7 +45,7 @@ helmCharts:
             main:
               image:
                 repository: ghcr.io/weirded/esphome-dist-server
-                tag: 1.7.2@sha256:f4b28522c257e49afd1e7729948d5d8cdae903526a0f4047b6966dd29e526ea2
+                tag: 1.7.2@sha256:40adca0877b6c326cd7b60e13072d22abc9d6757dadc18862df4e08b918f2361
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
