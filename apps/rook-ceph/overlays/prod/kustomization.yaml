@@ -44,7 +44,7 @@ helmCharts:
             # No affinity/nodeSelector here — DaemonSet must run on ALL nodes
             # including infra1 (x86) and infra2/infra4 (arm64 workers)
           controllerPlugin:
-            replicas: 2 # you have 2 mgr nodes
+            replicas: 2
         cephfs:
           enabled: false
         nvmeof:
@@ -131,10 +131,10 @@ helmCharts:
               memory: 500Mi #  Default: 1Gi
           osd:
             limits:
-              memory: 2Gi #    Default: 4Gi
+              memory: 2300Mi # Default: 4Gi
             requests:
               cpu: 500m #      Default: 1000m
-              memory: 1Gi #    Default: 4Gi
+              memory: 2Gi #    Default: 4Gi
         placement:
           all:
             tolerations:
