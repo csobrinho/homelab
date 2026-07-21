@@ -30,7 +30,7 @@ spec:
           command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
       containers:
         - name: dispatcharr
-          image: ghcr.io/dispatcharr/dispatcharr:0.27.2@sha256:f2b5ea3128b0513feb07efee7539ad546f3ba3a9095f19936f446f75b8baa894
+          image: ghcr.io/dispatcharr/dispatcharr:0.28.1@sha256:38ec7bdd8d4f784b442dd88a2a21165fddb60567b3dfca062adec82c0428432e
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -93,7 +93,7 @@ spec:
             periodSeconds: 30
             failureThreshold: 3
         - name: celery
-          image: ghcr.io/dispatcharr/dispatcharr:0.27.2@sha256:f2b5ea3128b0513feb07efee7539ad546f3ba3a9095f19936f446f75b8baa894
+          image: ghcr.io/dispatcharr/dispatcharr:0.28.1@sha256:38ec7bdd8d4f784b442dd88a2a21165fddb60567b3dfca062adec82c0428432e
           command: ["/app/docker/entrypoint.celery.sh"]
           env:
             - name: DISPATCHARR_ENV
