@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: rook-prometheus
+    role: alert-rules
+  name: prometheus-ceph-rules-pool-growth-warning
+  namespace: rook-ceph
+spec:
+  groups:
+    - name: pools
+      rules:
+        - alert: CephPoolGrowthWarning
+          annotations:
+            description:
+              Pool '{{ $labels.name }}' will be full in less than 5 days assuming
+              the average fill-up rate of the past 48 hours.
+            summary: Pool growth rate may soon exceed capacity on cluster {{ $labels.cluster }}
+            # Replaces upstream CephPoolGrowthWarning: the stock expr joins on
+            # (cluster,pool_id,instance), which breaks with "many-to-many matching
+            # not allowed" whenever a mgr pod restart leaves two pods scraped in
+            # the same window (rook#14338, rook#14427, rook#10691 - unresolved
+            # upstream as of 2026).
+            #
+            # Fix: dedup pod/instance duplicates via `max by` on each side before
+            # the join, dropping instance from the match keys.
+          expr:
+            (predict_linear(max by(cluster,pool_id) (ceph_pool_percent_used)[2d:1m], 3600 * 24 * 5)
+            * on(cluster,pool_id) group_right() max by(cluster,pool_id,name) (ceph_pool_metadata)) >= 95
+          labels:
+            oid: 1.3.6.1.4.1.50495.1.2.1.9.2
+            severity: warning
+            type: ceph_default

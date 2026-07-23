@@ -9,6 +9,7 @@ resources:
   - bucket-obdisian.yaml
   - ingress-route.yaml
   - middleware-auth-s3.yaml
+  - prometheus-ceph-rules-pool-growth-warning.yaml
   - s3-ingress-route.yaml
 
 helmCharts:
@@ -189,3 +190,17 @@ patches:
             requests:
               cpu: 750m #     Default: 1000m
               memory: 512Mi # Default: 1Gi
+  - target:
+      group: monitoring.coreos.com
+      version: v1
+      kind: PrometheusRule
+      name: prometheus-ceph-rules
+      namespace: rook-ceph
+    patch: |-
+      # Remove the CephPoolGrowthWarning alert from the PrometheusRule since
+      # the rule causes issues during updates. The new rule is manually added.
+      - op: test
+        path: /spec/groups/7/rules/0/alert
+        value: CephPoolGrowthWarning
+      - op: remove
+        path: /spec/groups/7/rules/0
