@@ -15,7 +15,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: changedetection-io
     namespace: tools
-    version: 6.7.1
+    version: 6.8.0
     kubeVersion: "1.33"
     includeCRDs: true
     valuesInline:
