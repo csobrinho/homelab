@@ -14,6 +14,9 @@ spec:
       labels:
         app: ipmi-server
     spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+        feature.node.kubernetes.io/usb-zigbee.present: "true"
       containers:
         - name: ipmi-server
           image: mneveroff/ipmi-server:1.2.7
