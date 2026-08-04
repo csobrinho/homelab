@@ -22,6 +22,14 @@ helmCharts:
         defaultAffinity: false
         nodeSelector:
           kubernetes.io/arch: "amd64"
+      service:
+        main:
+          externalTrafficPolicy: Local
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: infra-plex
+          labels:
+            io.cilium/lb-pool: pool-infra-plex
+          type: LoadBalancer
       persistence:
         config:
           enabled: true
