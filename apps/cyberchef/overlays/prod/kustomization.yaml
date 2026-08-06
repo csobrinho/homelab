@@ -17,6 +17,3 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
-
-components:
-  - ../../../../components/managed-sablier

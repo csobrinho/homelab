@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: cyberchef
   namespace: argocd
-  labels:
-    sablier.managed: "true"
 spec:
   destination:
     namespace: cyberchef
