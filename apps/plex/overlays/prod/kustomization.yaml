@@ -52,7 +52,7 @@ helmCharts:
           mountPath: /data
       plex:
         serverIP: 10.10.10.11 # infra-plex VIP.
-        additionalAdvertiseURL: "https://plex.sobrinho.pt:443,http://plex.media.svc.cluster.local:32400"
+        additionalAdvertiseURL: "https://plex.sobrinho.pt:443"
       resources:
         limits:
           gpu.intel.com/i915: "1"
