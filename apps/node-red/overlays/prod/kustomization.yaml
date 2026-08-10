@@ -30,6 +30,7 @@ helmCharts:
                       name: node-red-secret
                       key: credential_secret
                       expandObjectName: false
+                  HOME: /data/home
       securityContext:
         container:
           runAsUser: 1000
