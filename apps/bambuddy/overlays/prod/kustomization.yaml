@@ -11,7 +11,7 @@ helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: bambuddy
-    version: 5.0.1
+    version: 5.1.0
     namespace: tools
     valuesFile: values-empty.yaml
     valuesInline:
