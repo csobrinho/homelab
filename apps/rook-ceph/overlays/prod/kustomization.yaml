@@ -43,7 +43,7 @@ helmCharts:
           nodePlugin:
             priorityClassName: system-node-critical
             # No affinity/nodeSelector here — DaemonSet must run on ALL nodes
-            # including infra1 (x86) and infra2/infra4 (arm64 workers)
+            # including infra1 (x86) and infra2/infra34 (arm64 workers)
           controllerPlugin:
             replicas: 2
         cephfs:
@@ -105,10 +105,10 @@ helmCharts:
             - name: infra35
               devices:
                 - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0WA17672P-part3"
-            - name: infra6
+            - name: infra36
               devices:
                 - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNU0X415592A-part3"
-            # - name: infra7
+            # - name: infra37
             #   devices:
             #     - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_1TB_S3D2NX0J201186E-part3"
             - name: infra38
