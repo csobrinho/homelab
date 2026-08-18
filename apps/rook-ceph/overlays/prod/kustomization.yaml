@@ -102,7 +102,7 @@ helmCharts:
             # - name: infra3
             #   devices:
             #     - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_256GB_S251NSAG548480W-part3"
-            - name: infra5
+            - name: infra35
               devices:
                 - name: "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0WA17672P-part3"
             - name: infra6
