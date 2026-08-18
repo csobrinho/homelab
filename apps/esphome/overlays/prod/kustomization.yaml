@@ -48,7 +48,7 @@ helmCharts:
           enabled: true
           type: nfs
           path: /data/dev/esphome/components
-          server: infra1
+          server: infra31
           mountPath: /development/components
       resources:
         limits:

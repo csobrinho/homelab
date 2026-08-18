@@ -91,7 +91,7 @@ spec:
         - name: development
           nfs:
             path: /data/dev/esphome/components
-            server: infra1
+            server: infra31
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim

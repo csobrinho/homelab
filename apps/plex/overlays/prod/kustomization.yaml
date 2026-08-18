@@ -41,14 +41,14 @@ helmCharts:
           enabled: true
           type: nfs
           path: /data/media/transcode
-          server: infra1
+          server: infra31
           mountPath: /transcode
           size: 16Gi
         media:
           enabled: true
           type: nfs
           path: /data
-          server: infra1
+          server: infra31
           mountPath: /data
       plex:
         serverIP: 10.10.10.29 # infra-plex VIP.

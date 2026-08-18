@@ -31,7 +31,7 @@ helmCharts:
           enabled: true
           type: nfs
           path: /data
-          server: infra1
+          server: infra31
           mountPath: /data
       resources:
         limits:
