@@ -96,10 +96,10 @@ helmCharts:
                 requests:
                   cpu: 750m #     Default: 1000m
                   memory: 750Mi # Default: 4Gi
-            - name: infra2
+            - name: infra32
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_SSD_860_PRO_1TB_S45ENF0M201675D-part3"
-            # - name: infra3
+            # - name: infra33
             #   devices:
             #     - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_256GB_S251NSAG548480W-part3"
             - name: infra35
