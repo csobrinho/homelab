@@ -111,7 +111,7 @@ helmCharts:
             # - name: infra7
             #   devices:
             #     - name: "/dev/disk/by-id/ata-Samsung_SSD_850_PRO_1TB_S3D2NX0J201186E-part3"
-            - name: infra8
+            - name: infra38
               devices:
                 - name: "/dev/disk/by-id/ata-Samsung_Portable_SSD_T5_S3UJNV0K408351K-part3"
         network:
