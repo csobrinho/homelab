@@ -19,17 +19,14 @@ k8s:
 
 # Datapath
 bpf:
+  datapathMode: veth                  # Modern kernel interface (kernel 6.8+).
   masquerade: true                    # BPF-based masquerading (faster than iptables)
   preallocateMaps: true               # Pre-allocate BPF maps (reduces latency spikes)
-  tproxy: true                        # Transparent proxy support.
-  # datapathMode: netkit              # Modern kernel interface (kernel 6.8+).
-  lbExternalClusterIP: false          # Unless you need external access to ClusterIPs
 
 # Load Balancer (choose based on network topology)
 loadBalancer:
-  mode: hybrid                        # DSR is performed for TCP and SNAT for UDP connections. 
-  dsrDispatch: opt                    # Or "ipip" for certain scenarios
   algorithm: maglev                   # Better load distribution than random
+  mode: dsr                           # DSR is performed for TCP and SNAT for UDP connections. 
 ###  acceleration: best-effort        # XDP acceleration if NIC supports it. -- Keeps resetting the NIC!!
                                       # Intel x710 should support it with i40e >= 4.13 driver.
 
