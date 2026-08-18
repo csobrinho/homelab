@@ -10,7 +10,7 @@ spec:
       kubernetes.io/os: linux
   bgpInstances:
     - name: cilium
-      localASN: 65001
+      localASN: 65002
       peers:
         - name: unifi
           peerASN: 65000
