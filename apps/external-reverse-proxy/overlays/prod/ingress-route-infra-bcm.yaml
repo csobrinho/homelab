@@ -4,10 +4,10 @@ metadata:
   name: infra-bcm-ingress
   namespace: infra
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-int
+    external-dns.alpha.kubernetes.io/target: infra-bcm
 spec:
   entryPoints:
-    - websecure
+    # - websecure Only external. Internal access goes directly.
     - websecure-ext
   routes:
     - match: Host(`infra-bcm.sobrinho.pt`)
