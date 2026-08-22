@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: chromium
-          image: ghcr.io/browserless/chromium:v2.55.4@sha256:2ed0183564d7705be8555632b48306a500073ff64ca9e507f6cd2d4a56ecb0fc
+          image: ghcr.io/browserless/chromium:v2.56.0@sha256:6f3149efabf5e04a44385974448c85264398db416bc63f884564316d0fcadc3e
           ports:
             - containerPort: 3000
           env:
