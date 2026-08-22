@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: read-certs
+  namespace: infra
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames:
+      - infra-bcm-cert
+      - infra-kvm-cert
+      - infra-vm-cert
+      - unifi-cert
+    verbs: ["get"]

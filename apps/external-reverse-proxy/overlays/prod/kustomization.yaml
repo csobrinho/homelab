@@ -10,6 +10,8 @@ resources:
   - ingress-route-infra-kvm.yaml
   - ingress-route-infra-vm.yaml
   - ingress-route-unifi.yaml
+  - role-binding-node-red-read-certs.yaml
+  - role-read-certs.yaml
   - service-infra-bcm.yaml
   - service-infra-kvm.yaml
   - service-infra-vm.yaml

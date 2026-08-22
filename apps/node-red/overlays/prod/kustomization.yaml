@@ -9,6 +9,7 @@ resources:
   - ingress-route.yaml
   - secrets/node-red-secret-enc.yaml
   - middleware-go-redirect.yaml
+  - service-account.yaml
 
 helmCharts:
   - name: node-red
@@ -22,6 +23,8 @@ helmCharts:
       workload:
         main:
           podSpec:
+            automountServiceAccountToken: true
+            serviceAccountName: node-red-cert-reader
             containers:
               main:
                 env:
