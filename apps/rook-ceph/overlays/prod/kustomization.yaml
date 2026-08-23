@@ -142,7 +142,21 @@ helmCharts:
               - key: node-role.kubernetes.io/control-plane
                 operator: Exists
                 effect: PreferNoSchedule
-
+        security:
+          cephx:
+            daemon:
+              keyRotationPolicy: KeyGeneration
+              keyGeneration: 2
+            csi:
+              keyRotationPolicy: KeyGeneration
+              keyGeneration: 2
+              keepPriorKeyCountMax: 1  # keep one prior key also
+              keyType: aes # keep the old aes key type when the host kernels do not yet support aes256k
+            rbdMirrorPeer:
+              keyRotationPolicy: KeyGeneration
+              keyGeneration: 2
+              keyType: aes # keep the old aes key type when the peer does not yet support aes256k
+             
       # -- A list of CephFileSystem configurations to deploy
       # @default -- See [below](#ceph-file-systems)
       cephFileSystems: [] # Disabled.
