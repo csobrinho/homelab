@@ -29,6 +29,11 @@
     {
       "matchPackageNames": ["cilium/cilium", "quay.io/cilium/cilium"],
       "enabled": false
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchPackageNames": ["rook-ceph", "rook-ceph-cluster"],
+      "enabled": false
     }
   ],
   "helm-values": {
