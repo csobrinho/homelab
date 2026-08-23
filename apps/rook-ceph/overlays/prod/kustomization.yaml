@@ -132,7 +132,7 @@ helmCharts:
               memory: 500Mi #  Default: 1Gi
           osd:
             limits:
-              memory: 2300Mi # Default: 4Gi
+              memory: 2600Mi # Default: 4Gi
             requests:
               cpu: 500m #      Default: 1000m
               memory: 2Gi #    Default: 4Gi
