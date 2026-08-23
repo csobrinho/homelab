@@ -25,6 +25,10 @@
       "matchUpdateTypes": ["major"],
       "schedule": ["before 6am"],
       "automerge": false
+    },
+    {
+      "matchPackageNames": ["cilium/cilium", "quay.io/cilium/cilium"],
+      "enabled": false
     }
   ],
   "helm-values": {
