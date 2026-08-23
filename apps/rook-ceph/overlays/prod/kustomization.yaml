@@ -70,6 +70,7 @@ helmCharts:
       cephImage:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
+        skipUpgradeChecks: true # TODO: Remove this once the upgrade issues are resolved.
         dashboard:
           enabled: true
           prometheusEndpoint: "http://kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
