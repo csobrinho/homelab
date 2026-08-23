@@ -17,7 +17,7 @@ helmCharts:
     releaseName: rook-ceph
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.20.6
+    version: v1.20.4
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph/values.yaml
     valuesInline:
@@ -57,7 +57,7 @@ helmCharts:
     releaseName: rook-release
     namespace: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.20.6
+    version: v1.20.4
     includeCRDs: true
     # From https://github.com/rook/rook/blob/master/deploy/charts/rook-ceph-cluster/values.yaml
     valuesInline:
@@ -143,20 +143,6 @@ helmCharts:
               - key: node-role.kubernetes.io/control-plane
                 operator: Exists
                 effect: PreferNoSchedule
-        security:
-          cephx:
-            daemon:
-              keyRotationPolicy: KeyGeneration
-              keyGeneration: 2
-            csi:
-              keyRotationPolicy: KeyGeneration
-              keyGeneration: 2
-              keepPriorKeyCountMax: 1  # keep one prior key also
-              keyType: aes # keep the old aes key type when the host kernels do not yet support aes256k
-            rbdMirrorPeer:
-              keyRotationPolicy: KeyGeneration
-              keyGeneration: 2
-              keyType: aes # keep the old aes key type when the peer does not yet support aes256k
              
       # -- A list of CephFileSystem configurations to deploy
       # @default -- See [below](#ceph-file-systems)
