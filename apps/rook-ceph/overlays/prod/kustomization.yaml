@@ -70,7 +70,6 @@ helmCharts:
       cephImage:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
-        skipUpgradeChecks: true # TODO: Remove this once the upgrade issues are resolved.
         security:
           cephx:
             # Rotate mon/mgr/osd/mds daemon keys to aes256k (CVE-2025-30156 fix, Ceph
