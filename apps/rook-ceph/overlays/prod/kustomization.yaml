@@ -71,6 +71,19 @@ helmCharts:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
         skipUpgradeChecks: true # TODO: Remove this once the upgrade issues are resolved.
+        security:
+          cephx:
+            # Rotate mon/mgr/osd/mds daemon keys to aes256k (CVE-2025-30156 fix, Ceph
+            # Tentacle 20.2.4+). Daemon keys are used only for in-cluster daemon-to-daemon
+            # auth (userspace, containers) so they don't depend on host kernel support.
+            daemon:
+              keyRotationPolicy: KeyGeneration
+              keyGeneration: 2
+            # CSI/client keys are used by the kernel RBD/CephFS clients on nodes. aes256k
+            # kernel support only landed in kernel 7.0; only one node runs it, the rest are
+            # on 6.x, so these must stay on aes until every node is upgraded.
+            csi:
+              keyType: aes
         dashboard:
           enabled: true
           prometheusEndpoint: "http://kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
