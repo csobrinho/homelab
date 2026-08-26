@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: radarr
     namespace: media
-    version: 27.10.4
+    version: 27.10.5
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
