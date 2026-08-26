@@ -11,4 +11,5 @@ spec:
   source:
     path: apps/initial-setup/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
+    targetRevision: migration
   ignoreDifferences: []
