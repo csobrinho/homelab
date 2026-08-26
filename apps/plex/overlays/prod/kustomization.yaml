@@ -40,15 +40,15 @@ helmCharts:
         transcode:
           enabled: true
           type: nfs
-          path: /data/media/transcode
-          server: infra31
+          server: infra-vm
+          path: /mnt/library/media/transcode
           mountPath: /transcode
           size: 16Gi
         media:
           enabled: true
           type: nfs
-          path: /data
-          server: infra31
+          server: infra-vm
+          path: /mnt/library
           mountPath: /data
       plex:
         serverIP: 10.10.10.29 # infra-plex VIP.

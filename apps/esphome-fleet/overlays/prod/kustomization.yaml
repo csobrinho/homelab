@@ -97,7 +97,7 @@ helmCharts:
             - path: /data/esphome-versions
         development:
           type: nfs
-          server: infra31
-          path: /data/dev/esphome/components
+          server: infra-vm
+          path: /mnt/library/dev/esphome/components
           globalMounts:
             - path: /development/components
