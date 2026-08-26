@@ -90,8 +90,8 @@ spec:
       volumes:
         - name: development
           nfs:
-            path: /data/dev/esphome/components
-            server: infra31
+            server: infra-vm
+            path: /mnt/library/dev/esphome/components
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim

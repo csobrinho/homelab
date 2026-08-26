@@ -47,6 +47,6 @@ helmCharts:
         downloads:
           enabled: true
           type: nfs
-          path: /data/torrents
-          server: infra31
+          server: infra-vm
+          path: /mnt/library/torrents
           mountPath: /data/torrents
