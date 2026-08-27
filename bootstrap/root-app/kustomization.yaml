@@ -4,3 +4,6 @@ kind: Kustomization
 
 resources:
   - application.yaml
+
+components:
+  - ../../components/application-sync-policy

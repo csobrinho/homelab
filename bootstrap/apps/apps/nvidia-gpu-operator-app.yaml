@@ -11,7 +11,6 @@ spec:
   source:
     path: apps/nvidia-gpu-operator/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
-    targetRevision: migration
   ignoreDifferences:
     - group: nvidia.com
       kind: ClusterPolicy

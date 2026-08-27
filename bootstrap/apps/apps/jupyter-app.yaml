@@ -13,7 +13,6 @@ spec:
   source:
     path: apps/jupyter/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
-    targetRevision: migration
   ignoreDifferences:
     - kind: "Secret"
       jsonPointers:

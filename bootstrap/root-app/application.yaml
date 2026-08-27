@@ -6,25 +6,11 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  destination:
+    namespace: argocd
+    name: in-cluster
   project: default
   source:
     path: bootstrap/apps
     repoURL: https://github.com/csobrinho/homelab
-    targetRevision: migration
-  destination:
-    namespace: argocd
-    name: in-cluster
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true
-    retry:
-      limit: 3
-      backoff:
-        duration: 1m
-        maxDuration: 5m
-        factor: 2
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
-      - ApplyOutOfSyncOnly=true
+  ignoreDifferences: []
