@@ -1,6 +1,18 @@
-# Helm files
 charts
 requirements.lock
 Chart.lock
 *secret.yaml
 *-ca.yaml
+.claude/
+.private/
+.pytest_cache/
+.venv/
+*.crt
+*.env
+*.iso
+*.key
+.decrypted~*
+.DS_Store
+Thumbs.db
+kubeconfig
+talosconfig
