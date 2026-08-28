@@ -1,0 +1,17 @@
+# OpenTofu / Terraform
+.terraform/
+*.tfplan
+*.tfplan.*
+crash.log
+crash.*.log
+
+# Never commit decrypted SOPS material
+.decrypted~*
+*.plain.*
+proxmox.plain.yaml
+
+# Committed on purpose:
+#   proxmox.sops.yaml         - SOPS-encrypted (age); decrypted transiently by `sops exec-env`
+#   terraform.tfstate         - OpenTofu native state encryption (aes_gcm)
+#   terraform.tfstate.backup  - same
+#   .terraform.lock.hcl       - provider version lock

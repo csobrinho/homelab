@@ -22,6 +22,10 @@ mod kube "kubernetes"
 [group('Talos')]
 mod talos "talos"
 
+# Tofu Recipes
+[group('Tofu')]
+mod tofu "tofu"
+
 [private]
 log lvl msg *args:
     gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
