@@ -1,5 +1,3 @@
-# Adapted from https://github.com/onedr0p/home-ops
-#
 # Provisions the Talos control-plane VMs on Proxmox. Talos machine config is NOT
 # managed here - it is rendered and applied with `just talos apply-node <node>`
 # once a VM is up on the Image Factory ISO.

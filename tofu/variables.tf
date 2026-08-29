@@ -86,9 +86,9 @@ variable "network_mtu" {
 }
 
 variable "bios" {
-  description = "Firmware: 'seabios' or 'ovmf' (UEFI). 'ovmf' also provisions an EFI disk."
+  description = "Firmware: 'ovmf' (UEFI, also provisions an EFI disk) or 'seabios' (legacy). Cannot be changed on an existing VM."
   type        = string
-  default     = "seabios"
+  default     = "ovmf"
 
   validation {
     condition     = contains(["seabios", "ovmf"], var.bios)
