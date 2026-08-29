@@ -76,29 +76,22 @@ just tofu destroy
 4. `just talos apply-node infra1` (then `infra2`, `infra3`) to push machine config.
 5. Bootstrap etcd on the first node: `talosctl -n infra1 bootstrap`.
 
-## Prerequisites on the `talos/` side
+## Talos side (state as of this branch)
 
-The Talos config under `talos/` is currently written for bare metal. Before these
-VMs can join, that side needs:
+Done in `talos/` for the VM control plane on `10.10.2.0/24`:
 
-- **Node subnet 10.10.2.0/24.** The control plane runs on the infra-vm host
-  network (`vmbr0`, untagged), not `192.168.42.0/24`. Update
-  `talos/cluster.yaml.j2` -> `KubeNodeConfig.nodeIP.validSubnets` and
-  `KubeletConfig` `validSubnets`, and `talos/controlplane.yaml.j2` ->
-  `etcd.advertisedSubnets`. If bare-metal workers stay on `192.168.42.0/24`,
-  list both subnets so each node matches exactly one, and make sure the two
-  route to each other.
-- **VM network config.** The `LinkAliasConfig` / `BondConfig` / `VLANConfig`
-  chain keys off the `atlantic` NIC driver and does not apply to a virtio NIC.
-  The VMs need a `LinkAliasConfig` matching `link.driver == "virtio_net"` plus a
-  `DHCPv4Config` (or static `AddressConfig` + `RouteConfig` on 10.10.2.0/24).
-- **`k8s.internal`** must resolve to the three control-plane addresses (or a VIP /
-  load balancer in front of them).
-- **Install disk selector.** `talos/cluster.yaml.j2`'s `UnattendedInstallConfig`
-  matches `disk.model == "MK000480GWCEV"`; no virtual disk matches. Override
-  `provisioning.diskSelector` for the VMs (e.g. `disk.transport == "scsi"`, or by
-  size).
-- **Schematic.** The shared schematic carries bare-metal extensions (`i915`,
-  `thunderbolt`, `drbd`, `intel-ucode`, `mei`) and Meteor Lake kernel args. Add
-  `siderolabs/qemu-guest-agent` and set `agent_enabled = true` if you want
-  graceful shutdown and IP reporting.
+- Node subnet, `etcd.advertisedSubnets`, `KubeNodeConfig.nodeIP.validSubnets` -> `10.10.2.0/24`.
+- `cluster.yaml.j2`: `LinkAliasConfig` now matches `link.driver == "virtio_net"`;
+  the `atlantic` bond/VLAN docs are removed. Per-node static addressing lives in
+  `nodes/controlplane/infraN.yaml.j2` (`LinkConfig` net0, `10.10.2.11-13/24`,
+  gateway `10.10.2.1`).
+- Endpoint is `https://infra-k8s:6443`. `infra-k8s` A records -> `.11/.12/.13`
+  are yours to create; `StaticHostConfig` entries also map it locally so bring-up
+  doesn't need DNS. `certExtraSANs` carries `infra-k8s` + the three IPs.
+- Install `diskSelector` -> `disk.size < 100u * GB`.
+- `schematic.yaml.j2` includes `siderolabs/qemu-guest-agent`, so
+  `agent_enabled = true` in `terraform.tfvars`.
+
+Still bare-metal-only, left for when workers join (marked `# TODO` in
+`cluster.yaml.j2`): `RawVolumeConfig miroir-slow`, the `drbd` / `dm_thin_pool` /
+`nbd` `KernelModuleConfig` docs. They don't block the control plane.

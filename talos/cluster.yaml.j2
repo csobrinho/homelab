@@ -13,41 +13,34 @@ cluster:
     crt: op://kubernetes/talos/CLUSTER_CA_CRT
   clusterName: main
   controlPlane:
-    endpoint: https://k8s.internal:6443
+    endpoint: https://infra-k8s:6443
   token: op://kubernetes/talos/CLUSTER_TOKEN
 ---
 apiVersion: v1alpha1
 kind: LinkAliasConfig
 name: net0
 selector:
-  match: link.driver == "atlantic" && mac(link.permanent_addr).startsWith("00:30:93:12:") # TODO
+  match: link.driver == "virtio_net" # single virtio NIC on the Proxmox VM
+---
+# infra-k8s is the control-plane endpoint. Resolve it locally so bring-up does
+# not depend on external DNS; the three entries give client-side failover.
+apiVersion: v1alpha1
+kind: StaticHostConfig
+name: 10.10.2.11
+hostnames:
+  - infra-k8s
 ---
 apiVersion: v1alpha1
-kind: BondConfig
-name: bond0
-links:
-  - net0
-bondMode: active-backup
-mtu: 9000
+kind: StaticHostConfig
+name: 10.10.2.12
+hostnames:
+  - infra-k8s
 ---
 apiVersion: v1alpha1
-kind: DHCPv4Config
-name: bond0
-clientIdentifier: mac
----
-apiVersion: v1alpha1
-kind: VLANConfig
-name: bond0.70
-vlanID: 70
-parent: bond0
-mtu: 9000
----
-apiVersion: v1alpha1
-kind: VLANConfig
-name: bond0.90
-vlanID: 90
-parent: bond0
-mtu: 9000
+kind: StaticHostConfig
+name: 10.10.2.13
+hostnames:
+  - infra-k8s
 ---
 apiVersion: v1alpha1
 kind: ResolverConfig
@@ -72,7 +65,7 @@ installer:
   image: factory.talos.dev/metal-installer/{{ schematic }}:v1.14.0-rc.2
 provisioning:
   diskSelector:
-    match: disk.model == "MK000480GWCEV" # TODO
+    match: disk.size < 100u * GB # single ~64GiB virtio system disk; bare-metal workers override this
   wipe: false
 ---
 apiVersion: v1alpha1

@@ -14,6 +14,9 @@ cpu_cores = 4
 memory    = 8192 # MiB
 disk_size = 64   # GiB
 
+# talos/schematic.yaml.j2 includes siderolabs/qemu-guest-agent.
+agent_enabled = true
+
 # --- Proxmox placement -------------------------------------------------------
 vm_datastore_id  = "local-lvm"
 iso_datastore_id = "local"

@@ -32,7 +32,10 @@ labels:
 apiVersion: v1alpha1
 kind: KubeAPIServerConfig
 certExtraSANs:
-  - k8s.internal
+  - infra-k8s
+  - 10.10.2.11
+  - 10.10.2.12
+  - 10.10.2.13
 extraArgs:
   enable-aggregator-routing: "true"
 image: registry.k8s.io/kube-apiserver:v1.37.0
