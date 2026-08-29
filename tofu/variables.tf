@@ -126,7 +126,7 @@ variable "vm_tags" {
 }
 
 variable "talos_version" {
-  description = "Talos release for the Image Factory ISO, e.g. v1.14.0."
+  description = "Talos release for the Image Factory ISO, e.g. v1.14.0-rc.2."
   type        = string
 }
 
