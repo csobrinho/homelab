@@ -44,6 +44,13 @@ reset-node node *args:
 shutdown-node node *args:
     talosctl -n "{{ node }}" shutdown --force {{ args }}
 
+[confirm('Shut down EVERY node in the cluster [y|N] ?')]
+[doc('Gracefully shut down the whole cluster')]
+shutdown-cluster *args:
+    nodes="$(talosctl config info -o yaml | yq -r -e '.endpoints | join(",")')"
+    just log warn "Shutting down cluster" nodes "${nodes}"
+    talosctl -n "${nodes}" shutdown --force {{ args }}
+
 [confirm('Upgrade Kubernetes to ' + version + ' [y|N] ?')]
 [doc('Upgrade Kubernetes version on the cluster')]
 upgrade-k8s version:
