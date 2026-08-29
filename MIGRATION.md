@@ -7,9 +7,10 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 
 | | |
 | --- | --- |
+| Networks | nodes/infra `10.10.2.0/24`; VIPs `10.10.10.0/24` (BGP-routed) |
 | Control plane | 3 dedicated VMs `infra1/2/3` on Proxmox `infra-vm`, `10.10.2.11-13/24` |
-| Workers | bare-metal Meteor Lake nodes (wiped + rejoined later, `192.168.42.0/24`) |
-| Endpoint | `infra-k8s` today (round-robin DNS); → Talos Layer-2 VIP later |
+| Workers | more Proxmox VMs on the EPYC host, and RPi5 nodes (**arm64**) — all on `10.10.2.0/24` |
+| Endpoint | `infra-k8s` round-robin DNS + KubePrism; API VIP via Cilium BGP later |
 | CNI | Cilium, native routing + BGP peering with the UniFi gw (AS65000 @ `10.10.2.1`) |
 | GitOps | ArgoCD app-of-apps from `bootstrap/` |
 | Provisioning | `tofu/` (bpg/proxmox); Talos config `talos/` via `just talos` |
@@ -22,44 +23,47 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 - [x] Talos config VM-adapted (static addressing, virtio NIC alias, disk selector,
       SOPS-rendered secrets, endpoint `infra-k8s`)
 - [x] Toolchain + Talos pinned to `v1.14.0-rc.2`
-- [x] Cluster bootstrapped — etcd up, k8s `v1.37.0`, nodes registered (NotReady, no CNI)
-- [ ] **A.** Deploy Cilium → nodes Ready
-- [ ] **B.** Replace `kube-api-proxy` socat with a Talos-native API VIP
+- [x] Cluster bootstrapped — etcd up, k8s `v1.37.0`
+- [x] **A.** Cilium deployed — nodes Ready
+- [ ] **A'.** Delete the dead bare-metal config from `talos/cluster.yaml.j2`
+- [ ] **B.** Drop the `kube-api-proxy` socat (LB Service + EndpointSlice, or DNS-only)
 - [ ] **C.** Bootstrap CRDs (wave 0)
 - [ ] **D.** Deploy CoreDNS
 - [ ] **E.** Deploy ArgoCD → hand off to `bootstrap/root-app`
-- [ ] Workers + storage
+- [ ] Workers (EPYC VMs + RPi5 arm64) + storage
 - [ ] Cut over DNS / retire the old cluster
 
 ## Plan
 
-### A. Cilium
+### A. Cilium — done
 
-```sh
-kustomize build --enable-helm apps/cilium/overlays/prod | kubectl apply -f -
-kubectl -n kube-system delete pod -l k8s-app=cilium      # pick up the Talos caps
-kubectl -n kube-system get pods -l k8s-app=cilium -w
-```
+Deployed via `kustomize build --enable-helm apps/cilium/overlays/prod`. Nodes Ready.
+Remaining: delete the stale vendored `apps/cilium/overlays/prod/charts/cilium-1.20.0/`
+(chart is pulled from the repo). Verify `cilium bgp peers` established with `10.10.2.1`.
 
-- Chart `1.20.1` is pulled from the repo (`kustomization.yaml`); delete the stale
-  vendored `apps/cilium/overlays/prod/charts/cilium-1.20.0/`.
-- Verify: `cilium status`, `cilium bgp peers` (established with `10.10.2.1`), the
-  LB pool in `lb-pools.yaml` serves the API VIP address.
+### A'. Delete dead bare-metal config
 
-### B. Drop socat → Talos-native API LB
+No Meteor Lake nodes — workers are EPYC VMs (virtio, like the CP) and RPi5 (arm64).
+Remove from `talos/cluster.yaml.j2` (all `# TODO`): the `atlantic` bond / VLAN link
+docs, `RawVolumeConfig miroir-slow`, and the `drbd` / `drbd_transport_tcp` /
+`dm_thin_pool` / `nbd` `KernelModuleConfig` docs. RPi5 arm64 workers will need a
+`nodes/workers/<node>.schematic.yaml.j2` override for the arm64 image.
 
-Currently the API VIP (`infra-adm`) is a socat `DaemonSet` (`kube-api-proxy.yaml`)
-behind a Cilium `LoadBalancer` — an in-cluster dependency for the control-plane
-endpoint. Replace with a Talos `Layer2VIPConfig` on the CP nodes:
+### B. Drop the socat API proxy
 
-- pick a spare `10.10.2.x` (e.g. `.10`); Talos elects the holder via etcd and
-  announces it with gratuitous ARP (same-subnet requirement is met)
-- add the doc to `talos/controlplane.yaml.j2`, `just talos apply-node` each node
-- repoint `infra-adm` / `infra-k8s` DNS at the VIP
-- optionally set `cluster.yaml.j2` `controlPlane.endpoint` to it (SANs already cover it)
-- then delete `kube-api-proxy.yaml` + its LB pool
+The `10.10.10.x` API VIP can't be a Talos `Layer2VIPConfig` — that needs the VIP in
+the node interface's own subnet, and VIPs are on `10.10.10.0/24` (routed to the
+cluster via Cilium BGP). Options:
 
-Not cluster-dependent — can be done any time.
+1. **DNS-only** — keep `infra-k8s` round-robin at `10.10.2.11-13`; KubePrism gives
+   in-cluster HA. Delete `kube-api-proxy.yaml` + its LB pool, no replacement.
+2. **LB Service + manual EndpointSlice** — a `LoadBalancer` Service (VIP from the
+   `10.10.10.0/24` pool, BGP-advertised) with a hand-maintained `EndpointSlice`
+   pointing at `10.10.2.11-13:6443`. Removes the socat container; the apiserver is
+   the backend directly.
+
+Either way `certExtraSANs` already covers `infra-k8s` + the node IPs; add the VIP
+address to the SANs if option 2's VIP becomes the `controlPlane.endpoint`.
 
 ### C. Bootstrap CRDs (wave 0)
 
@@ -89,14 +93,15 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
 
 ## Later — workers + storage
 
-- Wipe the bare-metal nodes, rejoin as Talos workers on `192.168.42.0/24`:
-  create `talos/workers.yaml.j2` + `talos/nodes/workers/`, and move the
-  bare-metal-only docs currently marked `# TODO` in `cluster.yaml.j2`
-  (bond/VLAN link config, `RawVolumeConfig miroir-slow`, drbd `KernelModuleConfig`)
-  into that layer.
-- Enable `advertisementType: PodCIDR` in `apps/cilium/overlays/prod/bgp-config.yaml`
-  — workers on a different subnet break `autoDirectNodeRoutes`.
-- Storage: rook-ceph and/or `miroir` DRBD9 replication on the workers.
+- **EPYC VM workers**: `tofu/` — add worker entries (same bpg pattern; the CD-ROM
+  ISO / schematic are shared with the CP). Create `talos/workers.yaml.j2`
+  (`machine.type: worker`, `ca` crt-only) + `talos/nodes/workers/<node>.yaml.j2`.
+  All on `10.10.2.0/24`, so `autoDirectNodeRoutes` keeps working fleet-wide — no
+  PodCIDR BGP advertisement needed.
+- **RPi5 workers** (arm64): not tofu — flash the Talos arm64 SBC image. Needs an
+  arm64 schematic (`nodes/workers/<node>.schematic.yaml.j2`) and arm64-safe
+  workload scheduling (`kubernetes.io/arch` nodeAffinity or multi-arch images).
+- Storage: rook-ceph (and/or `miroir` DRBD9) once there are worker nodes to host it.
 
 ## Bring-up reference
 
