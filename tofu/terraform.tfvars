@@ -5,7 +5,8 @@
 proxmox_node = "infra-vm"
 
 # Match the Talos version used by talos/cluster.yaml.j2's installer image.
-talos_version = "v1.14.0"
+# 1.14.0 GA isn't out yet; rc.2 is the latest tag at the factory.
+talos_version = "v1.14.0-rc.2"
 
 # --- VM sizing (dedicated control plane; workloads run on separate VMs) --------
 cpu_cores = 4
