@@ -30,6 +30,8 @@ mod tofu "tofu"
 log lvl msg *args:
     gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
 
+# Render a Jinja template with talos/secrets.yaml (SOPS-decrypted) as context.
+# Secret values are referenced as e.g. {{ certs.os.crt }}, {{ cluster.id }}.
 [private]
 template file *args:
-    minijinja-cli "{{ file }}" {{ args }} | op inject
+    minijinja-cli -f yaml "{{ file }}" <(sops decrypt "{{ justfile_directory() }}/talos/secrets.yaml") {{ args }}

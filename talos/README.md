@@ -26,17 +26,19 @@ talosctl machineconfig patch <(cluster.yaml.j2) \
     -p @<(nodes/<role>/<node>.yaml.j2)
 ```
 
-Each layer passes through `minijinja-cli` (strict Jinja templating; the schematic ID arrives as a
-`-D` define) and `op inject` (1Password secret resolution) before `talosctl` merges them. Later patches strategically merge into
-earlier ones: documents with the same kind/name are deep-merged, new documents are appended.
+Each layer passes through `minijinja-cli` (strict Jinja templating) before `talosctl` merges them.
+`secrets.yaml` is SOPS-decrypted and handed to the template as context, so PKI and tokens are
+referenced as `{{ certs.os.crt }}`, `{{ cluster.id }}`, etc.; the schematic ID arrives as a `-D`
+define. Later patches strategically merge into earlier ones: documents with the same kind/name are
+deep-merged, new documents are appended.
 
 Two conventions keep the layers honest:
 
 - **Directory placement is the single source of truth for a node's role.** The role patch is chosen
   by which `nodes/<role>/` directory contains the node file, and `machine.type` is set by the role
   patch, not the node file. A node cannot claim one role by filename and another by content.
-- **Secrets never live in this repo.** All sensitive values are `op://kubernetes/talos/...`
-  references resolved at render time.
+- **Secrets never live in this repo in the clear.** `secrets.yaml` is SOPS-encrypted (age); its
+  values are injected into the templates at render time via `{{ ... }}` lookups.
 
 ## Schematics
 
