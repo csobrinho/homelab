@@ -79,12 +79,12 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
 
   cdrom {
     file_id   = "${proxmox_download_file.talos.datastore_id}:iso/${proxmox_download_file.talos.file_name}"
-    interface = "ide3"
+    interface = "ide2" # q35 only exposes ide0/ide2
   }
 
   # Empty disk on first boot -> falls through to the ISO, which installs Talos to
   # scsi0; subsequent boots come off scsi0 directly.
-  boot_order = ["scsi0", "ide3"]
+  boot_order = ["scsi0", "ide2"]
 
   network_device {
     bridge      = var.network_bridge
