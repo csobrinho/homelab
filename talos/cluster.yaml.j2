@@ -44,6 +44,8 @@ hostnames:
 ---
 apiVersion: v1alpha1
 kind: ResolverConfig
+nameservers:
+  - address: 10.10.2.1
 hostDNS:
   enabled: true
   forwardKubeDNSToHost: true # Requires Cilium socketLB features
