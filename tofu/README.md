@@ -88,6 +88,7 @@ Done in `talos/` for the VM control plane on `10.10.2.0/24`:
 - Endpoint is `https://infra-k8s:6443`. `infra-k8s` A records -> `.11/.12/.13`
   are yours to create; `StaticHostConfig` entries also map it locally so bring-up
   doesn't need DNS. `certExtraSANs` carries `infra-k8s` + the three IPs.
+- Node DNS (`ResolverConfig.nameservers`) is `10.10.2.1`.
 - Install `diskSelector` -> `disk.size < 100u * GB`.
 - `schematic.yaml.j2` includes `siderolabs/qemu-guest-agent`, so
   `agent_enabled = true` in `terraform.tfvars`.
