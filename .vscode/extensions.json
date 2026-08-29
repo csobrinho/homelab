@@ -8,5 +8,6 @@
     "PKief.material-icon-theme",
     "redhat.vscode-yaml",
     "samuelcolvin.jinjahtml",
+    "tamasfe.even-better-toml",
   ]
 }

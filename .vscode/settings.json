@@ -43,10 +43,10 @@
     "system-upgrade": "update",
     "kopiur-system": "aws"
   },
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 12,
   "vs-kubernetes": {
-    "vs-kubernetes.kubeconfig": "$HOME/.kube/config",
-    "vs-kubernetes.knownKubeconfigs": ["$HOME/.kube/config"]
+    "vs-kubernetes.kubeconfig": "~/.kube/config",
+    "vs-kubernetes.knownKubeconfigs": ["~/.kube/config"]
   },
   "window.zoomLevel": 0,
   "yaml.schemaStore.enable": true,
