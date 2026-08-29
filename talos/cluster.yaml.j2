@@ -2,19 +2,19 @@
 version: v1alpha1
 machine:
   ca:
-    crt: {{ certs.os.crt }}
+    crt: {{ sops.certs.os.crt }}
   features:
     apidCheckExtKeyUsage: true
     diskQuotaSupport: true
     rbac: true
-  token: {{ trustdinfo.token }}
+  token: {{ sops.trustdinfo.token }}
 cluster:
   ca:
-    crt: {{ certs.k8s.crt }}
+    crt: {{ sops.certs.k8s.crt }}
   clusterName: main
   controlPlane:
     endpoint: https://infra-k8s:6443
-  token: {{ secrets.bootstraptoken }}
+  token: {{ sops.secrets.bootstraptoken }}
 ---
 apiVersion: v1alpha1
 kind: LinkAliasConfig
@@ -58,8 +58,8 @@ endpoint: https://discovery.talos.dev/
 ---
 apiVersion: v1alpha1
 kind: DiscoveryIdentityConfig
-clusterID: {{ cluster.id }}
-clusterSecret: {{ cluster.secret }}
+clusterID: {{ sops.cluster.id }}
+clusterSecret: {{ sops.cluster.secret }}
 ---
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig

@@ -3,26 +3,26 @@ machine:
   type: controlplane
   # ca merges as a unit; crt must be repeated alongside key
   ca:
-    crt: {{ certs.os.crt }}
-    key: {{ certs.os.key }}
+    crt: {{ sops.certs.os.crt }}
+    key: {{ sops.certs.os.key }}
 cluster:
   # ca merges as a unit; crt must be repeated alongside key
   ca:
-    crt: {{ certs.k8s.crt }}
-    key: {{ certs.k8s.key }}
+    crt: {{ sops.certs.k8s.crt }}
+    key: {{ sops.certs.k8s.key }}
   aggregatorCA:
-    crt: {{ certs.k8saggregator.crt }}
-    key: {{ certs.k8saggregator.key }}
+    crt: {{ sops.certs.k8saggregator.crt }}
+    key: {{ sops.certs.k8saggregator.key }}
   etcd:
     advertisedSubnets:
       - 10.10.2.0/24
     ca:
-      crt: {{ certs.etcd.crt }}
-      key: {{ certs.etcd.key }}
+      crt: {{ sops.certs.etcd.crt }}
+      key: {{ sops.certs.etcd.key }}
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
   serviceAccount:
-    key: {{ certs.k8sserviceaccount.key }}
+    key: {{ sops.certs.k8sserviceaccount.key }}
 ---
 apiVersion: v1alpha1
 kind: KubeNodeConfig
@@ -87,7 +87,7 @@ config:
         - secretbox:
             keys:
               - name: key2
-                secret: {{ secrets.secretboxencryptionsecret }}
+                secret: {{ sops.secrets.secretboxencryptionsecret }}
         - identity: {}
       resources:
         - secrets

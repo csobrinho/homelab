@@ -27,9 +27,9 @@ talosctl machineconfig patch <(cluster.yaml.j2) \
 ```
 
 Each layer passes through `minijinja-cli` (strict Jinja templating) before `talosctl` merges them.
-`secrets.yaml` is SOPS-decrypted and handed to the template as context, so PKI and tokens are
-referenced as `{{ certs.os.crt }}`, `{{ cluster.id }}`, etc.; the schematic ID arrives as a `-D`
-define. Later patches strategically merge into earlier ones: documents with the same kind/name are
+`secrets.yaml` is SOPS-decrypted and exposed to the template under the `sops` key, so PKI and tokens
+are referenced as `{{ sops.certs.os.crt }}`, `{{ sops.cluster.id }}`, etc.; the schematic ID arrives
+as a `-D` define. Later patches strategically merge into earlier ones: documents with the same kind/name are
 deep-merged, new documents are appended.
 
 Two conventions keep the layers honest:
