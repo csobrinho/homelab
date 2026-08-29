@@ -50,6 +50,14 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     dedicated = var.memory
   }
 
+  # Pairs with talos WatchdogTimerConfig (/dev/watchdog0): the hypervisor resets
+  # the guest if the Talos watchdog stops being petted.
+  watchdog {
+    enabled = true
+    model   = "i6300esb"
+    action  = "reset"
+  }
+
   dynamic "efi_disk" {
     for_each = var.bios == "ovmf" ? [1] : []
     content {

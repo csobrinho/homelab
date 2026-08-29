@@ -71,14 +71,6 @@ provisioning:
   wipe: false
 ---
 apiVersion: v1alpha1
-kind: RawVolumeConfig
-name: miroir-slow
-provisioning:
-  diskSelector:
-    match: disk.model == "Corsair MP600 MICRO" && !system_disk # TODO
-  minSize: 1TB
----
-apiVersion: v1alpha1
 kind: FilesystemTrimConfig
 interval: 168h0m0s
 ---
