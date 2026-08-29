@@ -61,10 +61,11 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     content {
       datastore_id = var.vm_datastore_id
       type         = "4m"
-      file_format  = "raw"
     }
   }
 
+  # local-vms is a ZFS mirror (zfspool): disks are raw zvols, so file_format is
+  # left computed rather than pinned.
   disk {
     datastore_id = var.vm_datastore_id
     interface    = "scsi0"
@@ -72,7 +73,6 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     iothread     = true
     discard      = "on"
     ssd          = true
-    file_format  = "raw"
   }
 
   cdrom {
