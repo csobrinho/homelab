@@ -26,7 +26,7 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 - [x] Cluster bootstrapped — etcd up, k8s `v1.37.0`
 - [x] **A.** Cilium deployed — nodes Ready
 - [ ] **A'.** Delete the dead bare-metal config from `talos/cluster.yaml.j2`
-- [ ] **B.** Drop the `kube-api-proxy` socat (LB Service + EndpointSlice, or DNS-only)
+- [ ] **B.** Drop the `kube-api-proxy` socat — TEST Talos 1.14 native BGP anycast VIP
 - [ ] **C.** Bootstrap CRDs (wave 0)
 - [ ] **D.** Deploy CoreDNS
 - [ ] **E.** Deploy ArgoCD → hand off to `bootstrap/root-app`
@@ -51,19 +51,41 @@ docs, `RawVolumeConfig miroir-slow`, and the `drbd` / `drbd_transport_tcp` /
 
 ### B. Drop the socat API proxy
 
-The `10.10.10.x` API VIP can't be a Talos `Layer2VIPConfig` — that needs the VIP in
-the node interface's own subnet, and VIPs are on `10.10.10.0/24` (routed to the
-cluster via Cilium BGP). Options:
+The `10.10.10.x` API VIP can't be a Talos `Layer2VIPConfig` — that's ARP-based and
+needs the VIP in the node interface's own subnet; VIPs are on `10.10.10.0/24`.
 
-1. **DNS-only** — keep `infra-k8s` round-robin at `10.10.2.11-13`; KubePrism gives
-   in-cluster HA. Delete `kube-api-proxy.yaml` + its LB pool, no replacement.
-2. **LB Service + manual EndpointSlice** — a `LoadBalancer` Service (VIP from the
-   `10.10.10.0/24` pool, BGP-advertised) with a hand-maintained `EndpointSlice`
-   pointing at `10.10.2.11-13:6443`. Removes the socat container; the apiserver is
-   the backend directly.
+**→ LET'S TEST: Talos 1.14 native BGP anycast.** Per CP node:
 
-Either way `certExtraSANs` already covers `infra-k8s` + the node IPs; add the VIP
-address to the SANs if option 2's VIP becomes the `controlPlane.endpoint`.
+```yaml
+apiVersion: v1alpha1
+kind: DummyLinkConfig
+name: dummy0
+addresses: [{ address: 10.10.10.10/32 }]     # anycast API VIP
+---
+apiVersion: v1alpha1
+kind: BGPInstanceConfig
+name: fabric
+localASN: 65002
+routerID: 10.10.2.1X                          # node-unique
+advertise: [dummy0]
+neighbors:
+  - { address: 10.10.2.1, peerASN: 65000, bfd: {} }
+```
+
+All 3 CP nodes originate `10.10.10.10/32`; the UniFi gw ECMPs / fails over (BFD
+sub-second). apiserver already listens `0.0.0.0:6443`. Point `infra-k8s` DNS at
+`10.10.10.10`, add it to `certExtraSANs`, optionally make it `controlPlane.endpoint`.
+Pure L3 (cross-subnet OK), independent of Cilium (bootstrap-safe), no socat.
+
+**Open question for the test:** Talos BGP and Cilium BGP can't both peer the same gw
+from the same node IP (gw rejects the 2nd session). Resolutions:
+- run Talos BGP for the API VIP + Cilium LB via **L2 announcements** (forces the
+  service LB pool into `10.10.2.0/24`); or
+- split by role once workers exist — Talos BGP on CP nodes, Cilium BGP on workers.
+
+Fallbacks if the test doesn't pan out: (1) DNS-only — `infra-k8s` round-robin +
+KubePrism, just delete `kube-api-proxy`; (2) `LoadBalancer` Service + hand-maintained
+`EndpointSlice` → `10.10.2.11-13:6443`, Cilium-BGP-advertised.
 
 ### C. Bootstrap CRDs (wave 0)
 
