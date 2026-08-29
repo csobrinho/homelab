@@ -67,7 +67,8 @@ installer:
   image: factory.talos.dev/metal-installer/{{ schematic }}:v1.14.0-rc.2
 provisioning:
   diskSelector:
-    match: disk.size < 100u * GB # single ~64GiB virtio system disk; bare-metal workers override this
+    # the single writable virtio disk; excludes the ISO's read-only loop/cdrom devices
+    match: '!disk.readonly && !disk.cdrom && disk.size > 10u * GB'
   wipe: false
 ---
 apiVersion: v1alpha1
