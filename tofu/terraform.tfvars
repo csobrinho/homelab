@@ -18,7 +18,7 @@ disk_size = 64   # GiB
 agent_enabled = true
 
 # --- Proxmox placement -------------------------------------------------------
-vm_datastore_id  = "local-lvm"
+vm_datastore_id  = "local-vms"
 iso_datastore_id = "local"
 
 # --- Networking ------------------------------------------------------------
