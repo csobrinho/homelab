@@ -1,0 +1,10 @@
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: infra2
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  topology.kubernetes.io/region: home
+  topology.kubernetes.io/zone: proxmox
