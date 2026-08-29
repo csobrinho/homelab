@@ -58,7 +58,7 @@ variable "disk_size" {
 variable "vm_datastore_id" {
   description = "Proxmox datastore for the VM system disk (and EFI disk when bios = ovmf)."
   type        = string
-  default     = "local-lvm"
+  default     = "local-vms"
 }
 
 variable "iso_datastore_id" {

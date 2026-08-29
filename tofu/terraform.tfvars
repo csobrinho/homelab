@@ -1,5 +1,3 @@
-# Adapted from https://github.com/onedr0p/home-ops
-#
 # Non-secret, environment-specific values. Secrets (PROXMOX_VE_*, the state
 # passphrase) live in tofu/proxmox.sops.yaml. The schematic ID is injected by
 # `just tofu ...` from talos/schematic.yaml.j2.
@@ -30,9 +28,10 @@ network_bridge = "vmbr0"
 # network_mtu    = 1
 
 # --- Nodes -----------------------------------------------------------------
-# Keys must match talos/nodes/controlplane/<key>.yaml.j2.
+# Keys must match talos/nodes/controlplane/<key>.yaml.j2. MAC prefix 52:54:00 is
+# the KVM locally-administered OUI; last octet mirrors the 10.10.2.x host.
 nodes = {
-  infra1 = { vm_id = 811 }
-  infra2 = { vm_id = 812 }
-  infra3 = { vm_id = 813 }
+  infra1 = { vm_id = 211, mac_address = "52:54:00:0a:02:11" }
+  infra2 = { vm_id = 212, mac_address = "52:54:00:0a:02:12" }
+  infra3 = { vm_id = 213, mac_address = "52:54:00:0a:02:13" }
 }
