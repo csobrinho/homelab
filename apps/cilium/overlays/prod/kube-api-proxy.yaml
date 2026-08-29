@@ -16,8 +16,15 @@ spec:
       labels:
         app: kube-api-proxy
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: "true"
+      # Talos labels control-plane nodes with an empty value, so match on
+      # presence rather than nodeSelector: {…: "true"} (which matches nothing).
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
