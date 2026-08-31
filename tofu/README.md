@@ -9,6 +9,16 @@ Scope is deliberately small: **VMs only**. Talos machine configuration is render
 and applied separately with `just talos apply-node <node>` once a VM is up. Cluster
 workloads run on other VMs, not these.
 
+## Failure domains
+
+All three control-plane VMs - and the worker VMs - run on the single Proxmox host
+`infra-vm`. The 3-node control plane protects against VM-, Talos- and
+etcd-disk-level failure, but **not host failure**: an `infra-vm` outage takes the
+whole cluster down and loses etcd quorum. No second Proxmox host is planned. The
+only route to a real second failure domain is the RPi5 nodes (arm64) added later -
+one could carry a control-plane member if etcd host-redundancy becomes a
+requirement.
+
 ## Layout
 
 | Path                       | Purpose                                                          |
