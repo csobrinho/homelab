@@ -1,0 +1,16 @@
+# Single source of truth for the Talos and Kubernetes versions.
+#
+# Consumed via the `template` recipe (merged into every talos/*.yaml.j2 render):
+#   - cluster.yaml.j2      -> installer image tag, kubelet image
+#   - controlplane.yaml.j2 -> kube-apiserver / -controller-manager / -scheduler / -proxy images
+#   - tofu/                -> talos_version, injected as TF_VAR_talos_version by tofu/mod.just
+#
+# Renovate proposes bumps here (custom manager in .github/renovate.json). Merging
+# a PR only changes these strings; roll it out with:
+#   just talos upgrade-node <node>      # Talos
+#   just talos upgrade-k8s <version>    # Kubernetes (keep .kubernetes in sync)
+version:
+  # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+  talos: v1.14.0-rc.2
+  # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+  kubernetes: v1.37.0

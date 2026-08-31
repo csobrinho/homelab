@@ -32,7 +32,8 @@ log lvl msg *args:
 
 # Render a Jinja template. talos/secrets.yaml is SOPS-decrypted and exposed under
 # the `sops` key, so secrets are referenced as e.g. {{ sops.certs.os.crt }},
-# {{ sops.cluster.id }}, {{ sops.secrets.bootstraptoken }}.
+# {{ sops.cluster.id }}, {{ sops.secrets.bootstraptoken }}. talos/versions.yaml is
+# merged in too, exposing {{ version.talos }} and {{ version.kubernetes }}.
 [private]
 template file *args:
-    minijinja-cli -f yaml "{{ file }}" <(sops decrypt "{{ justfile_directory() }}/talos/secrets.yaml" | yq '{"sops": .}') {{ args }}
+    minijinja-cli -f yaml "{{ file }}" <(sops decrypt "{{ justfile_directory() }}/talos/secrets.yaml" | yq '{"sops": .}') "{{ justfile_directory() }}/talos/versions.yaml" {{ args }}

@@ -13,16 +13,13 @@ variable "nodes" {
     omitted Proxmox generates one and it is pinned in (encrypted) state, so it
     stays stable across re-applies. Set it explicitly if you want to create the
     DHCP reservation before the VM exists.
+
+    No default: terraform.tfvars is the single source of truth for the node set.
   EOT
   type = map(object({
     vm_id       = number
     mac_address = optional(string)
   }))
-  default = {
-    infra1 = { vm_id = 811 }
-    infra2 = { vm_id = 812 }
-    infra3 = { vm_id = 813 }
-  }
 }
 
 variable "cpu_cores" {
@@ -105,12 +102,12 @@ variable "machine_type" {
 variable "agent_enabled" {
   description = <<-EOT
     Enable the QEMU guest-agent integration. Requires the
-    'siderolabs/qemu-guest-agent' system extension in the Talos schematic; leave
-    false until that extension ships or `tofu apply` hangs waiting for an agent
-    that never answers.
+    'siderolabs/qemu-guest-agent' system extension in the Talos schematic (it is
+    in talos/schematic.yaml.j2). Set false only if that extension is dropped, or
+    `tofu apply` hangs waiting for an agent that never answers.
   EOT
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "start_on_boot" {
@@ -126,7 +123,12 @@ variable "vm_tags" {
 }
 
 variable "talos_version" {
-  description = "Talos release for the Image Factory ISO, e.g. v1.14.0-rc.2."
+  description = <<-EOT
+    Talos release for the Image Factory ISO, e.g. v1.14.0-rc.2. Read from
+    talos/versions.yaml (.version.talos) and injected as TF_VAR_talos_version by
+    `just tofu ...` so that file stays the single source of truth (shared with
+    talos/cluster.yaml.j2's installer image tag).
+  EOT
   type        = string
 }
 

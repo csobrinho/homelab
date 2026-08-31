@@ -1,11 +1,9 @@
 # Non-secret, environment-specific values. Secrets (PROXMOX_VE_*, the state
-# passphrase) live in tofu/proxmox.sops.yaml. The schematic ID is injected by
-# `just tofu ...` from talos/schematic.yaml.j2.
+# passphrase) live in tofu/proxmox.sops.yaml. `just tofu ...` injects
+# talos_schematic_id (from talos/schematic.yaml.j2) and talos_version (from
+# talos/versions.yaml).
 
 proxmox_node = "infra-vm"
-
-# Match the Talos version used by talos/cluster.yaml.j2's installer image.
-talos_version = "v1.14.0-rc.2"
 
 # --- VM sizing (dedicated control plane; workloads run on separate VMs) --------
 cpu_cores = 4

@@ -34,6 +34,11 @@
       "matchDatasources": ["helm"],
       "matchPackageNames": ["rook-ceph", "rook-ceph-cluster"],
       "enabled": false
+    },
+    {
+      "description": "Talos/Kubernetes in talos/versions.yaml: don't let the installer 'latest' tag block RC->stable bumps",
+      "matchFileNames": ["talos/versions.yaml"],
+      "respectLatest": false
     }
   ],
   "helm-values": {
@@ -59,6 +64,15 @@
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Talos and Kubernetes versions in talos/versions.yaml",
+      "managerFilePatterns": ["/talos/versions\\.ya?ml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s+[a-zA-Z_]+:\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}docker{{/if}}"
     }
   ],
   "automerge": true,
