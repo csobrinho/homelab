@@ -15,7 +15,7 @@ workloads run on other VMs, not these.
 | -------------------------- | --------------------------------------------------------------- |
 | `versions.tf`              | Provider + `required_version` pins, state encryption block       |
 | `providers.tf`             | Proxmox provider (all connection settings come from the env)     |
-| `variables.tf`             | Inputs, with defaults                                            |
+| `variables.tf`             | Inputs (`nodes` comes from `terraform.tfvars`; the rest default) |
 | `main.tf`                  | ISO download + the three VMs (`for_each` over `var.nodes`)       |
 | `outputs.tf`               | VM IDs and NIC MACs (for DHCP reservations)                      |
 | `terraform.tfvars`         | Non-secret, environment-specific values (committed)              |
@@ -27,13 +27,19 @@ workloads run on other VMs, not these.
 
 - **Provider credentials** live in `proxmox.sops.yaml`, encrypted to the age keys
   in the repo `.sops.yaml`. `just tofu ...` injects them via `sops exec-env`, so
-  no plaintext ever hits disk. Bootstrap it from the example:
+  no plaintext ever hits disk. On a fresh clone, recreate it with the keys the
+  provider (`providers.tf`) and `mod.just` expect:
 
   ```sh
-  cp proxmox.sops.yaml.example proxmox.sops.yaml
-  $EDITOR proxmox.sops.yaml          # fill in real values
-  sops --encrypt --in-place proxmox.sops.yaml
+  sops edit proxmox.sops.yaml        # sops creates + encrypts on save
   ```
+
+  | Key                     | Value                                              |
+  | ----------------------- | -------------------------------------------------- |
+  | `PROXMOX_VE_ENDPOINT`   | `https://<pve-host>:8006/`                          |
+  | `PROXMOX_VE_API_TOKEN`  | `<user>@<realm>!<token-id>=<uuid>`                  |
+  | `PROXMOX_VE_INSECURE`   | `"true"` to skip TLS verification of the PVE cert   |
+  | `TOFU_STATE_PASSPHRASE` | long random string; encrypts `terraform.tfstate`   |
 
 - **State is committed** to git. OpenTofu's native state encryption (`aes_gcm`
   keyed by a PBKDF2 passphrase) keeps `terraform.tfstate` unreadable at rest. The
@@ -44,16 +50,18 @@ workloads run on other VMs, not these.
 ## Talos image
 
 The boot ISO is pulled straight onto Proxmox storage from the
-[Image Factory](https://factory.talos.dev). `talos/schematic.yaml.j2` stays the
-single source of truth for extensions and kernel args: `just tofu ...` runs
-`just talos schematic-id` and passes the result as `TF_VAR_talos_schematic_id`.
+[Image Factory](https://factory.talos.dev). Two files in `talos/` stay the single
+source of truth; `just tofu ...` injects both as `TF_VAR_*`:
+
+- `schematic.yaml.j2` -> `talos_schematic_id` (via `just talos schematic-id`):
+  system extensions and kernel args.
+- `versions.yaml` (`.version.talos`) -> `talos_version`: the release tag. The same
+  file drives the installer image and kubelet image in `talos/cluster.yaml.j2`,
+  so the ISO and the installed system never diverge. Bump it there.
 
 > If `just talos schematic-id` is not reachable as a cross-module call in your
 > `just` version, drop `[private]` from that recipe in `talos/mod.just`, or set
 > `talos_schematic_id` directly in `terraform.tfvars`.
-
-Bump `talos_version` in `terraform.tfvars` in lockstep with the installer image
-in `talos/cluster.yaml.j2`.
 
 ## Usage
 
@@ -76,23 +84,12 @@ just tofu destroy
 4. `just talos apply-node infra1` (then `infra2`, `infra3`) to push machine config.
 5. Bootstrap etcd on the first node: `talosctl -n infra1 bootstrap`.
 
-## Talos side (state as of this branch)
+## Talos machine config
 
-Done in `talos/` for the VM control plane on `10.10.2.0/24`:
+Not managed here. `talos/README.md` covers how per-node configs are rendered and
+applied; `MIGRATION.md` tracks the k3s -> Talos plan and current state (node
+subnet, endpoint, DNS, storage direction, remaining `# TODO` items).
 
-- Node subnet, `etcd.advertisedSubnets`, `KubeNodeConfig.nodeIP.validSubnets` -> `10.10.2.0/24`.
-- `cluster.yaml.j2`: `LinkAliasConfig` now matches `link.driver == "virtio_net"`;
-  the `atlantic` bond/VLAN docs are removed. Per-node static addressing lives in
-  `nodes/controlplane/infraN.yaml.j2` (`LinkConfig` net0, `10.10.2.11-13/24`,
-  gateway `10.10.2.1`).
-- Endpoint is `https://infra-k8s:6443`. `infra-k8s` A records -> `.11/.12/.13`
-  are yours to create; `StaticHostConfig` entries also map it locally so bring-up
-  doesn't need DNS. `certExtraSANs` carries `infra-k8s` + the three IPs.
-- Node DNS (`ResolverConfig.nameservers`) is `10.10.2.1`.
-- Install `diskSelector` -> `disk.size < 100u * GB`.
-- `schematic.yaml.j2` includes `siderolabs/qemu-guest-agent`, so
-  `agent_enabled = true` in `terraform.tfvars`.
-
-Still bare-metal-only, left for when workers join (marked `# TODO` in
-`cluster.yaml.j2`): `RawVolumeConfig miroir-slow`, the `drbd` / `dm_thin_pool` /
-`nbd` `KernelModuleConfig` docs. They don't block the control plane.
+The install `diskSelector` in `talos/cluster.yaml.j2` is
+`!disk.readonly && !disk.cdrom && disk.size > 10u * GB` - it picks the single
+writable virtio disk and skips the read-only ISO loop/cdrom devices.
