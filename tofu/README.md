@@ -69,6 +69,13 @@ source of truth; `just tofu ...` injects both as `TF_VAR_*`:
   file drives the installer image and kubelet image in `talos/cluster.yaml.j2`,
   so the ISO and the installed system never diverge. Bump it there.
 
+The ISO filename embeds the version, so bumping `talos_version` replaces the
+download resource - the old ISO is deleted, the new one fetched. If you bump it
+while `attach_iso` is still `true` and the VMs are running, detach first (set
+`attach_iso = false`, apply) or Proxmox will refuse to delete the in-use ISO.
+Past bring-up this is moot: `attach_iso = false` and OS upgrades go through
+`just talos upgrade-node`.
+
 > If `just talos schematic-id` is not reachable as a cross-module call in your
 > `just` version, drop `[private]` from that recipe in `talos/mod.just`, or set
 > `talos_schematic_id` directly in `terraform.tfvars`.
