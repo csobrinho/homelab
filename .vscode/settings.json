@@ -45,8 +45,8 @@
   },
   "terminal.integrated.fontSize": 12,
   "vs-kubernetes": {
-    "vs-kubernetes.kubeconfig": "~/.kube/config",
-    "vs-kubernetes.knownKubeconfigs": ["~/.kube/config"]
+    "vs-kubernetes.kubeconfig": "kubeconfig",
+    "vs-kubernetes.knownKubeconfigs": ["kubeconfig"]
   },
   "window.zoomLevel": 0,
   "yaml.schemaStore.enable": true,
