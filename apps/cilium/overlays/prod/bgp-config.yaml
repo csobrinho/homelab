@@ -10,7 +10,7 @@ spec:
       kubernetes.io/os: linux
   bgpInstances:
     - name: cilium
-      localASN: 65002
+      localASN: 65001
       peers:
         - name: unifi
           peerASN: 65000
@@ -50,4 +50,4 @@ spec:
           - LoadBalancerIP
       selector:
         matchExpressions:
-          - { key: somekey, operator: NotIn, values: [never-used-value] } # Match all services.
+          - { key: "io.cilium/lb-pool", operator: Exists } # Match all services with a cilium pool label.
