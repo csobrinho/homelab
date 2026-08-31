@@ -49,6 +49,21 @@ docs, `RawVolumeConfig miroir-slow`, and the `drbd` / `drbd_transport_tcp` /
 `dm_thin_pool` / `nbd` `KernelModuleConfig` docs. RPi5 arm64 workers will need a
 `nodes/workers/<node>.schematic.yaml.j2` override for the arm64 image.
 
+Also decide storage direction **before workers exist** (schematic change = node
+reprovision): if it's rook-ceph, drop `siderolabs/drbd` from `schematic.yaml.j2`
+and add `iscsi-tools` + `util-linux-tools`; if Miroir/DRBD9 stays, keep the drbd
+extension and un-TODO the `drbd*` `KernelModuleConfig` blocks.
+
+Other config cleanup (from the 2026-08-31 review, deferred):
+- `apps/cilium/overlays/prod/frr.conf` — neighbors are `10.10.2.31–38`; real CP
+  nodes are `.11–.13`. Reconcile with the final node/worker IP scheme.
+- etcd `listen-metrics-urls: http://0.0.0.0:2381` (`controlplane.yaml.j2`) is
+  unauthenticated on all interfaces. Once Prometheus exists, either restrict via
+  a Talos ingress firewall rule (fleet-wide, port 2381 ← `10.10.2.0/24`) or move
+  the bind into the per-node files (they already carry the node IP).
+- `apps/cilium/overlays/prod/charts/cilium-1.19.6|1.20.0|1.20.1/` — gitignored
+  local cruft; the chart is pulled from `helm.cilium.io` at build time. Delete.
+
 ### B. Drop the socat API proxy
 
 The `10.10.10.x` API VIP can't be a Talos `Layer2VIPConfig` — that's ARP-based and
@@ -138,7 +153,8 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
   ```sh
   sops decrypt talos/secrets.yaml > /tmp/s.yaml
   talosctl gen config main https://infra-k8s:6443 --with-secrets /tmp/s.yaml \
-    --talos-version v1.14.0-rc.2 --output-types talosconfig -o talosconfig
+    --talos-version "$(yq -r .version.talos talos/versions.yaml)" \
+    --output-types talosconfig -o talosconfig
   rm /tmp/s.yaml
   talosctl config endpoint 10.10.2.11 10.10.2.12 10.10.2.13
   ```
