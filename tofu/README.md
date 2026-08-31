@@ -83,6 +83,10 @@ just tofu destroy
    installer on first boot; Talos installs to `scsi0` and reboots off it.
 4. `just talos apply-node infra1` (then `infra2`, `infra3`) to push machine config.
 5. Bootstrap etcd on the first node: `talosctl -n infra1 bootstrap`.
+6. Once all three are installed and healthy, set `attach_iso = false` in
+   `terraform.tfvars` and `just tofu apply` - this deletes the ISO and detaches
+   the CD-ROM, so later `talos/versions.yaml` bumps don't churn the VMs. OS
+   upgrades from here on are `just talos upgrade-node <node>`.
 
 ## Talos machine config
 

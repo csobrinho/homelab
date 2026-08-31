@@ -8,7 +8,10 @@ locals {
 }
 
 # Pull the schematic ISO straight onto Proxmox storage via the PVE download-url API.
+# Only while var.attach_iso is set - see the cdrom block and that variable.
 resource "proxmox_download_file" "talos" {
+  count = var.attach_iso ? 1 : 0
+
   content_type = "iso"
   datastore_id = var.iso_datastore_id
   node_name    = var.proxmox_node
@@ -33,6 +36,11 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
   scsi_hardware   = "virtio-scsi-single"
   on_boot         = var.start_on_boot
   stop_on_destroy = true
+
+  # Never let the provider silently reboot / power-cycle a control-plane node to
+  # apply a change - an offline-requiring update fails the apply instead, so
+  # etcd members are taken down one at a time, deliberately (use -target).
+  reboot_after_update = false
 
   agent {
     enabled = var.agent_enabled
@@ -75,14 +83,20 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     ssd          = true
   }
 
-  cdrom {
-    file_id   = "${proxmox_download_file.talos.datastore_id}:iso/${proxmox_download_file.talos.file_name}"
-    interface = "ide2" # q35 only exposes ide0/ide2
+  # Only while var.attach_iso is set (first boot / node rebuild). q35 exposes
+  # ide0/ide2 only.
+  dynamic "cdrom" {
+    for_each = var.attach_iso ? [1] : []
+    content {
+      file_id   = "${proxmox_download_file.talos[0].datastore_id}:iso/${proxmox_download_file.talos[0].file_name}"
+      interface = "ide2"
+    }
   }
 
   # Empty disk on first boot -> falls through to the ISO, which installs Talos to
-  # scsi0; subsequent boots come off scsi0 directly.
-  boot_order = ["scsi0", "ide2"]
+  # scsi0; subsequent boots come off scsi0 directly. Once var.attach_iso is off
+  # there is no ide2 to list.
+  boot_order = var.attach_iso ? ["scsi0", "ide2"] : ["scsi0"]
 
   network_device {
     bridge      = var.network_bridge

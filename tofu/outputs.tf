@@ -1,8 +1,8 @@
 # Adapted from https://github.com/onedr0p/home-ops
 
 output "talos_iso" {
-  description = "ISO file provisioned on Proxmox for the control-plane VMs to boot."
-  value       = "${var.iso_datastore_id}:iso/${proxmox_download_file.talos.file_name}"
+  description = "ISO file provisioned on Proxmox for the control-plane VMs to boot; null once var.attach_iso is off."
+  value       = var.attach_iso ? "${var.iso_datastore_id}:iso/${proxmox_download_file.talos[0].file_name}" : null
 }
 
 output "control_plane" {

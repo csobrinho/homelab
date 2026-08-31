@@ -64,6 +64,20 @@ variable "iso_datastore_id" {
   default     = "local"
 }
 
+variable "attach_iso" {
+  description = <<-EOT
+    Download the Image Factory ISO and attach it as a CD-ROM. Needed only for
+    first boot / rebuilding a node from an empty disk. Once every node is
+    installed, set false: `tofu apply` then deletes the ISO from Proxmox storage
+    and detaches the drive, and Talos version bumps (done with `just talos
+    upgrade-node`, which pulls the installer from the factory directly) no longer
+    touch these VMs. To rebuild one node later: set true, `tofu apply -target`
+    that VM, re-image, set false again.
+  EOT
+  type        = bool
+  default     = true
+}
+
 variable "network_bridge" {
   description = "Proxmox bridge for the VM NIC."
   type        = string
