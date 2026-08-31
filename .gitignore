@@ -1,6 +1,31 @@
-# Helm files
 charts
 requirements.lock
 Chart.lock
 *secret.yaml
 *-ca.yaml
+.claude/
+.private/
+.pytest_cache/
+.venv/
+*.crt
+*.env
+*.iso
+*.key
+.decrypted~*
+.DS_Store
+Thumbs.db
+kubeconfig
+talosconfig
+
+# tofu/
+# OpenTofu / Terraform
+tofu/.terraform/
+tofu/*.tfplan
+tofu/*.tfplan.*
+tofu/crash.log
+tofu/crash.*.log
+
+# Never commit decrypted SOPS material
+tofu/.decrypted~*
+tofu/*.plain.*
+tofu/proxmox.plain.yaml
