@@ -3,7 +3,10 @@
 # once a VM is up on the Image Factory ISO.
 
 locals {
-  talos_iso_file_name = "talos-${var.talos_version}-${substr(var.talos_schematic_id, 0, 8)}.iso"
+  # Arch stem (metal-amd64) is part of the name: the schematic ID is the same for
+  # every arch of a schematic, so without it an arm64 ISO would collide with the
+  # amd64 one on Proxmox storage.
+  talos_iso_file_name = "talos-${var.talos_version}-${substr(var.talos_schematic_id, 0, 8)}-${trimsuffix(var.talos_image, ".iso")}.iso"
   talos_iso_url       = "https://factory.talos.dev/image/${var.talos_schematic_id}/${var.talos_version}/${var.talos_image}"
 }
 
