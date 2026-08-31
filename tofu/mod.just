@@ -13,8 +13,11 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 [private]
 exec +args:
     cd "{{ source_directory() }}"
-    export TF_VAR_talos_schematic_id="${TF_VAR_talos_schematic_id:-$(just talos schematic-id)}"
-    export TF_VAR_talos_version="${TF_VAR_talos_version:-$(yq -r '.version.talos' "{{ source_directory() }}/../talos/versions.yaml")}"
+    # Bare assignments (not `export ...=`) so a failing $() aborts under `set -e`
+    # instead of silently injecting an empty / "null" version into the ISO URL.
+    TF_VAR_talos_schematic_id="${TF_VAR_talos_schematic_id:-$(just talos schematic-id)}"
+    TF_VAR_talos_version="${TF_VAR_talos_version:-$(yq -e -r '.version.talos' "{{ source_directory() }}/../talos/versions.yaml")}"
+    export TF_VAR_talos_schematic_id TF_VAR_talos_version
     passphrase="$(sops decrypt --extract '["TOFU_STATE_PASSPHRASE"]' proxmox.sops.yaml)"
     export TF_ENCRYPTION="{\"key_provider\":{\"pbkdf2\":{\"state\":{\"passphrase\":\"${passphrase}\"}}}}"
     exec sops exec-env proxmox.sops.yaml "tofu {{ args }}"

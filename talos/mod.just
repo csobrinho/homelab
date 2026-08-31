@@ -73,7 +73,7 @@ schematic-file node="":
 
 [private]
 schematic-id node="":
-    curl -sX POST --data-binary @<(just template "$(just talos schematic-file "{{ node }}")") "https://factory.talos.dev/schematics" | jq -r '.id'
+    curl -fsS -X POST --data-binary @<(just template "$(just talos schematic-file "{{ node }}")") "https://factory.talos.dev/schematics" | jq -e -r '.id'
 
 [private]
 machine-image node="":
