@@ -45,7 +45,7 @@ resources:
   # - apps/esphome-app.yaml
   # - apps/esphome-fleet-app.yaml
   # - apps/external-reverse-proxy-app.yaml
-  # - apps/go-playground-app.yaml
+  - apps/go-playground-app.yaml
   # - apps/home-assistant-app.yaml
   # - apps/intel-gpu-plugin-app.yaml
   # - apps/ipmi-server-app.yaml
