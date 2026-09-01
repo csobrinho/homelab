@@ -5,7 +5,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - nvidia-gpu-vendor-label.yaml
   - usb-chipwhisperer-device.yaml
   - usb-zigbee-device.yaml
   - usb-zwave-device.yaml
