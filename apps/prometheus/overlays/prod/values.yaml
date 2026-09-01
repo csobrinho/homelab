@@ -1,16 +1,4 @@
 # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
-.affinity:
-  avoidControlPlane: &avoidControlPlane
-    nodeAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100 # Prefer to schedule on infra31, which is the node with the most resources.
-          preference:
-            matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - infra31
-
 nameOverride: prometheus
 
 defaultRules:
@@ -48,7 +36,6 @@ defaultRules:
 prometheus:
   prometheusSpec:
     externalUrl: https://prometheus.sobrinho.pt
-    affinity: *avoidControlPlane
     replicas: 1
     ruleSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
@@ -61,16 +48,13 @@ prometheus:
       - name: storage.tsdb.no-lockfile # To avoid issues when the container is forced killed.
     maximumStartupDurationSeconds: 2400 # 40 minutes to allow for WAL replay on large datasets.
     resources:
-      limits:
-        cpu: 1500m
-        memory: 3.5Gi
       requests:
         cpu: 500m
         memory: 1.2Gi
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ceph-block
+          storageClassName: local-db
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -84,11 +68,10 @@ containers:
 alertmanager:
   alertmanagerSpec:
     externalUrl: https://alertmanager.sobrinho.pt
-    affinity: *avoidControlPlane
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: ceph-block
+          storageClassName: local-data
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -182,7 +165,6 @@ kube-state-metrics:
 cleanPrometheusOperatorObjectNames: true
 
 prometheusOperator:
-  affinity: *avoidControlPlane
   # Disable linkerd injection for admission webhooks jobs
   admissionWebhooks:
     patch:
