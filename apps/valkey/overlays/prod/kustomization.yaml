@@ -36,13 +36,10 @@ helmCharts:
         requests:
           cpu: 100m
           memory: 80Mi
-        limits:
-          cpu: 350m
-          memory: 384Mi
       dataStorage:
         enabled: true
-        requestedSize: 2Gi
-        className: ceph-block
+        requestedSize: 1Gi
+        className: local-data
         keepPvc: true
       metrics:
         enabled: true
