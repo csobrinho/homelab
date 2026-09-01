@@ -20,3 +20,9 @@ helmCharts:
     valuesInline:
       prometheus:
         enable: true
+      worker:
+        tolerations:
+          - key: "nvidia.com/gpu"
+            operator: "Equal"
+            value: "present"
+            effect: "NoSchedule"
