@@ -6,6 +6,7 @@ resources:
   - ../../base
   - cluster-issues.yaml
   - certificates.yaml
+  - secrets/cloudflare-token-secret-enc.yaml
 
 helmCharts:
   - name: cert-manager
