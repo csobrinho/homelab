@@ -1,0 +1,29 @@
+# From https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/charts/proxmox-csi-plugin/values.yaml
+# Config file format: https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/config.md
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - secrets/proxmox-csi-secret-enc.yaml
+  - storageclass-local-data.yaml
+
+helmCharts:
+  - name: proxmox-csi-plugin
+    repo: oci://ghcr.io/sergelogvinov/charts
+    releaseName: proxmox-csi-plugin
+    namespace: csi-proxmox
+    version: 0.5.12
+    includeCRDs: true
+    valuesInline:
+      existingConfigSecret: proxmox-csi-secret
+      existingConfigSecretKey: config.yaml
+      storageClass: []
+      node:
+        # Run the node plugin on every node so a PVC-bound pod can mount its disk
+        # anywhere - control-plane and the nvidia-tainted infra4 included.
+        tolerations:
+          - operator: Exists
+      metrics:
+        enabled: true

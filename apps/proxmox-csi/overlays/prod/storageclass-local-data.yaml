@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-data
+provisioner: csi.proxmox.sinextra.dev
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  csi.storage.k8s.io/fstype: ext4
+  storage: local-data
+  ssd: "true" # 990 PRO → SSD emulation + discard to the thin pool
+  cache: none # ZFS ARC already caches; avoids double-buffering + host-crash risk
+  aio: native # pairs with cache=none/directsync on ZFS
+mountOptions:
+  - noatime

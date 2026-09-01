@@ -12,6 +12,9 @@ resources:
   - apps/sealed-secrets-app.yaml
 
   # sync-wave: -80
+  - apps/proxmox-csi-app.yaml
+
+  # sync-wave: -70
   - apps/external-dns-app.yaml
   - apps/traefik-app.yaml
   - apps/valkey-app.yaml

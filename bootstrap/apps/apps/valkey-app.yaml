@@ -4,7 +4,7 @@ metadata:
   name: valkey
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-80"
+    argocd.argoproj.io/sync-wave: "-70"
 spec:
   destination:
     namespace: infra
