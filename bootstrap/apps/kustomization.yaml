@@ -9,19 +9,19 @@ resources:
   # sync-wave: -90
   - apps/cilium-app.yaml
   - apps/coredns-app.yaml
-  - apps/sealed-secrets-app.yaml
+  - apps/sealed-secrets-app.yaml # Load the old sealed secrets.
 
   # sync-wave: -80
   - apps/proxmox-csi-app.yaml
 
   # sync-wave: -70
+  - apps/cert-manager-app.yaml
   - apps/external-dns-app.yaml
   - apps/traefik-app.yaml
   - apps/valkey-app.yaml
 
   # sync-wave: -50
   - apps/argocd-app.yaml
-  - apps/cert-manager-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml
   - apps/snapshot-controller-app.yaml

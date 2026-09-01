@@ -9,15 +9,13 @@ resources:
 
 helmCharts:
   - name: coredns
-    repo: oci://ghcr.io/coredns/charts/coredns
+    repo: oci://ghcr.io/coredns/charts
     releaseName: coredns
     namespace: kube-system
     version: 1.46.2
     includeCRDs: true
     valuesInline:
       fullnameOverride: coredns
-      image:
-        repository: mirror.gcr.io/coredns/coredns
       replicaCount: 2
       priorityClassName: system-cluster-critical
       serviceAccount:
