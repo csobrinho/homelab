@@ -14,7 +14,7 @@ resources:
   - apps/changedetection-app.yaml
   - apps/cilium-app.yaml
   - apps/cloudnative-pg-app.yaml
-  - apps/cyberchef-app.yaml
+  # - apps/cyberchef-app.yaml
   - apps/descheduler-app.yaml
   - apps/dispatcharr-app.yaml
   - apps/esphome-app.yaml
@@ -52,7 +52,7 @@ resources:
   - apps/snapshot-controller-app.yaml
   - apps/sonarr-app.yaml
   - apps/streamflow-app.yaml
-  - apps/supermarket-app.yaml
+  # - apps/supermarket-app.yaml
   - apps/tautulli-app.yaml
   - apps/teamarr-app.yaml
   - apps/traefik-app.yaml
