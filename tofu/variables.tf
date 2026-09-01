@@ -22,6 +22,68 @@ variable "nodes" {
   }))
 }
 
+variable "workers" {
+  description = <<-EOT
+    Worker VMs to create, keyed by hostname. Each key MUST match a
+    talos/nodes/workers/<key>.yaml.j2 file. Per-node cpu_cores / memory /
+    disk_size override the worker_* defaults below.
+
+    hostpci passes host PCI devices (GPUs) straight through to the guest. A node
+    with hostpci also needs a talos/nodes/workers/<key>.schematic.yaml.j2 that
+    adds the matching drivers (e.g. the nonfree-kmod-nvidia extension), and the
+    Proxmox host must already have those devices bound to vfio-pci.
+
+    Defaults to {} so the worker set is opt-in; terraform.tfvars is the single
+    source of truth for it, exactly like var.nodes.
+  EOT
+  type = map(object({
+    vm_id       = number
+    mac_address = optional(string)
+    cpu_cores   = optional(number)
+    memory      = optional(number)
+    disk_size   = optional(number)
+    # Set exactly one of `mapping` or `id` per entry.
+    #   mapping - name of a PVE datacenter PCI resource mapping. Use this: a raw
+    #             `id` can only be set by root@pam over the API, an API token
+    #             gets "only root can set 'hostpciN' config for non-mapped
+    #             devices". A mapping needs just Mapping.Use on the token.
+    #   id      - raw PVE PCI path, e.g. "0000:01:00" (whole slot, all functions).
+    #             root@pam only.
+    hostpci = optional(list(object({
+      device  = string # "hostpci0", "hostpci1", ...
+      mapping = optional(string)
+      id      = optional(string)
+      pcie    = optional(bool, true)
+      rombar  = optional(bool, true)
+    })), [])
+  }))
+  default = {}
+}
+
+variable "worker_cpu_cores" {
+  description = "Default vCPUs per worker VM (override per node in var.workers)."
+  type        = number
+  default     = 24
+}
+
+variable "worker_memory" {
+  description = "Default RAM per worker VM, in MiB (override per node in var.workers)."
+  type        = number
+  default     = 98304 # 96 GiB
+}
+
+variable "worker_disk_size" {
+  description = "Default system disk per worker VM, in GiB. Talos + image cache + ephemeral live here; cluster storage (rook-ceph / DRBD) gets its own disks later."
+  type        = number
+  default     = 200
+}
+
+variable "worker_vm_tags" {
+  description = "Tags applied to every worker VM in the Proxmox UI."
+  type        = list(string)
+  default     = ["talos", "kubernetes", "worker", "opentofu"]
+}
+
 variable "cpu_cores" {
   description = "vCPUs per control-plane VM."
   type        = number

@@ -32,7 +32,7 @@ plan *args: (exec "plan" args)
 [doc('Apply changes')]
 apply *args: (exec "apply" args)
 
-[confirm('DESTROY all three control-plane VMs [y|N] ?')]
+[confirm('DESTROY every control-plane AND worker VM [y|N] ?')]
 [doc('Destroy everything this config manages')]
 destroy *args: (exec "destroy" args)
 

@@ -1,0 +1,12 @@
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: infra6
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: net0
+addresses:
+  - address: 10.10.2.16/24
+routes:
+  - gateway: 10.10.2.1

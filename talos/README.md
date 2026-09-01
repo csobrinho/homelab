@@ -10,7 +10,7 @@ rendered on demand and pushed to nodes with `talosctl`.
 | --------------------------------------- | ------------------------------------------------------------------------- |
 | `cluster.yaml.j2`                       | Documents applied to every node                                           |
 | `controlplane.yaml.j2`                  | Control-plane-only documents, including `machine.type`                    |
-| `workers.yaml.j2`                       | Worker-only documents (does not exist yet; created with the first worker) |
+| `workers.yaml.j2`                       | Worker-only documents (`machine.type: worker`, `ca` crt-only, worker role label) |
 | `nodes/<role>/<node>.yaml.j2`           | Per-node documents (hostname, addresses, BGP router ID, zone)             |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override                                      |
 | `schematic.yaml.j2`                     | Shared [Image Factory](https://factory.talos.dev) schematic               |
@@ -48,15 +48,16 @@ the `UnattendedInstallConfig` installer image and used by `download-image` and `
 
 Resolution is per node: `nodes/<role>/<node>.schematic.yaml.j2` wins when present, otherwise the
 shared `schematic.yaml.j2` applies. Overrides are complete files, not deltas; they exist for nodes
-whose hardware diverges from the fleet. No overrides exist today.
+whose hardware diverges from the fleet. `nodes/workers/infra4.schematic.yaml.j2` is one: the shared
+extension set plus the NVIDIA driver stack for its two passed-through RTX 5090s.
 
 ## Gotchas
 
 - `machine.ca` and `cluster.ca` merge as a cert+key **unit**: a patch supplying only `key` blanks
   `crt`. This is why `controlplane.yaml.j2` repeats the `crt` references alongside the keys.
-- Rendering a worker before `workers.yaml.j2` and `nodes/workers/` exist fails loudly. Adding the
-  first worker means creating `workers.yaml.j2` (with `machine: { type: worker }` and a `ca` block
-  carrying `crt` only) plus `nodes/workers/<node>.yaml.j2`.
+- Each worker needs `nodes/workers/<node>.yaml.j2` (hostname + address); `render-config` picks the
+  `workers` role purely from that file's directory. A node with passthrough GPUs also needs a
+  `nodes/workers/<node>.schematic.yaml.j2` driver override (see `infra4`).
 
 ## Common tasks
 

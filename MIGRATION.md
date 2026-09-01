@@ -30,8 +30,10 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 - [ ] **C.** Bootstrap CRDs (wave 0)
 - [ ] **D.** Deploy CoreDNS
 - [ ] **E.** Deploy ArgoCD → hand off to `bootstrap/root-app`
-- [ ] Workers (EPYC VMs + RPi5 arm64) + storage
-- [ ] Cut over DNS / retire the old cluster
+- [ ] Workers: `tofu/` + `talos/` configs written (`infra4` GPU, `infra5/6/7`) —
+      not yet applied. RPi5 arm64 still TODO. Storage still undecided.
+- [ ] `apps/nvidia-gpu-operator` — re-target from k3s to Talos (see below)
+- [ ] Cut over DNS / retire the old cluster (incl. GPU VM 110 → `infra4`)
 
 ## Plan
 
@@ -55,8 +57,9 @@ and add `iscsi-tools` + `util-linux-tools`; if Miroir/DRBD9 stays, keep the drbd
 extension and un-TODO the `drbd*` `KernelModuleConfig` blocks.
 
 Other config cleanup (from the 2026-08-31 review, deferred):
-- `apps/cilium/overlays/prod/frr.conf` — neighbors are `10.10.2.31–38`; real CP
-  nodes are `.11–.13`. Reconcile with the final node/worker IP scheme.
+- `apps/cilium/overlays/prod/frr.conf` — neighbors are `10.10.2.31–38`; actual
+  scheme is CP `infra1-3` `.11–.13`, workers `infra4-7` `.14–.17`. Reconcile
+  (Cilium BGP peers from worker node IPs).
 - etcd `listen-metrics-urls: http://0.0.0.0:2381` (`controlplane.yaml.j2`) is
   unauthenticated on all interfaces. Once Prometheus exists, either restrict via
   a Talos ingress firewall rule (fleet-wide, port 2381 ← `10.10.2.0/24`) or move
@@ -130,11 +133,25 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
 
 ## Later — workers + storage
 
-- **EPYC VM workers**: `tofu/` — add worker entries (same bpg pattern; the CD-ROM
-  ISO / schematic are shared with the CP). Create `talos/workers.yaml.j2`
-  (`machine.type: worker`, `ca` crt-only) + `talos/nodes/workers/<node>.yaml.j2`.
-  All on `10.10.2.0/24`, so `autoDirectNodeRoutes` keeps working fleet-wide — no
-  PodCIDR BGP advertisement needed.
+- **EPYC VM workers**: configs written (not applied). `tofu/terraform.tfvars`
+  `var.workers` = `infra4` (12 vCPU / 64 GiB, 2× RTX 5090 passthrough, replaces
+  k3s VM 110) + `infra5/6/7` (24 vCPU / 96 GiB). `talos/workers.yaml.j2` +
+  `talos/nodes/workers/*.yaml.j2`; `infra4` also has a `.schematic.yaml.j2` with
+  `nvidia-open-gpu-kernel-modules-production` + `nvidia-container-toolkit-production`
+  (595.91.07; the RTX 5090 / Blackwell GB202 is open-module only — the closed
+  `nonfree-kmod-nvidia` bailed `RmInitAdapter ... requires ... open kernel
+  modules` on first boot) and is tainted `nvidia.com/gpu=present:NoSchedule`.
+  All on `10.10.2.0/24`, so
+  `autoDirectNodeRoutes` keeps working fleet-wide — no PodCIDR BGP needed.
+  Bring-up: `just tofu apply`, DHCP reservations, `just talos apply-node <n>`
+  (workers just join — no `bootstrap`). GPU host prep (vfio-pci bind, IOMMU,
+  ReBAR, `lspci` slot IDs) is in `tofu/README.md`.
+- **NVIDIA on Talos** (`apps/nvidia-gpu-operator`): today's overlay is k3s-shaped
+  (`driver.usePrecompiled`, `toolkit.enabled`, k3s containerd paths). On Talos
+  the extension already ships the driver + toolkit + `nvidia` RuntimeClass, so
+  flip to `driver.enabled: false`, `toolkit.enabled: false`, drop the k3s
+  `CONTAINERD_*` env, keep the device plugin + `time-slicing-config-all` +
+  dcgm-exporter. Do this as part of wave E (ArgoCD), not before.
 - **RPi5 workers** (arm64): not tofu — flash the Talos arm64 SBC image. Needs an
   arm64 schematic (`nodes/workers/<node>.schematic.yaml.j2`) and arm64-safe
   workload scheduling (`kubernetes.io/arch` nodeAffinity or multi-arch images).
@@ -144,8 +161,10 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
 
 - **Proxmox token** (`tofu@pve!controlplane`, role `TofuProvision`) needs
   `SDN.Use` on PVE 9 for bridge assignment (plain bridges are in the
-  `localnetwork` SDN zone). Add any further privileges hit during `tofu apply`
-  to `tofu/README.md`.
+  `localnetwork` SDN zone), and `Mapping.Use` + `Mapping.Audit` for `infra4`'s
+  GPU passthrough (a token can't set a raw `hostpci` path — only a PVE PCI
+  *resource mapping*; `gpu0`/`gpu1` created as root). Add any further privileges
+  hit during `tofu apply` to `tofu/README.md`.
 - **First `apply-config`** is `--insecure` to the node's *maintenance* DHCP IP
   (`10.10.2.121-123`); the static `.11-.13` only exists after the config installs
   and the node reboots, after which the API needs mTLS (`talosconfig`).

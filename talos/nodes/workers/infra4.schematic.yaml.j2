@@ -1,0 +1,17 @@
+---
+# Complete schematic override for infra4 (not a delta): the shared
+# schematic.yaml.j2 set PLUS the NVIDIA driver stack for the 2x RTX 5090.
+#
+# OPEN kernel modules, not nonfree-kmod-nvidia: Blackwell (GB202, 10de:2b85) is
+# open-module only - the closed driver bailed on first boot with
+# "RmInitAdapter failed ... requires use of the NVIDIA open kernel modules".
+# Keep the kmod and container-toolkit on the SAME branch (both -production =
+# 595.91.07 for v1.14.0-rc.2); the pair must share a driver version. Re-check
+# names/versions on the Image Factory and bump alongside Talos upgrades.
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/qemu-guest-agent
+      - siderolabs/drbd # Miroir DRBD9 Replication
+      - siderolabs/nvidia-open-gpu-kernel-modules-production # NVIDIA open-source kernel modules (required for RTX 5090 Blackwell)
+      - siderolabs/nvidia-container-toolkit-production # NVIDIA container toolkit for Kubernetes GPU access

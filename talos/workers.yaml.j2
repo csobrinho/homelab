@@ -1,0 +1,7 @@
+---
+machine:
+  type: worker
+  # ca merges as a unit; workers carry crt only (no key). cluster.yaml.j2 already
+  # supplies machine.ca.crt, but repeating it here keeps the role patch honest.
+  ca:
+    crt: {{ sops.certs.os.crt }}
