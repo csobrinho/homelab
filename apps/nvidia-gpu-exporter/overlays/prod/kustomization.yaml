@@ -19,7 +19,6 @@ helmCharts:
         nvidia.com/gpu.present: "true"
       resources:
         limits:
-          cpu: 100m
           memory: 128Mi
       serviceMonitor:
         enabled: true

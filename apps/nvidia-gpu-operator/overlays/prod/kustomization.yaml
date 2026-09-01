@@ -1,6 +1,5 @@
 # From https://github.com/NVIDIA/gpu-operator/blob/main/deployments/gpu-operator/values.yaml
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1n.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: nvidia-gpu-operator
@@ -18,23 +17,22 @@ helmCharts:
     includeCRDs: true
     version: v26.3.1
     valuesInline:
-      # Node Feature Discovery.
       nfd:
         enabled: false # Already installed.
-      # Driver config.
       driver:
-        usePrecompiled: true
-        version: "570"
-        kernelModuleConfig:
-          name: "kernel-module-params" # With power saving attributes.
-      # Device Plugin
+        enable: false # Already installed.
+        # TODO: kernelModuleConfig:
+        #   name: "kernel-module-params" # With power saving attributes.
+      toolkit:
+        enabled: false
+      hostPaths:
+        driverInstallDir: /usr/local # where Talos puts the driver.
       devicePlugin:
         enabled: true
         config:
           create: false
           name: time-slicing-config-all
           default: any
-      # Metrics
       dcgmExporter:
         enabled: true
         serviceMonitor:
@@ -44,15 +42,3 @@ helmCharts:
           env:
             - name: TZ
               value: "America/Los_Angeles"
-      # k3s compatibility
-      toolkit:
-        enabled: true
-        env:
-          - name: CONTAINERD_CONFIG
-            value: /var/lib/rancher/k3s/agent/etc/containerd/config.toml
-          - name: CONTAINERD_SOCKET
-            value: /run/k3s/containerd/containerd.sock
-          - name: CONTAINERD_RUNTIME_CLASS
-            value: nvidia
-          - name: CONTAINERD_SET_AS_DEFAULT
-            value: "true"
