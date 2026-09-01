@@ -82,3 +82,12 @@ helmCharts:
                 severity: error
       env:
         TZ: America/Los_Angeles
+
+patches:
+  # valkey namespace patch to ensure it is created in the correct namespace.
+  - target:
+      labelSelector: app.kubernetes.io/instance=valkey
+    patch: |-
+      - op: add
+        path: /metadata/namespace
+        value: infra
