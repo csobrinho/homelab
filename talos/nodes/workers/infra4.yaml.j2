@@ -18,6 +18,11 @@ routes:
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: nvidia
+parameters:
+  # Restores /proc/driver/nvidia/suspend, which the open modules stopped
+  # creating by default. Only needed if you want to test the suspend/resume
+  # idle-power poke.
+  - NVreg_UseKernelSuspendNotifiers=0
 ---
 apiVersion: v1alpha1
 kind: KernelModuleConfig
