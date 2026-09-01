@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: cilium
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-90"
 spec:
   destination:
     namespace: kube-system

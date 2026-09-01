@@ -4,4 +4,11 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - secrets/k3s-etcd-snapshot-secret-enc.yaml
+
+helmCharts:
+  - name: prometheus-operator-crds
+    repo: https://prometheus-community.github.io/helm-charts
+    releaseName: prometheus-operator-crds
+    namespace: prometheus
+    version: 31.0.1
+    includeCRDs: true

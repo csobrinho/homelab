@@ -1,0 +1,78 @@
+# From https://github.com/coredns/helm/blob/master/charts/coredns/values.yaml
+# Based on: https://github.com/onedr0p/home-ops/blob/c2b4f51728e9c2e5f4b8b24a1052d1721e968e23/kubernetes/apps/kube-system/coredns/app/helmrelease.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: coredns
+    repo: oci://ghcr.io/coredns/charts/coredns
+    releaseName: coredns
+    namespace: kube-system
+    version: 1.46.2
+    includeCRDs: true
+    valuesInline:
+      fullnameOverride: coredns
+      image:
+        repository: mirror.gcr.io/coredns/coredns
+      replicaCount: 2
+      priorityClassName: system-cluster-critical
+      serviceAccount:
+        create: true
+      service:
+        name: kube-dns
+        clusterIP: 10.43.0.10
+      servers:
+        - zones:
+            - zone: .
+              scheme: dns://
+              use_tcp: true
+          port: 53
+          plugins:
+            - name: errors
+            # Serves a /health endpoint on :8080, required for livenessProbe.
+            - name: health
+              configBlock: |-
+                lameduck 5s
+            # Serves a /ready endpoint on :8181, required for readinessProbe.
+            - name: ready
+            # Required to query kubernetes API for data
+            - name: kubernetes
+              parameters: cluster.local in-addr.arpa ip6.arpa
+              configBlock: |-
+                pods verified
+                fallthrough in-addr.arpa ip6.arpa
+            - name: autopath
+              parameters: "@kubernetes"
+            # Serves a /metrics endpoint on :9153, required for serviceMonitor
+            - name: prometheus
+              parameters: 0.0.0.0:9153
+            - name: forward
+              parameters: . /etc/resolv.conf
+            - name: cache
+              configBlock: |-
+                prefetch 20
+                serve_stale
+                servfail 0
+            - name: loop
+            - name: reload
+            - name: loadbalance
+            - name: log
+              configBlock: |-
+                class error
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule

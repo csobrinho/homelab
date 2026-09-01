@@ -12,7 +12,7 @@ helmCharts:
     releaseName: kube-prometheus-stack
     namespace: prometheus
     version: 88.5.4
-    includeCRDs: true
+    includeCRDs: false # The CRDs are already installed by the prometheus-operator-crds helm chart in the initial-setup app
     # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     valuesFile: values.yaml
 

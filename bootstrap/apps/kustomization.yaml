@@ -3,66 +3,75 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - apps/actual-budget-app.yaml
-  - apps/apt-cacher-ng-app.yaml
-  - apps/argocd-app.yaml
-  - apps/bambuddy-app.yaml
-  - apps/bazarr-app.yaml
-  - apps/bentopdf-app.yaml
-  - apps/binner-app.yaml
-  - apps/cert-manager-app.yaml
-  - apps/changedetection-app.yaml
-  - apps/cilium-app.yaml
-  - apps/cloudnative-pg-app.yaml
-  - apps/cyberchef-app.yaml
-  - apps/descheduler-app.yaml
-  - apps/dispatcharr-app.yaml
-  - apps/esphome-app.yaml
-  - apps/esphome-fleet-app.yaml
-  - apps/external-dns-app.yaml
-  - apps/external-reverse-proxy-app.yaml
-  - apps/go-playground-app.yaml
-  - apps/home-assistant-app.yaml
+  # sync-wave: -100
   - apps/initial-setup-app.yaml
-  - apps/intel-gpu-plugin-app.yaml
-  - apps/ipmi-server-app.yaml
-  - apps/it-tools-app.yaml
-  - apps/jupyter-app.yaml
-  - apps/keda-app.yaml
-  - apps/lidarr-app.yaml
-  - apps/mealie-app.yaml
-  - apps/mosquitto-app.yaml
-  - apps/mqtt-explorer-app.yaml
-  - apps/n8n-app.yaml
-  - apps/node-feature-discovery-app.yaml
-  - apps/node-red-app.yaml
+
+  # sync-wave: -90
+  - apps/cilium-app.yaml
+  - apps/coredns-app.yaml
+  - apps/sealed-secrets-app.yaml
+
+  # sync-wave: -80
+  - apps/external-dns-app.yaml
+  - apps/traefik-app.yaml
+  - apps/valkey-app.yaml
+
+  # sync-wave: -50
+  - apps/argocd-app.yaml
+  - apps/cert-manager-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml
-  - apps/ollama-app.yaml
-  - apps/overseerr-app.yaml
-  - apps/pihole-app.yaml
-  - apps/plex-app.yaml
-  - apps/prometheus-app.yaml
-  - apps/prowlarr-app.yaml
-  - apps/qbittorrent-app.yaml
-  - apps/radarr-app.yaml
-  - apps/rook-ceph-app.yaml
-  - apps/sablier-app.yaml
-  - apps/sealed-secrets-app.yaml
   - apps/snapshot-controller-app.yaml
-  - apps/sonarr-app.yaml
-  - apps/streamflow-app.yaml
-  - apps/supermarket-app.yaml
-  - apps/tautulli-app.yaml
-  - apps/teamarr-app.yaml
-  - apps/traefik-app.yaml
-  - apps/unpackerr-app.yaml
-  - apps/valkey-app.yaml
-  - apps/velero-app.yaml
-  - apps/whatsapp-app.yaml
-  - apps/windmill-app.yaml
-  - apps/xfinity-usage-app.yaml
-  - apps/zwavejs2mqtt-app.yaml
+
+  # - apps/actual-budget-app.yaml
+  # - apps/apt-cacher-ng-app.yaml
+  # - apps/bambuddy-app.yaml
+  # - apps/bazarr-app.yaml
+  # - apps/bentopdf-app.yaml
+  # - apps/binner-app.yaml
+  # - apps/changedetection-app.yaml
+  # - apps/cloudnative-pg-app.yaml
+  # - apps/cyberchef-app.yaml
+  # - apps/descheduler-app.yaml
+  # - apps/dispatcharr-app.yaml
+  # - apps/esphome-app.yaml
+  # - apps/esphome-fleet-app.yaml
+  # - apps/external-reverse-proxy-app.yaml
+  # - apps/go-playground-app.yaml
+  # - apps/home-assistant-app.yaml
+  # - apps/intel-gpu-plugin-app.yaml
+  # - apps/ipmi-server-app.yaml
+  # - apps/it-tools-app.yaml
+  # - apps/jupyter-app.yaml
+  # - apps/keda-app.yaml
+  # - apps/lidarr-app.yaml
+  # - apps/mealie-app.yaml
+  # - apps/mosquitto-app.yaml
+  # - apps/mqtt-explorer-app.yaml
+  # - apps/n8n-app.yaml
+  # - apps/node-feature-discovery-app.yaml
+  # - apps/node-red-app.yaml
+  # - apps/ollama-app.yaml
+  # - apps/overseerr-app.yaml
+  # - apps/pihole-app.yaml
+  # - apps/plex-app.yaml
+  # - apps/prometheus-app.yaml
+  # - apps/prowlarr-app.yaml
+  # - apps/qbittorrent-app.yaml
+  # - apps/radarr-app.yaml
+  # - apps/rook-ceph-app.yaml
+  # - apps/sablier-app.yaml
+  # - apps/sonarr-app.yaml
+  # - apps/streamflow-app.yaml
+  # - apps/supermarket-app.yaml
+  # - apps/tautulli-app.yaml
+  # - apps/teamarr-app.yaml
+  # - apps/unpackerr-app.yaml
+  # - apps/velero-app.yaml
+  # - apps/whatsapp-app.yaml
+  # - apps/windmill-app.yaml
+  # - apps/xfinity-usage-app.yaml
+  # - apps/zwavejs2mqtt-app.yaml
 
 components:
   - ../../components/application-sync-policy
