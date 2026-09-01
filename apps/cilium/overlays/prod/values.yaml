@@ -36,6 +36,7 @@ bgpControlPlane:                      # Routing with BGP
 routingMode: native                   # Use native routing with BGP
 autoDirectNodeRoutes: true            # Direct node-to-node routing
 ipv4NativeRoutingCIDR: 10.42.0.0/16   # Your pod CIDR
+policyEnforcementMode: never          # Don't use NetworkPolicies (faster)
 bpfClockProbe: true                   # Auto-detect best clock source
 
 # kube-proxy Replacement
