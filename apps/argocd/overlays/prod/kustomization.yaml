@@ -20,6 +20,12 @@ helmCharts:
         env:
           - name: TZ
             value: America/Los_Angeles
+        # Cilium enforces k8s NetworkPolicies; the chart's per-component
+        # policies break repo-server <-> controller replies on the DSR
+        # datapath (reply arrives VIP-sourced, misses conntrack, ingress
+        # policy denies it). Disable until the datapath is switched off DSR.
+        networkPolicy:
+          create: false
       redis:
         enabled: false
       externalRedis:
