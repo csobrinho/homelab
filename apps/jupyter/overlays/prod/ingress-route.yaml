@@ -4,7 +4,7 @@ metadata:
   name: jupyter-ingress
   namespace: jupyter
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-int
+    external-dns.alpha.kubernetes.io/target: infra-int-old
 spec:
   entryPoints:
     - websecure

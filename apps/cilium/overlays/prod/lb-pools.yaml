@@ -39,25 +39,25 @@ spec:
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: pool-infra-int
+  name: pool-infra-int-old
 spec:
   blocks:
     - cidr: "10.10.10.24/32"
   serviceSelector:
     matchLabels:
-      io.cilium/lb-pool: pool-infra-int
+      io.cilium/lb-pool: pool-infra-int-old
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
 apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: pool-infra-ext
+  name: pool-infra-ext-old
 spec:
   blocks:
     - cidr: "10.10.10.25/32"
   serviceSelector:
     matchLabels:
-      io.cilium/lb-pool: pool-infra-ext
+      io.cilium/lb-pool: pool-infra-ext-old
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
 apiVersion: "cilium.io/v2"

@@ -75,11 +75,11 @@ affinity:
 
 service:
   annotations:
-    lbipam.cilium.io/sharing-key: infra-int
+    lbipam.cilium.io/sharing-key: infra-int-old
     lbipam.cilium.io/sharing-cross-namespace: "*"
-    external-dns.alpha.kubernetes.io/hostname: infra-int
+    external-dns.alpha.kubernetes.io/hostname: infra-int-old
   labels:
-    io.cilium/lb-pool: pool-infra-int
+    io.cilium/lb-pool: pool-infra-int-old
   spec:
     externalTrafficPolicy: Local
 
@@ -87,7 +87,7 @@ ingressRoute:
   dashboard:
     enabled: true
     annotations:
-      external-dns.alpha.kubernetes.io/target: infra-int
+      external-dns.alpha.kubernetes.io/target: infra-int-old
     matchRule: Host(`traefik.sobrinho.pt`)
     services:
       - name: api@internal
