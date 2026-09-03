@@ -9,5 +9,7 @@
     "redhat.vscode-yaml",
     "samuelcolvin.jinjahtml",
     "tamasfe.even-better-toml",
+    "Gruntfuggly.todo-tree",
+    "bokuweb.vscode-ripgrep",
   ]
 }
