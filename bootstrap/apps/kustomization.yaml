@@ -11,6 +11,7 @@ resources:
   - apps/coredns-app.yaml
   - apps/metrics-server-app.yaml
   - apps/sealed-secrets-app.yaml # Load the old sealed secrets.
+  - apps/spegel-app.yaml
 
   # sync-wave: -80
   - apps/proxmox-csi-app.yaml

@@ -1,0 +1,31 @@
+# From https://github.com/spegel-org/spegel/blob/main/charts/spegel/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: spegel
+    repo: oci://ghcr.io/spegel-org/helm-charts
+    releaseName: spegel
+    namespace: kube-system
+    version: 0.7.4
+    includeCRDs: true
+    valuesInline:
+      # Based on: https://github.com/onedr0p/home-ops/blob/52a4a767d0bec8f115563653c89bebc5e65bef41/kubernetes/apps/kube-system/spegel/app/helmrelease.yaml
+      grafanaDashboard:
+        enabled: true
+        mode: GrafanaOperator
+        grafanaOperator:
+          matchLabels:
+            dashboards: grafana
+      service:
+        registry:
+          hostPort: 29999
+      serviceMonitor:
+        enabled: true
+      spegel:
+        containerdSock: /run/containerd/containerd.sock
+        containerdRegistryConfigPath: /etc/cri/conf.d/hosts
