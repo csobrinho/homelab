@@ -15,12 +15,13 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       # Based on: https://github.com/onedr0p/home-ops/blob/52a4a767d0bec8f115563653c89bebc5e65bef41/kubernetes/apps/kube-system/spegel/app/helmrelease.yaml
-      grafanaDashboard:
-        enabled: true
-        mode: GrafanaOperator
-        grafanaOperator:
-          matchLabels:
-            dashboards: grafana
+      # TODO: Needs grafana operator to be installed in the cluster for this to work
+      # grafanaDashboard:
+      #   enabled: true
+      #   mode: GrafanaOperator
+      #   grafanaOperator:
+      #     matchLabels:
+      #       dashboards: grafana
       service:
         registry:
           hostPort: 29999
