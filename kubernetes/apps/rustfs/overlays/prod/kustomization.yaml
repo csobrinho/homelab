@@ -1,0 +1,104 @@
+# RustFS — S3-compatible object storage (single-node).
+# Docs: https://docs.rustfs.com  Image: https://hub.docker.com/r/rustfs/rustfs
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+  - secrets/rustfs-secret-enc.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: rustfs
+    version: 5.1.0
+    namespace: rustfs
+    valuesFile: values-empty.yaml
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+      controllers:
+        rustfs:
+          containers:
+            app:
+              image:
+                repository: rustfs/rustfs
+                tag: 1.0.0-rc.5@sha256:c36b3efea3d1e503f1a2581abd0e7611e0e5820dd30e1850a52384b3fc52bda4
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                # Single-node, single-drive layout.
+                RUSTFS_VOLUMES: /data
+                RUSTFS_ADDRESS: 0.0.0.0:9000
+                RUSTFS_CONSOLE_ENABLE: "true"
+                RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+                RUSTFS_OBS_LOGGER_LEVEL: info
+                RUSTFS_SERVER_DOMAINS: s33.sobrinho.pt:9000 # TODO: Remove the ":port" once https://github.com/rustfs/rustfs/pull/7051 lands.
+              envFrom:
+                - secretRef:
+                    name: rustfs-secret
+              probes:
+                liveness:
+                  enabled: true
+                  custom: true
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: &port 9000
+                    periodSeconds: 30
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                readiness:
+                  enabled: true
+                  custom: true
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                startup:
+                  enabled: true
+                  port: *port
+                  spec:
+                    failureThreshold: 30
+                    periodSeconds: 10
+              resources:
+                requests:
+                  cpu: 250m
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+      defaultPodOptions:
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: &uid 10001
+          runAsGroup: *uid
+          fsGroup: *uid
+          fsGroupChangePolicy: OnRootMismatch
+      service:
+        app:
+          ports:
+            s3:
+              port: *port
+            console:
+              port: 9001
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          size: 200Gi
+          # local-s3: zvols on data/s3 (250G quota), xfs, WaitForFirstConsumer.
+          # See kubernetes/apps/proxmox-csi/overlays/prod/storageclass-local-s3.yaml
+          storageClass: local-s3
+          retain: true
+        tmp:
+          type: emptyDir
+        logs:
+          type: emptyDir
