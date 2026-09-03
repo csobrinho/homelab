@@ -1,0 +1,27 @@
+# From https://github.com/kubernetes-sigs/metrics-server/blob/master/charts/metrics-server/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: metrics-server
+    repo: https://kubernetes-sigs.github.io/metrics-server/
+    releaseName: metrics-server
+    namespace: kube-system
+    version: 3.14.0
+    includeCRDs: true
+    valuesInline:
+      # Based on https://github.com/onedr0p/home-ops/blob/52a4a767d0bec8f115563653c89bebc5e65bef41/kubernetes/apps/kube-system/metrics-server/app/helmrelease.yaml
+      args:
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=10s
+        - --kubelet-request-timeout=2s
+      metrics:
+        enabled: true
+      serviceMonitor:
+        enabled: true

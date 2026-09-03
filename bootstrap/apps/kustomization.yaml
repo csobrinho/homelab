@@ -9,6 +9,7 @@ resources:
   # sync-wave: -90
   - apps/cilium-app.yaml
   - apps/coredns-app.yaml
+  - apps/metrics-server-app.yaml
   - apps/sealed-secrets-app.yaml # Load the old sealed secrets.
 
   # sync-wave: -80
