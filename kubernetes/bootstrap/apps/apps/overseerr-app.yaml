@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: overseerr
+  namespace: argocd
+  labels:
+    sablier.managed: "true"
+spec:
+  destination:
+    namespace: media
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/overseerr/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

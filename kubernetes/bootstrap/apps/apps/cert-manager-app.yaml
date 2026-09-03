@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-70"
+spec:
+  destination:
+    namespace: cert-manager
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/cert-manager/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

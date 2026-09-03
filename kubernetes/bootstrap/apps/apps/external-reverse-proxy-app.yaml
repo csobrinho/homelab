@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-reverse-proxy
+  namespace: argocd
+spec:
+  destination:
+    namespace: infra
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/external-reverse-proxy/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

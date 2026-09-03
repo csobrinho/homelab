@@ -60,7 +60,7 @@ ip link show flannel.1  # Should return error
 ```sh
 export KUBECONFIG=~/.kube/config
 
-cilium install --version 1.18.2 --values apps/cilium/overlays/prod/values.yaml
+cilium install --version 1.18.2 --values kubernetes/apps/cilium/overlays/prod/values.yaml
 
 # Wait for Cilium to be ready
 cilium status --wait

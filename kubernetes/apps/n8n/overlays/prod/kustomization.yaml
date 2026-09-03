@@ -1,0 +1,75 @@
+# From https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+  - secrets/n8n-secret-enc.yaml
+
+helmCharts:
+  - name: n8n
+    repo: oci://8gears.container-registry.com/library
+    releaseName: n8n
+    namespace: n8n
+    version: 2.1.0
+    includeCRDs: true
+    valuesInline:
+      image:
+        repository: ghcr.io/n8n-io/n8n
+        pullPolicy: IfNotPresent
+        tag: 2.36.5
+      main:
+        replicaCount: 1
+        config:
+          n8n:
+            editor:
+              base_url: https://n8n.sobrinho.pt/
+            templates:
+              enabled: "true"
+            enforce:
+              settings_file_permissions: "true"
+          db:
+            type: sqlite
+          generic:
+            timezone: America/Los_Angeles
+          queue:
+            health:
+              check:
+                active: true
+            bull:
+              redis:
+                host: valkey.infra.svc.cluster.local
+                port: 6379
+                db: 2 # See kubernetes/apps/valkey/overlays/prod/kustomization.yaml
+        persistence:
+          enabled: true
+          type: dynamic
+          storageClass: "ceph-block"
+          accessModes:
+            - ReadWriteOnce
+          size: 4Gi
+        extraEnv:
+          EXECUTIONS_MODE:
+            value: "regular"
+          N8N_PROXY_HOPS:
+            value: "1"
+          N8N_ENCRYPTION_KEY:
+            valueFrom:
+              secretKeyRef:
+                name: n8n-secret
+                key: encryption-key
+        resources:
+          limits:
+            cpu: 750m
+            memory: 768Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      worker:
+        enabled: false
+      webhook:
+        enabled: false
+      valkey:
+        enabled: false

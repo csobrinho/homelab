@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  destination:
+    namespace: prometheus
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/prometheus/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

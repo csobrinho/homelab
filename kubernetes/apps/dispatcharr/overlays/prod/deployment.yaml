@@ -1,0 +1,154 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: dispatcharr
+    app.kubernetes.io/name: dispatcharr
+  name: dispatcharr
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dispatcharr
+      app.kubernetes.io/name: dispatcharr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: dispatcharr
+        app.kubernetes.io/name: dispatcharr
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.38
+          command: ["sh", "-c", "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done"]
+        - name: wait-for-redis
+          image: busybox:1.38
+          command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
+      containers:
+        - name: dispatcharr
+          image: ghcr.io/dispatcharr/dispatcharr:0.29.0@sha256:df768adcb9993b58f5e67010cc802c8659b7f964cb1213ab7ff9bb9384db9145
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              gpu.intel.com/i915: "1"
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              gpu.intel.com/i915: "1"
+              cpu: 1000m
+              memory: 2Gi
+          ports:
+            - containerPort: 9191
+              name: main
+              protocol: TCP
+          env:
+            - name: DISPATCHARR_PORT
+              value: "9191"
+            - name: DISPATCHARR_ENV
+              value: "modular"
+            - name: POSTGRES_HOST
+              value: "cluster-rw.cnpg-system.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "dispatcharr"
+            - name: POSTGRES_USER
+              value: "dispatcharr"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_HOST
+              value: "valkey.infra.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "1" # See kubernetes/apps/valkey/overlays/prod/kustomization.yaml
+            - name: DJANGO_SETTINGS_MODULE
+              value: "dispatcharr.settings"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          readinessProbe:
+            httpGet:
+              path: /api/core/version/
+              port: main
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/core/version/
+              port: main
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+        - name: celery
+          image: ghcr.io/dispatcharr/dispatcharr:0.29.0@sha256:df768adcb9993b58f5e67010cc802c8659b7f964cb1213ab7ff9bb9384db9145
+          command: ["/app/docker/entrypoint.celery.sh"]
+          env:
+            - name: DISPATCHARR_ENV
+              value: "modular"
+            - name: POSTGRES_HOST
+              value: "cluster-rw.cnpg-system.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "dispatcharr"
+            - name: POSTGRES_USER
+              value: "dispatcharr"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dispatcharr-secret
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_HOST
+              value: "valkey.infra.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "1" # See kubernetes/apps/valkey/overlays/prod/kustomization.yaml
+            - name: DJANGO_SETTINGS_MODULE
+              value: "dispatcharr.settings"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 2Gi
+              cpu: 750m
+          livenessProbe:
+            exec:
+              command: ["celery", "-A", "dispatcharr", "inspect", "ping"]
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 4
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+        supplementalGroups:
+          - 105 # Add render group.
+          - 44
+          - 107
+          - 568
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dispatcharr-data

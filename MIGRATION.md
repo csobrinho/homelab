@@ -39,7 +39,7 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 
 ### A. Cilium — done
 
-Deployed via `kustomize build --enable-helm apps/cilium/overlays/prod`. Nodes Ready.
+Deployed via `kustomize build --enable-helm kubernetes/apps/cilium/overlays/prod`. Nodes Ready.
 Remaining: delete the stale vendored `apps/cilium/overlays/prod/charts/cilium-1.20.0/`
 (chart is pulled from the repo). Verify `cilium bgp peers` established with `10.10.2.1`.
 
