@@ -1,3 +1,4 @@
+# See https://github.com/home-operations/helm-charts/blob/main/charts/snapshot-controller/values.yaml
 # See https://github.com/kubernetes-csi/external-snapshotter/
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -5,6 +6,16 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd/?ref=v8.6.0
-  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/csi-snapshotter?ref=v8.6.0
-  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller/?ref=v8.6.0
+
+helmCharts:
+  - name: snapshot-controller
+    repo: oci://ghcr.io/home-operations/charts
+    releaseName: snapshot-controller
+    namespace: kube-system
+    version: 0.1.0
+    includeCRDs: true
+    valuesInline:
+      replicaCount: 2
+      monitoring:
+        serviceMonitor:
+          enabled: true
