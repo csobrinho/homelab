@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-s3
+provisioner: csi.proxmox.sinextra.dev
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  csi.storage.k8s.io/fstype: xfs # large sequential objects / backup blobs
+  storage: local-s3 # zvols on data/s3 (250G quota, blocksize=64k)
+  ssd: "true" # 990 PRO → SSD emulation + discard to the pool
+  cache: none # ZFS ARC already caches; avoids double-buffering + host-crash risk
+  aio: native # pairs with cache=none/directsync on ZFS
+mountOptions:
+  - noatime

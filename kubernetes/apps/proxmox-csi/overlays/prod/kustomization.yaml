@@ -8,6 +8,7 @@ resources:
   - ../../base
   - secrets/proxmox-csi-secret-enc.yaml
   - storageclass-local-data.yaml
+  - storageclass-local-s3.yaml
 
 helmCharts:
   - name: proxmox-csi-plugin
