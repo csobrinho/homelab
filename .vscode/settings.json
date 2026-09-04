@@ -52,11 +52,11 @@
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
     "kubernetes": [
-        "./apps/**/*.yaml",
-        "./bootstrap/**/*.yaml",
-        "./components/**/*.yaml",
-        "./kubernetes/**/*.yaml",
-    ],
+      "./apps/**/*.yaml",
+      "./bootstrap/**/*.yaml",
+      "./components/**/*.yaml",
+      "./kubernetes/**/*.yaml"
+    ]
   },
   "[just]": {
     "editor.defaultFormatter": "nefrob.vscode-just-syntax"

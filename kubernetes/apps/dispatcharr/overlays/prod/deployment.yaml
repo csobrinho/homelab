@@ -24,10 +24,20 @@ spec:
       initContainers:
         - name: wait-for-postgres
           image: busybox:1.38
-          command: ["sh", "-c", "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done"]
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done",
+            ]
         - name: wait-for-redis
           image: busybox:1.38
-          command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done",
+            ]
       containers:
         - name: dispatcharr
           image: ghcr.io/dispatcharr/dispatcharr:0.29.0@sha256:df768adcb9993b58f5e67010cc802c8659b7f964cb1213ab7ff9bb9384db9145

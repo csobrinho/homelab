@@ -20,12 +20,12 @@ it belongs in the role instead.
 The EPYC IOD exposes four root-complex quadrants, one per bus base. This is the
 primary framework for reasoning about which physical slot a device is in.
 
-| Quadrant | Slots on it | Notes |
-|---|---|---|
-| `00` | PCIE2, PCIE5, M2_1 | PCIE2 and M2_1 share one 16-lane group |
-| `40` | M2_2, (PCIE4/PCIE6) | M2_2 has a dedicated x4 |
-| `80` | PCIE1, PCIE7 | clean split, no sharing |
-| `c0` | PCIE3 | |
+| Quadrant | Slots on it         | Notes                                  |
+| -------- | ------------------- | -------------------------------------- |
+| `00`     | PCIE2, PCIE5, M2_1  | PCIE2 and M2_1 share one 16-lane group |
+| `40`     | M2_2, (PCIE4/PCIE6) | M2_2 has a dedicated x4                |
+| `80`     | PCIE1, PCIE7        | clean split, no sharing                |
+| `c0`     | PCIE3               |                                        |
 
 `dmidecode -t slot` reports `ffff:` segments for the onboard M.2s and some
 slots. The segment is a firmware placeholder and meaningless, but **the bus byte
@@ -35,12 +35,12 @@ in it is still correct** and is what identifies the quadrant.
 
 Named domains used throughout this doc and in pool-placement decisions:
 
-| Domain | Physical | Characteristics |
-|---|---|---|
-| **A** | PCIE1 (Adapter 1) | Dedicated x16, uncontended, coolest. Best domain. |
-| **B** | PCIE2 (Adapter 2) | Shares its 16-lane group with M2_1 and SATA. |
-| **C** | M2_2 | Dedicated x4, but sits under the GPUs — hottest drive in the box. |
-| **D** | M2_1 | Shares the root bridge with PCIE2 (same silicon lane group, not just board routing). Hot. |
+| Domain | Physical          | Characteristics                                                                           |
+| ------ | ----------------- | ----------------------------------------------------------------------------------------- |
+| **A**  | PCIE1 (Adapter 1) | Dedicated x16, uncontended, coolest. Best domain.                                         |
+| **B**  | PCIE2 (Adapter 2) | Shares its 16-lane group with M2_1 and SATA.                                              |
+| **C**  | M2_2              | Dedicated x4, but sits under the GPUs — hottest drive in the box.                         |
+| **D**  | M2_1              | Shares the root bridge with PCIE2 (same silicon lane group, not just board routing). Hot. |
 
 Both bifurcation adapters are confirmed running **4×4×4×4**. All ports negotiate
 **x4 Gen4 (16.0 GT/s)** with `max == current`.
@@ -56,18 +56,18 @@ Both RTX 5090s are passed through to VM 110 (`nvidia`):
 
 ## Current physical mapping
 
-| Slot | Adapter | Domain | Root port | Endpoint | Dev | Serial | Size | Assignment |
-|---|---|---|---|---|---|---|---|---|
-| PCIE1 | Adapter 1 | A | `80:03.1` | `82:00.0` | nvme0 | `S7KHNJ0WC60232B` | 2TB | `vms` (single-disk) |
-| PCIE1 | Adapter 1 | A | `80:03.2` | `83:00.0` | nvme1 | `S7KHNU0X801652Y` | 2TB | `data` (single-disk, live) — hosts `data/s3` |
-| PCIE1 | Adapter 1 | A | — | — | — | *empty* | — | — |
-| PCIE1 | Adapter 1 | A | — | — | — | *empty* | — | — |
-| PCIE2 | Adapter 2 | B | `00:03.1` | `02:00.0` | nvme3 | `S7KGNU0Y225237B` | 4TB | `library_d1` |
-| PCIE2 | Adapter 2 | B | `00:03.2` | `03:00.0` | nvme4 | `S7KGNU0Y701620B` | 4TB | `library_d2` |
-| PCIE2 | Adapter 2 | B | — | — | — | *empty* | — | — |
-| PCIE2 | Adapter 2 | B | — | — | — | *empty* | — | — |
-| M2_1 | onboard | D | `00:03.5` | `04:00.0` | nvme5 | `S73WNU0XA42755B` | 2TB | unassigned |
-| M2_2 | onboard | C | `40:01.1` | `41:00.0` | nvme2 | `S7KHNJ0X105718Z` | 2TB | unassigned |
+| Slot  | Adapter   | Domain | Root port | Endpoint  | Dev   | Serial            | Size | Assignment                                   |
+| ----- | --------- | ------ | --------- | --------- | ----- | ----------------- | ---- | -------------------------------------------- |
+| PCIE1 | Adapter 1 | A      | `80:03.1` | `82:00.0` | nvme0 | `S7KHNJ0WC60232B` | 2TB  | `vms` (single-disk)                          |
+| PCIE1 | Adapter 1 | A      | `80:03.2` | `83:00.0` | nvme1 | `S7KHNU0X801652Y` | 2TB  | `data` (single-disk, live) — hosts `data/s3` |
+| PCIE1 | Adapter 1 | A      | —         | —         | —     | _empty_           | —    | —                                            |
+| PCIE1 | Adapter 1 | A      | —         | —         | —     | _empty_           | —    | —                                            |
+| PCIE2 | Adapter 2 | B      | `00:03.1` | `02:00.0` | nvme3 | `S7KGNU0Y225237B` | 4TB  | `library_d1`                                 |
+| PCIE2 | Adapter 2 | B      | `00:03.2` | `03:00.0` | nvme4 | `S7KGNU0Y701620B` | 4TB  | `library_d2`                                 |
+| PCIE2 | Adapter 2 | B      | —         | —         | —     | _empty_           | —    | —                                            |
+| PCIE2 | Adapter 2 | B      | —         | —         | —     | _empty_           | —    | —                                            |
+| M2_1  | onboard   | D      | `00:03.5` | `04:00.0` | nvme5 | `S73WNU0XA42755B` | 2TB  | unassigned                                   |
+| M2_2  | onboard   | C      | `40:01.1` | `41:00.0` | nvme2 | `S7KHNJ0X105718Z` | 2TB  | unassigned                                   |
 
 > **Bay numbering within each adapter is not confirmed.** Root port function
 > order (`.1`, `.2`, `.3`, `.4`) usually tracks physical bay order on
@@ -81,18 +81,18 @@ fleet.
 
 ## Target layout
 
-| Slot | Domain | Member | Size | Status |
-|---|---|---|---|---|
-| PCIE1 bay 1 | A | `db`-1 | 4TB | not racked |
-| PCIE1 bay 2 | A | `models`-1 | 2TB | not racked |
-| PCIE1 bay 3 | A | `models`-2 | 2TB | not racked |
-| PCIE1 bay 4 | A | `vms`-1 | 2TB | ✅ `S7KHNJ0WC60232B` |
-| PCIE2 bay 1 | B | `vms`-2 | 2TB | awaiting RPi5 teardown |
-| PCIE2 bay 2 | B | `data`-1 | 2TB | `S7KHNU0X801652Y` (currently on PCIE1) |
-| PCIE2 bay 3 | B | `data`-2 | 2TB | awaiting RPi5 teardown |
-| PCIE2 bay 4 | B | `library_d1` | 4TB | ✅ `S7KGNU0Y225237B` |
-| M2_1 | D | `library_d2` | 4TB | `S7KGNU0Y701620B` (currently on PCIE2) |
-| M2_2 | C | `db`-2 | 4TB | not racked |
+| Slot        | Domain | Member       | Size | Status                                 |
+| ----------- | ------ | ------------ | ---- | -------------------------------------- |
+| PCIE1 bay 1 | A      | `db`-1       | 4TB  | not racked                             |
+| PCIE1 bay 2 | A      | `models`-1   | 2TB  | not racked                             |
+| PCIE1 bay 3 | A      | `models`-2   | 2TB  | not racked                             |
+| PCIE1 bay 4 | A      | `vms`-1      | 2TB  | ✅ `S7KHNJ0WC60232B`                   |
+| PCIE2 bay 1 | B      | `vms`-2      | 2TB  | awaiting RPi5 teardown                 |
+| PCIE2 bay 2 | B      | `data`-1     | 2TB  | `S7KHNU0X801652Y` (currently on PCIE1) |
+| PCIE2 bay 3 | B      | `data`-2     | 2TB  | awaiting RPi5 teardown                 |
+| PCIE2 bay 4 | B      | `library_d1` | 4TB  | ✅ `S7KGNU0Y225237B`                   |
+| M2_1        | D      | `library_d2` | 4TB  | `S7KGNU0Y701620B` (currently on PCIE2) |
+| M2_2        | C      | `db`-2       | 4TB  | not racked                             |
 
 ### Placement rationale
 
@@ -114,12 +114,12 @@ fleet.
 
 ### ZFS
 
-| Pool | Members | ashift | recordsize | sync | Other | Purpose |
-|---|---|---|---|---|---|---|
-| `vms` | 2× 2TB (A + B) | 12 | — (zvols) | `disabled` | `volblocksize=16K` via Proxmox | VM boot disks |
-| `data` | 2× 2TB (B) | 12 | `128K` | `disabled` | `xattr=sa`, `acltype=posix` | General k8s PVCs; parents `data/s3` |
-| `db` | 2× 4TB (A + C) | 12 | `16K` | `standard` | `logbias=latency` | Postgres/CNPG, SQLite, Home Assistant |
-| `models` | 2× 2TB (A) | 12 | `1M` | `disabled` | | LLM weights |
+| Pool     | Members        | ashift | recordsize | sync       | Other                          | Purpose                               |
+| -------- | -------------- | ------ | ---------- | ---------- | ------------------------------ | ------------------------------------- |
+| `vms`    | 2× 2TB (A + B) | 12     | — (zvols)  | `disabled` | `volblocksize=16K` via Proxmox | VM boot disks                         |
+| `data`   | 2× 2TB (B)     | 12     | `128K`     | `disabled` | `xattr=sa`, `acltype=posix`    | General k8s PVCs; parents `data/s3`   |
+| `db`     | 2× 4TB (A + C) | 12     | `16K`      | `standard` | `logbias=latency`              | Postgres/CNPG, SQLite, Home Assistant |
+| `models` | 2× 2TB (A)     | 12     | `1M`       | `disabled` |                                | LLM weights                           |
 
 Common to all: `compression=lz4`, `atime=off`, `autotrim=on` (pool), mirror vdev.
 
@@ -173,12 +173,12 @@ zpool export <pool> && zpool import -d /dev/disk/by-id <pool>
 Child dataset of `data`, **not its own pool** — there are no spare bays for one,
 and object data isn't latency-sensitive enough to need an uncontended domain.
 
-| | |
-|---|---|
-| Dataset | `data/s3` — `quota=250G`; inherits `sync=disabled` / `lz4` / `atime=off` / `xattr=sa` / `acltype=posix` from `data` |
-| Proxmox storage | `local-s3` — pool `data/s3`, `blocksize 64k`, `content images`, `sparse 1`, `nodes infra-vm` |
-| StorageClass | `local-s3` — proxmox-csi, **xfs**, `reclaimPolicy: Retain`, `allowVolumeExpansion`. In `kubernetes/apps/proxmox-csi/overlays/prod/`. |
-| Consumer | one RustFS deployment, a single **200Gi RWO** PVC shared by every bucket |
+|                 |                                                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Dataset         | `data/s3` — `quota=250G`; inherits `sync=disabled` / `lz4` / `atime=off` / `xattr=sa` / `acltype=posix` from `data`                  |
+| Proxmox storage | `local-s3` — pool `data/s3`, `blocksize 64k`, `content images`, `sparse 1`, `nodes infra-vm`                                         |
+| StorageClass    | `local-s3` — proxmox-csi, **xfs**, `reclaimPolicy: Retain`, `allowVolumeExpansion`. In `kubernetes/apps/proxmox-csi/overlays/prod/`. |
+| Consumer        | one RustFS deployment, a single **200Gi RWO** PVC shared by every bucket                                                             |
 
 **Why a dedicated dataset/storage, not just `local-data`:**
 
@@ -198,7 +198,7 @@ quotas. Split a bucket into its own instance/PVC only if it diverges in size or
 durability needs.
 
 **Migration-window risk:** during the old→new cutover `data` is `sync=disabled`,
-a single non-PLP SSD, no mirror yet. RustFS holds a *staging* copy only — the old
+a single non-PLP SSD, no mirror yet. RustFS holds a _staging_ copy only — the old
 cluster keeps the source until each restore is verified. Don't delete anything on
 the old side early; watch pool usage (destination PVCs also land on `data`).
 
@@ -207,10 +207,10 @@ the old side early; watch pool usage (destination PVCs also land on `data`).
 Bulk media pool. 2× 4TB, **XFS** (not ZFS), pooled with mergerfs at
 `/mnt/library`.
 
-| Member | Serial | Label | Mountpoint |
-|---|---|---|---|
-| d1 | `S7KGNU0Y225237B` | `library_d1` | `/mnt/library_d1` |
-| d2 | `S7KGNU0Y701620B` | `library_d2` | `/mnt/library_d2` |
+| Member | Serial            | Label        | Mountpoint        |
+| ------ | ----------------- | ------------ | ----------------- |
+| d1     | `S7KGNU0Y225237B` | `library_d1` | `/mnt/library_d1` |
+| d2     | `S7KGNU0Y701620B` | `library_d2` | `/mnt/library_d2` |
 
 Branch members are mounted from `/etc/fstab` **by label**, not by-id. See
 [Identification conventions](#identification-conventions) for why.
@@ -219,13 +219,13 @@ Branch members are mounted from `/etc/fstab` **by label**, not by-id. See
 
 ## Proxmox storage
 
-| ID | Type | Pool | Content | Options |
-|---|---|---|---|---|
-| `local` | dir | — | `vztmpl,import,iso,snippets` | boot mirror; cloud-init snippets. **No `backup`** — keep dumps off `rpool`. |
-| `local-vms` | zfspool | `vms` | `images` | `blocksize 16k`, `sparse 1` |
-| `local-data` | zfspool | `data` | `images` | `sparse 1`, `nodes infra-vm` |
-| `local-s3` | zfspool | `data/s3` | `images` | `blocksize 64k`, `sparse 1`, `nodes infra-vm` — see [data/s3](#datas3--object-storage-rustfs) |
-| `local-zfs` | zfspool | `rpool/data` | `rootdir` | boot mirror. **TODO:** still needs `--content ""` — nothing should land here. |
+| ID           | Type    | Pool         | Content                      | Options                                                                                       |
+| ------------ | ------- | ------------ | ---------------------------- | --------------------------------------------------------------------------------------------- |
+| `local`      | dir     | —            | `vztmpl,import,iso,snippets` | boot mirror; cloud-init snippets. **No `backup`** — keep dumps off `rpool`.                   |
+| `local-vms`  | zfspool | `vms`        | `images`                     | `blocksize 16k`, `sparse 1`                                                                   |
+| `local-data` | zfspool | `data`       | `images`                     | `sparse 1`, `nodes infra-vm`                                                                  |
+| `local-s3`   | zfspool | `data/s3`    | `images`                     | `blocksize 64k`, `sparse 1`, `nodes infra-vm` — see [data/s3](#datas3--object-storage-rustfs) |
+| `local-zfs`  | zfspool | `rpool/data` | `rootdir`                    | boot mirror. **TODO:** still needs `--content ""` — nothing should land here.                 |
 
 Naming follows Proxmox's own convention (`local`, `local-zfs`), so all
 host-local storage sorts together in the UI and in `pvesm status`. Keep it
@@ -252,10 +252,10 @@ isn't a pool property, so it has to come from the storage definition.
 
 Different layers use different identifiers, deliberately:
 
-| Layer | Identifier | Why |
-|---|---|---|
-| ZFS vdevs | `by-id` (serial) | Identifies *hardware*. `zpool status` names the drive to physically pull. |
-| `/etc/fstab` (mergerfs) | `LABEL=` | Identifies *filesystem*. Survives drive replacement — restore the fs with its label and the mount keeps working. |
+| Layer                   | Identifier       | Why                                                                                                              |
+| ----------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| ZFS vdevs               | `by-id` (serial) | Identifies _hardware_. `zpool status` names the drive to physically pull.                                        |
+| `/etc/fstab` (mergerfs) | `LABEL=`         | Identifies _filesystem_. Survives drive replacement — restore the fs with its label and the mount keeps working. |
 
 Using by-id in fstab would mean that after a drive swap, `mount -a` silently
 skips that branch and mergerfs serves a tree with a chunk missing — which looks

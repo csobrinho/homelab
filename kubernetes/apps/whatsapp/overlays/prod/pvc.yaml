@@ -3,14 +3,14 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   finalizers:
-  - kubernetes.io/pvc-protection
+    - kubernetes.io/pvc-protection
   labels:
     app: whatsapp
   name: whatsapp-sessions
   namespace: tools
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -20,14 +20,14 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   finalizers:
-  - kubernetes.io/pvc-protection
+    - kubernetes.io/pvc-protection
   labels:
     app: whatsapp
   name: whatsapp-media
   namespace: tools
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi

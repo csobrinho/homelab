@@ -29,17 +29,17 @@ not hardware fault tolerance.
 
 ## Layout
 
-| Path                       | Purpose                                                          |
-| -------------------------- | --------------------------------------------------------------- |
-| `versions.tf`              | Provider + `required_version` pins, state encryption block       |
-| `providers.tf`             | Proxmox provider (all connection settings come from the env)     |
-| `variables.tf`             | Inputs (`nodes` / `workers` come from `terraform.tfvars`; rest default) |
-| `main.tf`                  | ISO download + one `node` VM resource over a merged `var.nodes` + `var.workers` map |
-| `outputs.tf`               | VM IDs and NIC MACs, split `control_plane` / `workers` by role   |
-| `terraform.tfvars`         | Non-secret, environment-specific values (committed)              |
-| `proxmox.sops.yaml`        | SOPS-encrypted `PROXMOX_VE_*` + state passphrase (committed)     |
-| `terraform.tfstate`        | Encrypted state, committed (GitOps)                              |
-| `mod.just`                 | `just tofu ...` recipes                                          |
+| Path                | Purpose                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| `versions.tf`       | Provider + `required_version` pins, state encryption block                          |
+| `providers.tf`      | Proxmox provider (all connection settings come from the env)                        |
+| `variables.tf`      | Inputs (`nodes` / `workers` come from `terraform.tfvars`; rest default)             |
+| `main.tf`           | ISO download + one `node` VM resource over a merged `var.nodes` + `var.workers` map |
+| `outputs.tf`        | VM IDs and NIC MACs, split `control_plane` / `workers` by role                      |
+| `terraform.tfvars`  | Non-secret, environment-specific values (committed)                                 |
+| `proxmox.sops.yaml` | SOPS-encrypted `PROXMOX_VE_*` + state passphrase (committed)                        |
+| `terraform.tfstate` | Encrypted state, committed (GitOps)                                                 |
+| `mod.just`          | `just tofu ...` recipes                                                             |
 
 ## Secrets & state
 
@@ -48,16 +48,16 @@ not hardware fault tolerance.
   no plaintext ever hits disk. On a fresh clone, recreate it with the keys the
   provider (`providers.tf`) and `mod.just` expect:
 
-  ```sh
-  sops edit proxmox.sops.yaml        # sops creates + encrypts on save
-  ```
+    ```sh
+    sops edit proxmox.sops.yaml        # sops creates + encrypts on save
+    ```
 
-  | Key                     | Value                                              |
-  | ----------------------- | -------------------------------------------------- |
-  | `PROXMOX_VE_ENDPOINT`   | `https://<pve-host>:8006/`                          |
-  | `PROXMOX_VE_API_TOKEN`  | `<user>@<realm>!<token-id>=<uuid>`                  |
-  | `PROXMOX_VE_INSECURE`   | `"true"` to skip TLS verification of the PVE cert   |
-  | `TOFU_STATE_PASSPHRASE` | long random string; encrypts `terraform.tfstate`   |
+    | Key                     | Value                                             |
+    | ----------------------- | ------------------------------------------------- |
+    | `PROXMOX_VE_ENDPOINT`   | `https://<pve-host>:8006/`                        |
+    | `PROXMOX_VE_API_TOKEN`  | `<user>@<realm>!<token-id>=<uuid>`                |
+    | `PROXMOX_VE_INSECURE`   | `"true"` to skip TLS verification of the PVE cert |
+    | `TOFU_STATE_PASSPHRASE` | long random string; encrypts `terraform.tfstate`  |
 
 - **State is committed** to git. OpenTofu's native state encryption (`aes_gcm`
   keyed by a PBKDF2 passphrase) keeps `terraform.tfstate` unreadable at rest. The
@@ -108,14 +108,16 @@ Then `just tofu apply`, add DHCP reservations from `just tofu output workers`, a
 `just talos apply-node infra5` (etc.) — no `bootstrap`, workers just join.
 
 > **Nodes with a `.schematic.yaml.j2` override (e.g. `infra4`):** the boot ISO
-> only carries the *base* schematic; extensions come from the per-node
+> only carries the _base_ schematic; extensions come from the per-node
 > `installer.image`. If the first install lands from the ISO's own installer the
 > extension is missing (`talosctl get extensions` empty, kmod modprobe fails).
 > Fix / verify right after join:
+>
 > ```sh
 > talosctl -n <ip> -e <ip> get extensions
 > talosctl -n <ip> -e <ip> upgrade --image "$(just talos machine-image <node>)"   # if missing
 > ```
+>
 > (`-e <ip>` talks to the node directly — a not-yet-joined node can't be reached
 > through a control-plane endpoint: `no request forwarding`.)
 
@@ -134,12 +136,12 @@ Then `just tofu apply`, add DHCP reservations from `just tofu output workers`, a
    Resource Mappings → Add → PCI, "All Functions" checked):
    `gpu0` → `0000:01:00`, `gpu1` → `0000:81:00`. `terraform.tfvars` references
    these by name. A raw `hostpci` path (`id`) can only be set by `root@pam` over
-   the API — the `tofu@pve!controlplane` token gets *"only root can set
-   'hostpciN' config for non-mapped devices"* — but a **mapping** just needs
+   the API — the `tofu@pve!controlplane` token gets _"only root can set
+   'hostpciN' config for non-mapped devices"_ — but a **mapping** just needs
    `Mapping.Use`:
-   ```sh
-   pveum role modify TofuProvision --privs Mapping.Use,Mapping.Audit --append
-   ```
+    ```sh
+    pveum role modify TofuProvision --privs Mapping.Use,Mapping.Audit --append
+    ```
 5. If the guest hits code 43 / black screen, dump the card vBIOS and set
    `rom_file` on the `hostpci` entry.
 

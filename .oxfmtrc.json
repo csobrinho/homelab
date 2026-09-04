@@ -1,0 +1,4 @@
+{
+  // Ignore this file to avoid the formatting of the comments with the explanation.
+  "ignorePatterns": ["kubernetes/apps/cilium/overlays/prod/values.yaml"]
+}

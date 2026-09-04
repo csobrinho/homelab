@@ -19,7 +19,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: xxxxxx  # namespace where the pvc's exist
+  namespace: xxxxxx # namespace where the pvc's exist
   name: volume-migration
 spec:
   completions: 1
@@ -36,8 +36,8 @@ spec:
         - name: volume-migration
           image: ubuntu:resolute
           tty: true
-          command: [ "/bin/sh" ]
-          args: [ "-c", "cp -r -v /mnt/old/. /mnt/new" ]
+          command: ["/bin/sh"]
+          args: ["-c", "cp -r -v /mnt/old/. /mnt/new"]
           volumeMounts:
             - name: old-vol
               mountPath: /mnt/old

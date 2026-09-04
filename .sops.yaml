@@ -1,6 +1,6 @@
 keys:
-  - &primary   age1f0ljhf3prpuyvzghavm3nfh8yzszjc345j7jemcyaprqweplfumsapgv4e
-  - &recovery  age15aa0shf806u5zzzz77jz5uaqs3k09785lsxf8f0whju6x4uaeahscj6dlp
+  - &primary age1f0ljhf3prpuyvzghavm3nfh8yzszjc345j7jemcyaprqweplfumsapgv4e
+  - &recovery age15aa0shf806u5zzzz77jz5uaqs3k09785lsxf8f0whju6x4uaeahscj6dlp
 
 creation_rules:
   - path_regex: talos/secrets\.yaml$

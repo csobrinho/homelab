@@ -12,8 +12,7 @@ spec:
       rules:
         - alert: CephPoolGrowthWarning
           annotations:
-            description:
-              Pool '{{ $labels.name }}' will be full in less than 5 days assuming
+            description: Pool '{{ $labels.name }}' will be full in less than 5 days assuming
               the average fill-up rate of the past 48 hours.
             summary: Pool growth rate may soon exceed capacity on cluster {{ $labels.cluster }}
             # Replaces upstream CephPoolGrowthWarning: the stock expr joins on

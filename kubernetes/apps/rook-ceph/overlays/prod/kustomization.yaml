@@ -155,7 +155,7 @@ helmCharts:
               - key: node-role.kubernetes.io/control-plane
                 operator: Exists
                 effect: PreferNoSchedule
-             
+
       # -- A list of CephFileSystem configurations to deploy
       # @default -- See [below](#ceph-file-systems)
       cephFileSystems: [] # Disabled.

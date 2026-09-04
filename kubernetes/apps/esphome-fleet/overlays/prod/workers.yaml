@@ -93,21 +93,21 @@ spec:
             server: infra-vm
             path: /mnt/library/dev/esphome/components
   volumeClaimTemplates:
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: esphome-fleet-worker-data
-      annotations:
-        helm.sh/resource-policy: keep
-      labels:
-        velero.io/exclude-from-backup: "true"
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 16Gi
-      storageClassName: ceph-block
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: esphome-fleet-worker-data
+        annotations:
+          helm.sh/resource-policy: keep
+        labels:
+          velero.io/exclude-from-backup: "true"
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 16Gi
+        storageClassName: ceph-block
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject

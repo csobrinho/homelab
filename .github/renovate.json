@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "assignees": ["csobrinho"],
   "minimumReleaseAge": "48 hours",
   "prConcurrentLimit": 0,
@@ -51,15 +49,15 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["/\\.ya?ml$/"],
-      "matchStrings": ["# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>\\S+)\\s+app\\.kubernetes\\.io/version: (?<currentValue>.*?)\\s"
+      ],
       "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
       "description": "kustomize version in validate_kustomize.yaml",
-      "managerFilePatterns": [
-        "/\\.github/workflows/validate_kustomize\\.yaml/"
-      ],
+      "managerFilePatterns": ["/\\.github/workflows/validate_kustomize\\.yaml/"],
       "matchStrings": ["kustomize-version:\\s+\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",

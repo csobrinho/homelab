@@ -19,6 +19,7 @@ cilium version
 ```
 
 2. Update the `/etc/systemd/system/k3s.service` for each control plane and add:
+
 ```
 '--flannel-backend' 'none' \
 '--disable-network-policy' \
@@ -26,6 +27,7 @@ cilium version
 ```
 
 Control plane should look like:
+
 ```
 ExecStart=/usr/local/bin/k3s \
     server \
@@ -57,6 +59,7 @@ ip link show flannel.1  # Should return error
 ```
 
 5. Install Cilium CNI from one control plane node:
+
 ```sh
 export KUBECONFIG=~/.kube/config
 

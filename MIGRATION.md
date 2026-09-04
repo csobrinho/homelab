@@ -5,16 +5,16 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
 
 ## Target
 
-| | |
-| --- | --- |
-| Networks | nodes/infra `10.10.2.0/24`; VIPs `10.10.10.0/24` (BGP-routed) |
-| Control plane | 3 dedicated VMs `infra1/2/3` on Proxmox `infra-vm`, `10.10.2.11-13/24` |
-| Workers | more Proxmox VMs on the EPYC host, and RPi5 nodes (**arm64**) — all on `10.10.2.0/24` |
-| Endpoint | `infra-k8s` round-robin DNS + KubePrism; API VIP via Cilium BGP later |
-| CNI | Cilium, native routing + BGP peering with the UniFi gw (AS65000 @ `10.10.2.1`) |
-| GitOps | ArgoCD app-of-apps from `bootstrap/` |
-| Provisioning | `tofu/` (bpg/proxmox); Talos config `talos/` via `just talos` |
-| Secrets | SOPS + age (`talos/secrets.yaml`, `tofu/proxmox.sops.yaml`) |
+|               |                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------- |
+| Networks      | nodes/infra `10.10.2.0/24`; VIPs `10.10.10.0/24` (BGP-routed)                         |
+| Control plane | 3 dedicated VMs `infra1/2/3` on Proxmox `infra-vm`, `10.10.2.11-13/24`                |
+| Workers       | more Proxmox VMs on the EPYC host, and RPi5 nodes (**arm64**) — all on `10.10.2.0/24` |
+| Endpoint      | `infra-k8s` round-robin DNS + KubePrism; API VIP via Cilium BGP later                 |
+| CNI           | Cilium, native routing + BGP peering with the UniFi gw (AS65000 @ `10.10.2.1`)        |
+| GitOps        | ArgoCD app-of-apps from `bootstrap/`                                                  |
+| Provisioning  | `tofu/` (bpg/proxmox); Talos config `talos/` via `just talos`                         |
+| Secrets       | SOPS + age (`talos/secrets.yaml`, `tofu/proxmox.sops.yaml`)                           |
 
 ## Status
 
@@ -57,6 +57,7 @@ and add `iscsi-tools` + `util-linux-tools`; if Miroir/DRBD9 stays, keep the drbd
 extension and un-TODO the `drbd*` `KernelModuleConfig` blocks.
 
 Other config cleanup (from the 2026-08-31 review, deferred):
+
 - `apps/cilium/overlays/prod/frr.conf` — neighbors are `10.10.2.31–38`; actual
   scheme is CP `infra1-3` `.11–.13`, workers `infra4-7` `.14–.17`. Reconcile
   (Cilium BGP peers from worker node IPs).
@@ -78,16 +79,16 @@ needs the VIP in the node interface's own subnet; VIPs are on `10.10.10.0/24`.
 apiVersion: v1alpha1
 kind: DummyLinkConfig
 name: dummy0
-addresses: [{ address: 10.10.10.10/32 }]     # anycast API VIP
+addresses: [{ address: 10.10.10.10/32 }] # anycast API VIP
 ---
 apiVersion: v1alpha1
 kind: BGPInstanceConfig
 name: fabric
 localASN: 65002
-routerID: 10.10.2.1X                          # node-unique
+routerID: 10.10.2.1X # node-unique
 advertise: [dummy0]
 neighbors:
-  - { address: 10.10.2.1, peerASN: 65000, bfd: {} }
+    - { address: 10.10.2.1, peerASN: 65000, bfd: {} }
 ```
 
 All 3 CP nodes originate `10.10.10.10/32`; the UniFi gw ECMPs / fails over (BFD
@@ -97,6 +98,7 @@ Pure L3 (cross-subnet OK), independent of Cilium (bootstrap-safe), no socat.
 
 **Open question for the test:** Talos BGP and Cilium BGP can't both peer the same gw
 from the same node IP (gw rejects the 2nd session). Resolutions:
+
 - run Talos BGP for the API VIP + Cilium LB via **L2 announcements** (forces the
   service LB pool into `10.10.2.0/24`); or
 - split by role once workers exist — Talos BGP on CP nodes, Cilium BGP on workers.
@@ -140,7 +142,7 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
   `nvidia-open-gpu-kernel-modules-production` + `nvidia-container-toolkit-production`
   (595.91.07; the RTX 5090 / Blackwell GB202 is open-module only — the closed
   `nonfree-kmod-nvidia` bailed `RmInitAdapter ... requires ... open kernel
-  modules` on first boot) and is tainted `nvidia.com/gpu=present:NoSchedule`.
+modules` on first boot) and is tainted `nvidia.com/gpu=present:NoSchedule`.
   All on `10.10.2.0/24`, so
   `autoDirectNodeRoutes` keeps working fleet-wide — no PodCIDR BGP needed.
   Bring-up: `just tofu apply`, DHCP reservations, `just talos apply-node <n>`
@@ -163,20 +165,20 @@ App-of-apps from `bootstrap/apps` takes over — including adopting Cilium and C
   `SDN.Use` on PVE 9 for bridge assignment (plain bridges are in the
   `localnetwork` SDN zone), and `Mapping.Use` + `Mapping.Audit` for `infra4`'s
   GPU passthrough (a token can't set a raw `hostpci` path — only a PVE PCI
-  *resource mapping*; `gpu0`/`gpu1` created as root). Add any further privileges
+  _resource mapping_; `gpu0`/`gpu1` created as root). Add any further privileges
   hit during `tofu apply` to `tofu/README.md`.
-- **First `apply-config`** is `--insecure` to the node's *maintenance* DHCP IP
+- **First `apply-config`** is `--insecure` to the node's _maintenance_ DHCP IP
   (`10.10.2.121-123`); the static `.11-.13` only exists after the config installs
   and the node reboots, after which the API needs mTLS (`talosconfig`).
 - **talosconfig:**
-  ```sh
-  sops decrypt talos/secrets.yaml > /tmp/s.yaml
-  talosctl gen config main https://infra-k8s:6443 --with-secrets /tmp/s.yaml \
-    --talos-version "$(yq -r .version.talos talos/versions.yaml)" \
-    --output-types talosconfig -o talosconfig
-  rm /tmp/s.yaml
-  talosctl config endpoint 10.10.2.11 10.10.2.12 10.10.2.13
-  ```
+    ```sh
+    sops decrypt talos/secrets.yaml > /tmp/s.yaml
+    talosctl gen config main https://infra-k8s:6443 --with-secrets /tmp/s.yaml \
+      --talos-version "$(yq -r .version.talos talos/versions.yaml)" \
+      --output-types talosconfig -o talosconfig
+    rm /tmp/s.yaml
+    talosctl config endpoint 10.10.2.11 10.10.2.12 10.10.2.13
+    ```
 - **Disk selector** must exclude the ISO's loop/cdrom:
   `!disk.readonly && !disk.cdrom && disk.size > 10u * GB`.
 - **Cilium on Talos** needs `cgroup.autoMount.enabled: false`, a capability set
