@@ -51,7 +51,7 @@ helmCharts:
           path: /mnt/library
           mountPath: /data
       plex:
-        serverIP: 10.10.10.29 # infra-plex VIP.
+        serverIP: 10.10.11.29 # infra-plex VIP.
         additionalAdvertiseURL: "https://plex.sobrinho.pt:443"
       resources:
         limits:

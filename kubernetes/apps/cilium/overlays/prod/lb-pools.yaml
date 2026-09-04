@@ -6,7 +6,7 @@ metadata:
   name: pool-infra-adm
 spec:
   blocks:
-    - cidr: "10.10.10.20/32"
+    - cidr: "10.10.11.20/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-adm
@@ -18,7 +18,7 @@ metadata:
   name: pool-infra-dns1
 spec:
   blocks:
-    - cidr: "10.10.10.22/32"
+    - cidr: "10.10.11.22/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-dns1
@@ -30,7 +30,7 @@ metadata:
   name: pool-infra-dns2
 spec:
   blocks:
-    - cidr: "10.10.10.23/32"
+    - cidr: "10.10.11.23/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-dns2
@@ -42,7 +42,7 @@ metadata:
   name: pool-infra-int-old
 spec:
   blocks:
-    - cidr: "10.10.10.24/32"
+    - cidr: "10.10.11.24/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-int-old
@@ -54,7 +54,7 @@ metadata:
   name: pool-infra-ext-old
 spec:
   blocks:
-    - cidr: "10.10.10.25/32"
+    - cidr: "10.10.11.25/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-ext-old
@@ -66,7 +66,7 @@ metadata:
   name: pool-infra-apt
 spec:
   blocks:
-    - cidr: "10.10.10.26/32"
+    - cidr: "10.10.11.26/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-apt
@@ -78,7 +78,7 @@ metadata:
   name: pool-infra-prometheus
 spec:
   blocks:
-    - cidr: "10.10.10.27/32"
+    - cidr: "10.10.11.27/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-prometheus
@@ -90,7 +90,7 @@ metadata:
   name: pool-infra-home-assistant
 spec:
   blocks:
-    - cidr: "10.10.10.28/32"
+    - cidr: "10.10.11.28/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-home-assistant
@@ -102,7 +102,7 @@ metadata:
   name: pool-infra-plex
 spec:
   blocks:
-    - cidr: "10.10.10.29/32"
+    - cidr: "10.10.11.29/32"
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-plex
