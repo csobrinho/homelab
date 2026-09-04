@@ -62,7 +62,7 @@
     "editor.defaultFormatter": "nefrob.vscode-just-syntax"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
