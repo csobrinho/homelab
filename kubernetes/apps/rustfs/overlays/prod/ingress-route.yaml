@@ -10,7 +10,7 @@ spec:
     - websecure
     # - websecure-ext - keep the S3 API internal-only
   routes:
-    - match: Host(`s33.sobrinho.pt`) || Host(`*.s33.sobrinho.pt`)
+    - match: Host(`s33.sobrinho.pt`)
       kind: Rule
       services:
         - name: rustfs
@@ -48,7 +48,6 @@ spec:
   secretName: rustfs-cert
   dnsNames:
     - s33.sobrinho.pt
-    - "*.s33.sobrinho.pt"
     - rustfs.sobrinho.pt
   issuerRef:
     name: letsencrypt-prod
