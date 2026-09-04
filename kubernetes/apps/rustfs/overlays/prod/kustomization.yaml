@@ -29,13 +29,13 @@ helmCharts:
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
+                # See: https://docs.rustfs.com/en/reference/environment-variables
                 # Single-node, single-drive layout.
                 RUSTFS_VOLUMES: /data
                 RUSTFS_ADDRESS: 0.0.0.0:9000
                 RUSTFS_CONSOLE_ENABLE: "true"
                 RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
                 RUSTFS_OBS_LOGGER_LEVEL: info
-                RUSTFS_SERVER_DOMAINS: s33.sobrinho.pt:9000 # TODO: Remove the ":port" once https://github.com/rustfs/rustfs/pull/7051 lands.
               envFrom:
                 - secretRef:
                     name: rustfs-secret
