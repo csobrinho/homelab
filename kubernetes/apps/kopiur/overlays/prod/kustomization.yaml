@@ -1,0 +1,42 @@
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/library/common/values.yaml
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/stable/kopiur/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - clusterrepository.yaml
+  - secrets/kopiur-secret-enc.yaml
+
+helmCharts:
+  - name: kopiur
+    repo: oci://ghcr.io/home-operations/charts
+    releaseName: kopiur
+    namespace: kopiur-system
+    version: 0.10.7
+    includeCRDs: true
+    valuesInline:
+      monitoring:
+        # TODO: Enable dashboards once we have a grafana instance running in the cluster.
+        # dashboards:
+        #   enabled: true
+        #   grafanaOperator:
+        #     enabled: true
+        #     matchLabels:
+        #       dashboards: grafana
+        prometheusRule:
+          enabled: true
+        serviceMonitor:
+          enabled: true
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 2Gi
