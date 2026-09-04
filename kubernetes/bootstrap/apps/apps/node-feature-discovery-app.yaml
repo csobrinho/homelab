@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-feature-discovery
+  namespace: argocd
+spec:
+  destination:
+    namespace: tools
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/node-feature-discovery/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

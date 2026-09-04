@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: esphome-fleet
+  namespace: argocd
+spec:
+  destination:
+    namespace: esphome
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/esphome-fleet/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences:
+    - group: "apps"
+      kind: "StatefulSet"
+      name: "esphome-fleet-worker"
+      namespace: "esphome"
+      jsonPointers:
+        - "/spec/replicas"

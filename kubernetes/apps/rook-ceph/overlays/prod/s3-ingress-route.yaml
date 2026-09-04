@@ -1,0 +1,32 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: ceph-s3-ingress
+  namespace: rook-ceph
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int-old
+spec:
+  entryPoints:
+    - websecure
+    # - websecure-ext - disabled
+  routes:
+    - match: Host(`s3-old.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: rook-ceph-rgw-ceph-objectstore
+          port: 80
+  tls:
+    secretName: ceph-s3-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: ceph-s3-cert
+  namespace: rook-ceph
+spec:
+  secretName: ceph-s3-cert
+  dnsNames:
+    - s3-old.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

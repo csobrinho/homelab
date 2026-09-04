@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/descheduler/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

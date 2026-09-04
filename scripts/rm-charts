@@ -2,7 +2,6 @@
 set -x
 set -eu -o pipefail
 
-REPO="/data/config/homelab"
-cd $REPO
+cd /mnt/library/config/homelab/kubernetes
 
 find -type d -wholename */prod/charts -exec rm -rv \{\} \+
