@@ -1,4 +1,8 @@
 {
-  // Ignore this file to avoid the formatting of the comments with the explanation.
-  "ignorePatterns": ["kubernetes/apps/cilium/overlays/prod/values.yaml"]
+  "ignorePatterns": [
+    // Keep the formatting of the comments with the explanation for each value.
+    "kubernetes/apps/cilium/overlays/prod/values.yaml",
+    // Formatter can't handle {{ }} template placeholders.
+    "kubernetes/apps/supermarket/overlays/prod/helm/supermarket/templates/cronjob.yaml"
+  ]
 }
