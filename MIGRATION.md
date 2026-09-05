@@ -22,7 +22,7 @@ Moving the homelab off the old k3s cluster onto Talos Linux. Work happens on the
       `local-vms`, MAC `52:54:00:0a:02:1x`, watchdog, guest-agent)
 - [x] Talos config VM-adapted (static addressing, virtio NIC alias, disk selector,
       SOPS-rendered secrets, endpoint `infra-k8s`)
-- [x] Toolchain + Talos pinned to `v1.14.0-rc.2`
+- [x] Toolchain + Talos pinned to `v1.14.0`
 - [x] Cluster bootstrapped — etcd up, k8s `v1.37.0`
 - [x] **A.** Cilium deployed — nodes Ready
 - [ ] **A'.** Delete the dead bare-metal config from `talos/cluster.yaml.j2`
