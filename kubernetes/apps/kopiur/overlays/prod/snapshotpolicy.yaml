@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: sonarr-config
+  namespace: media
+spec:
+  compression:
+    compressor: zstd
+  mover:
+    securityContext:
+      runAsUser: 568
+      runAsGroup: 568
+  repository:
+    kind: ClusterRepository
+    name: s3
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+    keepWeekly: 4
+  sources:
+    - pvc:
+        name: sonarr-config
+  volumeSnapshotClassName: ceph-block
+  credentialProjection:
+    enabled: true

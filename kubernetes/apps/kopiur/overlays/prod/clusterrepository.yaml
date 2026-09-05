@@ -24,3 +24,5 @@ spec:
       key: KOPIA_PASSWORD
   scheduleDefaults:
     timezone: America/Los_Angeles
+  credentialProjection:
+    allowed: true

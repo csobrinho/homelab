@@ -8,6 +8,7 @@ resources:
   - ../../base
   - clusterrepository.yaml
   - secrets/kopiur-secret-enc.yaml
+  - snapshotpolicy.yaml
 
 helmCharts:
   - name: kopiur
@@ -40,3 +41,6 @@ helmCharts:
           cpu: 100m
         limits:
           memory: 2Gi
+      features:
+        credentialProjection:
+          enabled: true
