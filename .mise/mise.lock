@@ -683,9 +683,9 @@ url_api = "https://api.github.com/repos/getsops/sops/releases/assets/486808200"
 url = "https://github.com/getsops/sops/releases/download/v3.13.3/sops-v3.13.3.intoto.jsonl"
 
 [[tools.talos]]
-version = "1.14.0-rc.2"
+version = "1.14.0"
 backend = "aqua:siderolabs/talos"
-specifiers = ["1.14.0-rc.2"]
+specifiers = ["1.14.0"]
 
 [tools.talos."platforms.linux-arm64"]
 checksum = "sha256:3a4c987e451ea651425dc4773dfef13aaeb5f06629780affd57d5d364224bae2"

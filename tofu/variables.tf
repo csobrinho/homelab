@@ -200,7 +200,7 @@ variable "vm_tags" {
 
 variable "talos_version" {
   description = <<-EOT
-    Talos release for the Image Factory ISO, e.g. v1.14.0-rc.2. Read from
+    Talos release for the Image Factory ISO, e.g. v1.14.0. Read from
     talos/versions.yaml (.version.talos) and injected as TF_VAR_talos_version by
     `just tofu ...` so that file stays the single source of truth (shared with
     talos/cluster.yaml.j2's installer image tag).
