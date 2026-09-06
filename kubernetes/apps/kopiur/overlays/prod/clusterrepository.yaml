@@ -3,7 +3,7 @@
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: ClusterRepository
 metadata:
-  name: s3
+  name: primary
 spec:
   allowedNamespaces:
     all: true

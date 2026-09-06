@@ -14,7 +14,7 @@ spec:
       runAsGroup: 568
   repository:
     kind: ClusterRepository
-    name: s3
+    name: primary
   retention:
     keepLatest: 3
     keepHourly: 24
