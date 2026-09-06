@@ -70,6 +70,11 @@ helmCharts:
       cephImage:
         imagePullPolicy: IfNotPresent
       cephClusterSpec:
+        cephConfig:
+          mon:
+            mon_cluster_log_level: info
+        crashCollector:
+          disable: false
         security:
           cephx:
             # Rotate mon/mgr/osd/mds daemon keys to aes256k (CVE-2025-30156 fix, Ceph
@@ -86,6 +91,16 @@ helmCharts:
         dashboard:
           enabled: true
           prometheusEndpoint: "http://kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
+        healthCheck:
+          muteHealthWarning:
+            AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
+              policy: mute
+            AUTH_INSECURE_CLIENT_KEY_TYPE:
+              policy: mute
+            AUTH_INSECURE_KEYS_ALLOWED:
+              policy: mute
+            AUTH_INSECURE_KEYS_CREATABLE:
+              policy: mute
         mgr:
           count: 2
           allowMultiplePerNode: false
@@ -155,7 +170,7 @@ helmCharts:
               - key: node-role.kubernetes.io/control-plane
                 operator: Exists
                 effect: PreferNoSchedule
-             
+
       # -- A list of CephFileSystem configurations to deploy
       # @default -- See [below](#ceph-file-systems)
       cephFileSystems: [] # Disabled.
