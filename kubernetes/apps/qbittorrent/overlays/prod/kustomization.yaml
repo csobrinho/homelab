@@ -45,7 +45,12 @@ helmCharts:
               port: 8888
               protocol: "http"
               targetPort: 8888
-          type: "ClusterIP"
+          externalTrafficPolicy: Local
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: infra-proxy
+          labels:
+            io.cilium/lb-pool: pool-infra-proxy
+          type: LoadBalancer
       addons:
         gluetun:
           enabled: true
