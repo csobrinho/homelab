@@ -8,7 +8,6 @@ resources:
   - ../../base
   - clusterrepository.yaml
   - secrets/kopiur-secret-enc.yaml
-  - snapshotpolicy.yaml
 
 helmCharts:
   - name: kopiur
