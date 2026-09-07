@@ -1,276 +1,109 @@
 # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
-nameOverride: prometheus
-
-defaultRules:
-  create: true
-  rules:
-    alertmanager: true
-    configReloaders: true
-    general: true
-    k8s: true
-    kubelet: true
-    kubePrometheusGeneral: true
-    kubePrometheusNodeRecording: true
-    kubernetesApps: true
-    kubernetesResources: true
-    kubernetesStorage: true
-    kubernetesSystem: true
-    kubeStateMetrics: true
-    network: true
-    node: true
-    nodeExporterAlerting: true
-    nodeExporterRecording: true
-    prometheus: true
-    prometheusOperator: true
-    # Disabled.
-    etcd: false
-    kubeApiserverAvailability: false
-    kubeApiserverBurnrate: false
-    kubeApiserverHistogram: false
-    kubeApiserverSlos: false
-    kubeControllerManager: false
-    kubeProxy: false
-    kubeSchedulerAlerting: false
-    kubeSchedulerRecording: false
-
-prometheus:
-  prometheusSpec:
-    externalUrl: https://prometheus.sobrinho.pt
-    replicas: 1
-    ruleSelectorNilUsesHelmValues: false
-    serviceMonitorSelectorNilUsesHelmValues: false
-    podMonitorSelectorNilUsesHelmValues: false
-    probeSelectorNilUsesHelmValues: false
-    retention: 2d
-    enableAdminAPI: true
-    walCompression: true
-    additionalArgs:
-      - name: storage.tsdb.no-lockfile # To avoid issues when the container is forced killed.
-    maximumStartupDurationSeconds: 2400 # 40 minutes to allow for WAL replay on large datasets.
-    resources:
-      requests:
-        cpu: 500m
-        memory: 1.2Gi
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: local-db
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 32Gi
-
-containers:
-  - name: prometheus
-    startupProbe:
-      failureThreshold: 1000 # To allow for WAL replay on large datasets.
+# Based on: https://github.com/onedr0p/home-ops/blob/07e3edc9d97bb94c96e713d7480d6aa3b111e9d2/kubernetes/apps/o11y/kube-prometheus-stack/app/helmrelease.yaml
+cleanPrometheusOperatorObjectNames: true
 
 alertmanager:
   alertmanagerSpec:
+    alertmanagerConfiguration:
+      name: alertmanager
     externalUrl: https://alertmanager.sobrinho.pt
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: local-data
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 5Gi
-  config:
-    route:
-      group_by: ["alertname", "severity"]
-      group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 4h
-      receiver: "general"
-      routes:
-        # Critical alerts - immediate notification.
-        - match:
-            severity: critical
-          receiver: "critical"
-          group_wait: 10s
-          repeat_interval: 30m
-        # Warning alerts - less frequent.
-        - match:
-            severity: warning
-          receiver: "warning"
-          group_wait: 5m
-          repeat_interval: 12h
-    receivers:
-      - name: "critical"
-        webhook_configs:
-          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/critical"
-            send_resolved: true
-            http_config:
-              follow_redirects: true
-      - name: "warning"
-        webhook_configs:
-          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/warning"
-            send_resolved: true
-            http_config:
-              follow_redirects: true
-      - name: "general"
-        webhook_configs:
-          - url: "https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/general"
-            send_resolved: true
-            http_config:
-              follow_redirects: true
-    inhibit_rules:
-      # Existing rules from https://github.com/prometheus-community/helm-charts/blob/e383011a042d4abf70b0163a1fa95589d57f1298/charts/kube-prometheus-stack/values.yaml#L512-L533
-      - source_matchers:
-          - "severity = critical"
-        target_matchers:
-          - "severity =~ warning|info"
-        equal:
-          - "namespace"
-          - "alertname"
-      - source_matchers:
-          - "severity = warning"
-        target_matchers:
-          - "severity = info"
-        equal:
-          - "namespace"
-          - "alertname"
-      - source_matchers:
-          - "alertname = InfoInhibitor"
-        target_matchers:
-          - "severity = info"
-        equal:
-          - "namespace"
-      - target_matchers:
-          - "alertname = InfoInhibitor"
+          enabled: true
+          retain: true
+          storageClass: local-data
+          accessModes:
+            - ReadWriteOnce
+          size: 1Gi
 
-      # Added rules.
-      # Suppress detailed alerts when top-level cluster health fails.
-      - source_matchers:
-          - "alertname = CephHealthError"
-          - "severity = critical"
-        target_matchers:
-          - "alertname =~ ^Ceph(OSD|PG|Mon|Pool).*"
-
-grafana:
-  defaultDashboardsTimezone: America/Los_Angeles
-  serviceMonitor:
-    enabled: true
-    metricRelabelings:
-      # Drop Grafana feature toggle state metrics — thousands of series, never queried.
-      - sourceLabels: [__name__]
-        action: drop
-        regex: "grafana_feature_toggles_info|grafana_apiserver_request_duration_seconds_(bucket|sum|count)|grafana_apiserver_response_sizes_(bucket|sum|count)"
-
-kube-state-metrics:
-  selfMonitor:
-    enabled: true
-
-cleanPrometheusOperatorObjectNames: true
-
-prometheusOperator:
-  # Disable linkerd injection for admission webhooks jobs
-  admissionWebhooks:
-    patch:
-      podAnnotations:
-        linkerd.io/inject: disabled
-
-# Enable serviceaccount automount
-prometheus-node-exporter:
-  serviceAccount:
-    automountServiceAccountToken: true
-  tolerations:
-    - key: node.kubernetes.io/unreachable
-      effect: NoExecute
-      operator: Exists
-      tolerationSeconds: 60
-
-kubeControllerManager:
-  enabled: false
-
-kubeScheduler:
-  enabled: false
+kubeEtcd:
+  service:
+    selector:
+      component: kube-apiserver # etcd runs on control plane nodes
 
 kubeProxy:
   enabled: false
 
-kubeApiServer:
-  enabled: true
-  serviceMonitor:
-    metricRelabelings:
-      - regex: apiserver_request_duration_seconds_bucket
-        sourceLabels: [__name__]
-        action: drop
-      - regex: apiserver_request_sli_duration_seconds_bucket
-        sourceLabels: [__name__]
-        action: drop
-      - regex: apiserver_request_body_size_bytes_bucket
-        sourceLabels: [__name__]
-        action: drop
-      - regex: etcd_request_duration_seconds_bucket
-        sourceLabels: [__name__]
-        action: drop
+prometheus:
+  prometheusSpec:
+    externalUrl: https://prometheus.sobrinho.pt
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    scrapeConfigSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 30d
+    retentionSize: 40GiB
+    enableAdminAPI: true
+    additionalArgs:
+      - name: storage.tsdb.no-lockfile # To avoid issues when the container is forced killed.
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        memory: 4Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          enabled: true
+          retain: true
+          storageClass: local-db
+          accessModes:
+            - ReadWriteOnce
+          size: 50Gi
+  service:
+    type: LoadBalancer
+    annotations:
+      lbipam.cilium.io/sharing-key: infra-prometheus
+      lbipam.cilium.io/sharing-cross-namespace: o11y
+      external-dns.alpha.kubernetes.io/hostname: infra-prometheus
+    labels:
+      io.cilium/lb-pool: pool-infra-prometheus
 
-kubeEtcd:
+prometheus-node-exporter:
+  fullnameOverride: node-exporter
+
+kube-state-metrics:
+  fullnameOverride: kube-state-metrics
+
+grafana:
   enabled: false
+  forceDeployDashboards: true
+  operator:
+    dashboardsConfigMapRefEnabled: true
+    folder: o11y
+    matchLabels:
+      dashboards: grafana
 
-kubelet:
-  serviceMonitor:
-    metricRelabelings:
-      # Reduce bucket cardinality of kubelet storage operations.
-      - regex: (csi_operations|storage_operation_duration)_seconds_bucket
-        sourceLabels: [__name__]
-        action: drop
-      # Drop workqueue histogram buckets — only workqueue_adds_total and
-      # workqueue_depth are used in default rules/alerts, not the bucket series.
-      - regex: "workqueue_(queue|work)_duration_seconds_bucket"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop kubelet runtime operation duration buckets — not used in default rules/alerts.
-      - regex: "kubelet_runtime_operations_duration_seconds_bucket"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop prober duration buckets — not used in default rules/alerts.
-      # (KubeletPodStartUpLatencyHigh uses kubelet_pod_worker_duration_seconds_bucket, not this.)
-      - regex: "prober_probe_duration_seconds_bucket"
-        sourceLabels: [__name__]
-        action: drop
-
-    cAdvisorMetricRelabelings:
-      # Drop less useful container CPU metrics.
-      - regex: "container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop less useful container / always zero filesystem metrics.
-      - regex: "container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop less useful / always zero container memory metrics.
-      # NOTE: container_memory_working_set_bytes and container_memory_rss are kept
-      # intentionally — use these for pod resource sizing decisions.
-      - regex: "container_memory_(mapped_file|swap)"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop less useful container process metrics.
-      - regex: "container_(file_descriptors|tasks_state|threads_max)"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop container_memory_failures_total{scope="hierarchy"} metrics,
-      # we only need the container scope.
-      - regex: "container_memory_failures_total;hierarchy"
-        sourceLabels: [__name__, scope]
-        action: drop
-      # Drop container_network_... metrics that match various interfaces that
-      # correspond to CNI and similar interfaces. This avoids capturing network
-      # metrics for host network containers.
-      - regex: "container_network_.*;(cali|cilium|cni|lxc|nodelocaldns|tunl).*"
-        sourceLabels: [__name__, interface]
-        action: drop
-      # Drop container spec metrics that overlap with kube-state-metrics.
-      - regex: "container_spec.*"
-        sourceLabels: [__name__]
-        action: drop
-      # Drop cgroup metrics with no pod.
-      - regex: ".+;"
-        sourceLabels: [id, pod]
-        action: drop
-      # Drop block I/O per-device stats — high cardinality, not in any default dashboard/alert.
-      - regex: "container_blkio_device_usage_total"
-        sourceLabels: [__name__]
-        action: drop
+additionalPrometheusRulesMap:
+  dockerhub-rules:
+    groups:
+      - name: dockerhub
+        rules:
+          - alert: DockerhubRateLimitRisk
+            annotations:
+              summary: There are {{ $value }} containers pulling from Dockerhub. This may lead to rate limiting.
+            expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
+            labels:
+              severity: critical
+  oom-rules:
+    groups:
+      - name: oom
+        rules:
+          - alert: OomKilled
+            annotations:
+              summary: Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
+            expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
+            labels:
+              severity: critical
+  zfs-rules:
+    groups:
+      - name: zfs
+        rules:
+          - alert: ZfsUnexpectedPoolState
+            annotations:
+              summary: ZFS pool {{$labels.zpool}} on {{$labels.instance}} is in a unexpected state {{$labels.state}}
+            expr: node_zfs_zpool_state{state!="online"} > 0
+            labels:
+              severity: critical

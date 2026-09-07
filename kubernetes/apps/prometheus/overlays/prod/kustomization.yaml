@@ -4,13 +4,16 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - alertmanager-config.yaml
+  - grafana-dashboard.yaml
   - ingress-route.yaml
+  - scrape-config.yaml
 
 helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
     releaseName: kube-prometheus-stack
-    namespace: prometheus
+    namespace: o11y
     version: 88.5.4
     includeCRDs: false # The CRDs are already installed by the prometheus-operator-crds helm chart in the initial-setup app
     # From https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
@@ -19,18 +22,19 @@ helmCharts:
   - name: prometheus-pushgateway
     repo: https://prometheus-community.github.io/helm-charts
     releaseName: prometheus-pushgateway
-    namespace: prometheus
+    namespace: o11y
     version: 3.8.0
     includeCRDs: true
     valuesInline:
       # From https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-pushgateway/values.yaml
       serviceMonitor:
         enabled: true
-        namespace: prometheus
+        namespace: o11y
       service:
         type: LoadBalancer
       serviceAnnotations:
-        external-dns.alpha.kubernetes.io/hostname: infra-prometheus
+        lbipam.cilium.io/sharing-key: infra-prometheus
+        lbipam.cilium.io/sharing-cross-namespace: o11y
       serviceLabels:
         io.cilium/lb-pool: pool-infra-prometheus
       resources:

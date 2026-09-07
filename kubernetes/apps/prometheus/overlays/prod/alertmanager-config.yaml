@@ -1,0 +1,83 @@
+---
+# Based on: https://github.com/onedr0p/home-ops/blob/07e3edc9d97bb94c96e713d7480d6aa3b111e9d2/kubernetes/apps/o11y/kube-prometheus-stack/app/alertmanagerconfig.yaml
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/alertmanagerconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager
+spec:
+  route:
+    groupBy: [alertname, severity]
+    groupWait: 10s
+    groupInterval: 5m
+    repeatInterval: 4h
+    receiver: general
+    routes:
+      # Critical alerts - immediate notification.
+      - match:
+          severity: critical
+        receiver: critical
+        group_wait: 10s
+        repeat_interval: 30m
+      # Warning alerts - less frequent.
+      - match:
+          severity: warning
+        receiver: warning
+        group_wait: 5m
+        repeat_interval: 12h
+
+  receivers:
+    - name: critical
+      webhookConfigs:
+        - url: https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/critical
+          sendResolved: true
+          httpConfig:
+            followRedirects: true
+    - name: warning
+      webhookConfigs:
+        - url: https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/warning
+          sendResolved: true
+          httpConfig:
+            followRedirects: true
+    - name: general
+      webhookConfigs:
+        - url: https://node-red.sobrinho.pt/webhooks/1ebf4e6a-38bb-4fbd-9cf5-27420b8f0579/general
+          sendResolved: true
+          httpConfig:
+            followRedirects: true
+
+  inhibitRules:
+    - equal:
+        - alertname
+        - namespace
+      sourceMatch:
+        - name: severity
+          matchType: =
+          value: critical
+      targetMatch:
+        - name: severity
+          matchType: =~
+          value: warning|info
+
+    - equal:
+        - alertname
+        - namespace
+      sourceMatch:
+        - name: severity
+          matchType: =
+          value: warning
+      targetMatch:
+        - name: severity
+          matchType: =
+          value: info
+
+    - equal:
+        - namespace
+      sourceMatch:
+        - name: alertname
+          matchType: =
+          value: InfoInhibitor
+      targetMatch:
+        - name: severity
+          matchType: =
+          value: info
