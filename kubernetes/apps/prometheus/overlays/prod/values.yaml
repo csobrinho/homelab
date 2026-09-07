@@ -10,11 +10,10 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          retain: true
-          storageClass: local-data
-          accessModes:
-            - ReadWriteOnce
-          size: 1Gi
+          storageClassName: local-data
+          resources:
+            requests:
+              storage: 1Gi
 
 kubeEtcd:
   service:
@@ -45,11 +44,10 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          retain: true
-          storageClass: local-db
-          accessModes:
-            - ReadWriteOnce
-          size: 50Gi
+          storageClassName: local-db
+          resources:
+            requests:
+              storage: 50Gi
   service:
     type: LoadBalancer
     annotations:

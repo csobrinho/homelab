@@ -14,17 +14,19 @@ spec:
     receiver: general
     routes:
       # Critical alerts - immediate notification.
-      - match:
-          severity: critical
+      - matchers:
+          - name: severity
+            value: critical
         receiver: critical
-        group_wait: 10s
-        repeat_interval: 30m
+        groupWait: 10s
+        repeatInterval: 30m
       # Warning alerts - less frequent.
-      - match:
-          severity: warning
+      - matchers:
+          - name: severity
+            value: warning
         receiver: warning
-        group_wait: 5m
-        repeat_interval: 12h
+        groupWait: 5m
+        repeatInterval: 12h
 
   receivers:
     - name: critical
