@@ -1,0 +1,32 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: grafana-ingress
+  namespace: o11y
+  annotations:
+    external-dns.alpha.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`grafana.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: grafana-service
+          port: grafana
+  tls:
+    secretName: grafana-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: grafana-cert
+  namespace: o11y
+spec:
+  secretName: grafana-cert
+  dnsNames:
+    - grafana.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

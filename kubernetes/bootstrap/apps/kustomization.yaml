@@ -25,10 +25,11 @@ resources:
 
   # sync-wave: -50
   - apps/argocd-app.yaml
+  - apps/grafana-app.yaml
+  - apps/node-feature-discovery-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml
   - apps/snapshot-controller-app.yaml
-  - apps/node-feature-discovery-app.yaml
 
   # sync-wave: -20
   # - apps/prometheus-app.yaml
