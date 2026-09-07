@@ -10,7 +10,6 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          enabled: true
           retain: true
           storageClass: local-data
           accessModes:
@@ -46,7 +45,6 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          enabled: true
           retain: true
           storageClass: local-db
           accessModes:
