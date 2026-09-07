@@ -60,7 +60,7 @@ resources:
   # - apps/mosquitto-app.yaml
   # - apps/mqtt-explorer-app.yaml
   # - apps/n8n-app.yaml
-  # - apps/node-red-app.yaml
+  - apps/node-red-app.yaml
   # - apps/ollama-app.yaml
   # - apps/overseerr-app.yaml
   # - apps/pihole-app.yaml

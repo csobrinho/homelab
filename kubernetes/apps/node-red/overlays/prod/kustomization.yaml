@@ -34,14 +34,23 @@ helmCharts:
                       key: credential_secret
                       expandObjectName: false
                   HOME: /data/home
-      securityContext:
-        container:
-          runAsUser: 1000
-          runAsGroup: 568
       persistence:
         data:
+          existingClaim: node-red-data
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: node-red-kopiur
+    namespace: node-red
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        node-red-data:
           enabled: true
           retain: true
-          storageClass: ceph-block
+          storageClass: local-data
           accessMode: ReadWriteOnce
-          size: 2Gi
+          size: 4Gi
