@@ -16,7 +16,7 @@ helmCharts:
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
     releaseName: whatsapp-kopiur
-    namespace: media
+    namespace: tools
     version: 0.1.0
     valuesInline:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
