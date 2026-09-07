@@ -4,7 +4,7 @@ metadata:
   name: grafana
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-50"
+    argocd.argoproj.io/sync-wave: "-80"
 spec:
   destination:
     namespace: o11y

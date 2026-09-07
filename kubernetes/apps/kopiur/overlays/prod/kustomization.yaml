@@ -18,13 +18,12 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       monitoring:
-        # TODO: Enable dashboards once we have a grafana instance running in the cluster.
-        # dashboards:
-        #   enabled: true
-        #   grafanaOperator:
-        #     enabled: true
-        #     matchLabels:
-        #       dashboards: grafana
+        dashboards:
+          enabled: true
+          grafanaOperator:
+            enabled: true
+            matchLabels:
+              dashboards: grafana
         prometheusRule:
           enabled: true
         serviceMonitor:

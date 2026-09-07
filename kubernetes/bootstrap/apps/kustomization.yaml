@@ -14,8 +14,9 @@ resources:
   - apps/spegel-app.yaml
 
   # sync-wave: -80
-  - apps/proxmox-csi-app.yaml
+  - apps/grafana-app.yaml
   - apps/kopiur-app.yaml
+  - apps/proxmox-csi-app.yaml
 
   # sync-wave: -70
   - apps/cert-manager-app.yaml
@@ -25,7 +26,6 @@ resources:
 
   # sync-wave: -50
   - apps/argocd-app.yaml
-  - apps/grafana-app.yaml
   - apps/node-feature-discovery-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml
