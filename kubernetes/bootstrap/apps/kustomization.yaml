@@ -51,7 +51,7 @@ resources:
   - apps/sablier-app.yaml
   - apps/sealed-secrets-app.yaml
   - apps/snapshot-controller-app.yaml
-  - apps/sonarr-app.yaml
+  # - apps/sonarr-app.yaml
   - apps/streamflow-app.yaml
   # - apps/supermarket-app.yaml
   - apps/tautulli-app.yaml
