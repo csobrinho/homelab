@@ -45,3 +45,19 @@ helmCharts:
           storageClass: ceph-block
           accessMode: ReadWriteOnce
           size: 2Gi
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: node-red-kopiur
+    namespace: node-red
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 1000
+      gid: 568
+      backup:
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+      persistence:
+        node-red-data:
+          existingClaim: true
