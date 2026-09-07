@@ -71,7 +71,7 @@ resources:
   # - apps/rook-ceph-app.yaml
   - apps/rustfs-app.yaml
   - apps/sablier-app.yaml
-  # - apps/sonarr-app.yaml
+  - apps/sonarr-app.yaml
   # - apps/streamflow-app.yaml
   - apps/supermarket-app.yaml
   # - apps/tautulli-app.yaml
