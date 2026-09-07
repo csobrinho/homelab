@@ -19,11 +19,7 @@ helmCharts:
       TZ: America/Los_Angeles
       persistence:
         config:
-          enabled: true
-          retain: true
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 5Gi
+          existingClaim: radarr-config
         data:
           enabled: true
           type: nfs
@@ -33,3 +29,20 @@ helmCharts:
       metrics:
         main:
           enabled: false
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: radarr-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        radarr-config:
+          enabled: true
+          retain: true
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 5Gi

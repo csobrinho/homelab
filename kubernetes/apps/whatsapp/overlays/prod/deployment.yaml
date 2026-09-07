@@ -15,11 +15,9 @@ spec:
       labels:
         app: whatsapp
     spec:
-      nodeSelector:
-        kubernetes.io/arch: arm64
       containers:
         - name: whatsapp
-          image: devlikeapro/waha:noweb-arm@sha256:9385a81e3e30073a77bb15d84bc53a6c7c37e0be4909ed92e1e1ee177473fc9d
+          image: devlikeapro/waha:noweb-2026.8.2@sha256:03f7781b339255c1dfd100a2b7439d59c79f3a9d645ce92940ee3a5b2d5474a0
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
@@ -59,12 +57,10 @@ spec:
                   name: whatsapp-secret
                   key: PASSWORD
           resources:
-            limits:
-              cpu: 300m
-              memory: 512Mi
             requests:
               cpu: 100m
-              memory: 300Mi
+            limits:
+              memory: 512Mi
           ports:
             - name: main
               containerPort: 3000

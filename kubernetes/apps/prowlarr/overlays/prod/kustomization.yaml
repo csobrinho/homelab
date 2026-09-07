@@ -24,14 +24,27 @@ helmCharts:
         enabled: false
       persistence:
         config:
-          enabled: true
-          retain: true
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 5Gi
+          existingClaim: prowlarr-config
       metrics:
         main:
           enabled: false
       configmap:
         dashboard:
           enabled: false
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: prowlarr-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        prowlarr-config:
+          enabled: true
+          retain: true
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 512Mi
