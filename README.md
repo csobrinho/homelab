@@ -29,7 +29,7 @@ Control plane should look like:
 ```
 ExecStart=/usr/local/bin/k3s \
     server \
-    '--server' 'https://10.10.2.10:6443' \
+    '--server' 'https://10.10.3.10:6443' \
     '--disable' 'servicelb,traefik' \
     '--embedded-registry' \
     '--flannel-backend' 'none' \

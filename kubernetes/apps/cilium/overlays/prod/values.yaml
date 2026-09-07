@@ -15,7 +15,7 @@ kubeProxyReplacement: true            # eBPF replaces iptables
 
 # Kubernetes config.
 k8s:
-  apiServerURLs: "https://10.10.2.31:6443 https://10.10.2.32:6443 https://10.10.2.33:6443"
+  apiServerURLs: "https://10.10.3.11:6443 https://10.10.3.12:6443 https://10.10.3.13:6443"
 
 # Datapath
 bpf:
@@ -26,7 +26,8 @@ bpf:
 # Load Balancer (choose based on network topology)
 loadBalancer:
   algorithm: maglev                   # Better load distribution than random
-  mode: dsr                           # DSR is performed for TCP and SNAT for UDP connections. 
+  mode: dsr                           # DSR is performed for TCP and SNAT for UDP connections.
+  dsrDispatch: opt
 ###  acceleration: best-effort        # XDP acceleration if NIC supports it. -- Keeps resetting the NIC!!
                                       # Intel x710 should support it with i40e >= 4.13 driver.
 

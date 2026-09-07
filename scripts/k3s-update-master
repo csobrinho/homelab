@@ -14,7 +14,7 @@ version="$2"
 }
 
 k3sup join \
-	--ip "10.10.2.1$id" \
+	--ip "10.10.3.1$id" \
 	--server \
 	--server-url "https://infra-adm:6443" \
 	--k3s-channel stable \
