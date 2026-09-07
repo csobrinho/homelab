@@ -15,6 +15,7 @@ resources:
 
   # sync-wave: -80
   - apps/proxmox-csi-app.yaml
+  - apps/kopiur-app.yaml
 
   # sync-wave: -70
   - apps/cert-manager-app.yaml

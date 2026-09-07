@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kopiur
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-80"
+spec:
+  destination:
+    namespace: kopiur-system
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/kopiur/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []
