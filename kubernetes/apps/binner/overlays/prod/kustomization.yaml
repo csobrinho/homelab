@@ -18,8 +18,8 @@ helmCharts:
     version: 0.1.0
     valuesInline:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
-      uid: 568
-      gid: 568
+      uid: 1001
+      gid: 1001
       persistence:
         binner-data:
           retain: true
