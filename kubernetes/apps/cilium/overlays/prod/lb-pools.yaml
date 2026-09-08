@@ -106,3 +106,27 @@ spec:
   serviceSelector:
     matchLabels:
       io.cilium/lb-pool: pool-infra-adm
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-proxy
+spec:
+  blocks:
+    - cidr: "10.10.10.11/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-proxy
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-infra-pg
+spec:
+  blocks:
+    - cidr: "10.10.10.12/32"
+  serviceSelector:
+    matchLabels:
+      io.cilium/lb-pool: pool-infra-pg
