@@ -29,13 +29,13 @@ spec:
         inherit: true
       - name: windmill_user
         login: false
-        connectionLimit: -1	
-        ensure: present	
+        connectionLimit: -1
+        ensure: present
         inherit: true
       - name: windmill_admin
         login: false
-        connectionLimit: -1	
-        ensure: present	
+        connectionLimit: -1
+        ensure: present
         inherit: true
         bypassrls: true
         inRoles:
@@ -50,3 +50,16 @@ spec:
         inRoles:
           - windmill_admin
           - windmill_user
+    services:
+      additional:
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: "cluster"
+              annotations:
+                external-dns.alpha.kubernetes.io/hostname: infra-pgo
+              labels:
+                io.cilium/lb-pool: pool-infra-pg
+            spec:
+              type: LoadBalancer
+              externalTrafficPolicy: Local
