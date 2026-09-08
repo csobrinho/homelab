@@ -8,16 +8,36 @@ spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.10
   storage:
-    size: 5Gi
-    storageClass: ceph-block
+    size: 16Gi
+    storageClass: local-db
   resources:
     requests:
       cpu: 250m
-      memory: 256Mi
     limits:
-      cpu: 1000m
       memory: 1536Mi
   enableSuperuserAccess: true
+  # REPLICATION: START
+  externalClusters:
+    - name: cluster-old
+      connectionParameters:
+        host: infra-pgo
+        port: "5432"
+        user: streaming_replica
+        dbname: postgres
+        sslmode: disable # Disables TLS verification completely.
+      sslKey:
+        name: cluster-replication
+        key: tls.key
+      sslCert:
+        name: cluster-replication
+        key: tls.crt
+  bootstrap:
+    pg_basebackup:
+      source: cluster-old
+  replica:
+    enabled: true
+    source: cluster-old
+  # REPLICATION: END
   managed:
     roles:
       - name: dispatcharr
@@ -50,3 +70,17 @@ spec:
         inRoles:
           - windmill_admin
           - windmill_user
+    services:
+      additional:
+        - selectorType: rw
+          updateStrategy: patch
+          serviceTemplate:
+            metadata:
+              name: "cluster"
+              annotations:
+                external-dns.alpha.kubernetes.io/hostname: infra-pg
+              labels:
+                io.cilium/lb-pool: pool-infra-pg
+            spec:
+              type: LoadBalancer
+              externalTrafficPolicy: Local
