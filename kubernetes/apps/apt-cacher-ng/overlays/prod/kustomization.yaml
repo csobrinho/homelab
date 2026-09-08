@@ -29,10 +29,9 @@ helmCharts:
             io.cilium/lb-pool: pool-infra-apt
           type: LoadBalancer
       persistence:
-        apt-cacher-ng:
+        apt-cacher-ng: # No need to have kopiur backups.
           enabled: true
-          mountPath: /var/cache/apt-cacher-ng
           retain: true
           accessMode: ReadWriteOnce
           size: 10Gi
-          storageClass: "ceph-block"
+          storageClass: local-data

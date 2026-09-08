@@ -29,15 +29,28 @@ helmCharts:
       persistence:
         data:
           enabled: true
-          retain: true
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 5Gi
+          existingClaim: mealie-data
           advancedMounts:
             main: # the controller with the "main" identifier
               main: # the container with the "main" identifier
                 - path: /app/data/
                   readOnly: false
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: mealie-kopiur
+    namespace: mealie
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 0
+      gid: 0
+      persistence:
+        mealie-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          storageClass: local-data
 
 components:
   - ../../../../components/managed-sablier

@@ -4,6 +4,9 @@
 			"path": "."
 		},
 		{
+			"path": "../migration"
+		},
+		{
 			"path": "../helm-charts"
 		}
 	],

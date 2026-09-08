@@ -8,8 +8,24 @@ resources:
   - ../../base
   - deployment.yaml
   - ingress-route.yaml
-  - pvc.yaml
   - service.yaml
+
+helmCharts:
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: binner-kopiur
+    namespace: binner
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        binner-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 1Gi
+          storageClass: local-data
 
 components:
   - ../../../../components/managed-sablier
