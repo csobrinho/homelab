@@ -43,7 +43,7 @@ resources:
   - apps/cloudnative-pg-app.yaml
   - apps/cyberchef-app.yaml
   # - apps/descheduler-app.yaml
-  # - apps/dispatcharr-app.yaml
+  - apps/dispatcharr-app.yaml
   # - apps/esphome-app.yaml
   # - apps/esphome-fleet-app.yaml
   - apps/external-reverse-proxy-app.yaml
