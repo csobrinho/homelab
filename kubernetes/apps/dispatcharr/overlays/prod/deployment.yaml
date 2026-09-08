@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: wait-for-postgres
           image: busybox:1.38
-          command: ["sh", "-c", "until nc -z cluster-rw.cnpg-system.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done"]
+          command: ["sh", "-c", "until nc -z infra-pg 5432; do echo waiting for postgres; sleep 2; done"]
         - name: wait-for-redis
           image: busybox:1.38
           command: ["sh", "-c", "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done"]
@@ -51,7 +51,7 @@ spec:
             - name: DISPATCHARR_ENV
               value: "modular"
             - name: POSTGRES_HOST
-              value: "cluster-rw.cnpg-system.svc.cluster.local"
+              value: "infra-pg"
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB
@@ -99,7 +99,7 @@ spec:
             - name: DISPATCHARR_ENV
               value: "modular"
             - name: POSTGRES_HOST
-              value: "cluster-rw.cnpg-system.svc.cluster.local"
+              value: "infra-pg"
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB
