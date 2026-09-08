@@ -19,17 +19,11 @@ spec:
         app.kubernetes.io/instance: dispatcharr
         app.kubernetes.io/name: dispatcharr
     spec:
-      nodeSelector:
-        kubernetes.io/arch: "amd64"
       initContainers:
         - name: wait-for-postgres
           image: busybox:1.38
           command:
-            [
-              "sh",
-              "-c",
-              "until nc -z infra-pg 5432; do echo waiting for postgres; sleep 2; done",
-            ]
+            ["sh", "-c", "until nc -z infra-pg 5432; do echo waiting for postgres; sleep 2; done"]
         - name: wait-for-redis
           image: busybox:1.38
           command:
@@ -44,13 +38,11 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-              gpu.intel.com/i915: "1"
               cpu: 500m
-              memory: 1Gi
+              nvidia.com/gpu: "1"
             limits:
-              gpu.intel.com/i915: "1"
-              cpu: 1000m
               memory: 2Gi
+              nvidia.com/gpu: "1"
           ports:
             - containerPort: 9191
               name: main
@@ -60,6 +52,8 @@ spec:
               value: "9191"
             - name: DISPATCHARR_ENV
               value: "modular"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: video,compute,utility
             - name: POSTGRES_HOST
               value: "infra-pg"
             - name: POSTGRES_PORT
@@ -108,6 +102,8 @@ spec:
           env:
             - name: DISPATCHARR_ENV
               value: "modular"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: video,compute,utility
             - name: POSTGRES_HOST
               value: "infra-pg"
             - name: POSTGRES_PORT
@@ -138,11 +134,11 @@ spec:
               mountPath: /data
           resources:
             requests:
-              memory: 1Gi
               cpu: 500m
+              nvidia.com/gpu: "1"
             limits:
               memory: 2Gi
-              cpu: 750m
+              nvidia.com/gpu: "1"
           livenessProbe:
             exec:
               command: ["celery", "-A", "dispatcharr", "inspect", "ping"]
@@ -150,6 +146,11 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 5
             failureThreshold: 4
+      tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Equal
+          value: present
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
