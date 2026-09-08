@@ -24,12 +24,12 @@ spec:
         port: "5432"
         user: streaming_replica
         dbname: postgres
-        sslmode: disable # Disables TLS verification completely.
+        sslmode: prefer
       sslKey:
-        name: cluster-replication
+        name: cluster-replication-old
         key: tls.key
       sslCert:
-        name: cluster-replication
+        name: cluster-replication-old
         key: tls.crt
   bootstrap:
     pg_basebackup:
