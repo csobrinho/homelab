@@ -33,8 +33,12 @@ spec:
             - name: BINNER_PORT
               value: "8090"
           volumeMounts:
-            - mountPath: /app/data
-              name: data
+            - name: data
+              mountPath: /data
+              subPath: db
+            - name: data
+              mountPath: /userfiles
+              subPath: files
       volumes:
         - name: data
           persistentVolumeClaim:

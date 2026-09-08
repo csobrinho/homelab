@@ -25,7 +25,7 @@ helmCharts:
           retain: true
           accessMode: ReadWriteOnce
           size: 1Gi
-          storageClass: local-data
+          storageClass: local-db
 
 components:
   - ../../../../components/managed-sablier
