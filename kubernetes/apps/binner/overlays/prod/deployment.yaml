@@ -19,9 +19,10 @@ spec:
           image: ghcr.io/csobrinho/binner-docker:main
           imagePullPolicy: IfNotPresent
           resources:
+            requests:
+              cpu: 50m
             limits:
               memory: 384Mi
-              cpu: 200m
           ports:
             - containerPort: 8090
               name: main

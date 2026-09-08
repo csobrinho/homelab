@@ -34,15 +34,29 @@ helmCharts:
           path: /mnt/library
           mountPath: /data
       resources:
-        limits:
-          cpu: 250m
-          memory: 512Mi
         requests:
           cpu: 100m
-          memory: 256Mi
+        limits:
+          memory: 512Mi
       metrics:
         main:
           enabled: false # Disabled until pvc reusage due to exportarr is fixed.
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: lidarr-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      backup:
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+      persistence:
+        lidarr-config:
+          existingClaim: true
 
 components:
   - ../../../../components/managed-sablier
