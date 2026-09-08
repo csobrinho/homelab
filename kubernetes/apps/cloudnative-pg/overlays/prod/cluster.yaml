@@ -53,6 +53,7 @@ spec:
     services:
       additional:
         - selectorType: rw
+          updateStrategy: patch
           serviceTemplate:
             metadata:
               name: "cluster"
@@ -63,3 +64,9 @@ spec:
             spec:
               type: LoadBalancer
               externalTrafficPolicy: Local
+  postgresql:
+    pg_hba:
+      # Accept replication from your network subnet without client cert validation
+      - hostssl replication streaming_replica 10.10.0.0/16 scram-sha-256
+      - hostssl replication streaming_replica 10.10.0.0/16 md5
+      - host replication streaming_replica 10.10.0.0/16 scram-sha-256
