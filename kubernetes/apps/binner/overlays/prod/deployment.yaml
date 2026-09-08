@@ -30,6 +30,8 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
+            - name: BINNER_PORT
+              value: "8090"
           volumeMounts:
             - mountPath: /app/data
               name: data
