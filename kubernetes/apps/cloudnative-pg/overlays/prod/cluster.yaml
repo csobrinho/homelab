@@ -8,7 +8,7 @@ spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.10
   storage:
-    size: 5Gi
+    size: 10Gi
     storageClass: ceph-block
   resources:
     requests:
