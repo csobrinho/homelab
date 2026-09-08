@@ -46,25 +46,14 @@ helmCharts:
     version: 0.1.0
     valuesInline:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
-      persistence:
-        mealie-data:
-          existingClaim: true
+      uid: 911
+      gid: 911
       backup:
         schedule:
           cron: "" # Disable the automatic backup schedule.
-        mover:
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          podSecurityContext:
-            fsGroup: 0
-      populate:
-        mover:
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          podSecurityContext:
-            fsGroup: 0
+      persistence:
+        mealie-data:
+          existingClaim: true
 
 components:
   - ../../../../components/managed-sablier
