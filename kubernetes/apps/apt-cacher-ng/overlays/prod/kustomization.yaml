@@ -18,8 +18,7 @@ helmCharts:
     valuesInline:
       TZ: America/Los_Angeles
       podOptions:
-        nodeSelector:
-          kubernetes.io/arch: "amd64"
+        defaultAffinity: false
       service:
         main:
           externalTrafficPolicy: Local
@@ -29,8 +28,12 @@ helmCharts:
             io.cilium/lb-pool: pool-infra-apt
           type: LoadBalancer
       persistence:
-        apt-cacher-ng: # No need to have kopiur backups.
+        # No need to have kopiur backups.
+        apt-cacher-ng: # Avoid creating a apt-cacher-ng-apt-cacher-ng pvc :|
+          enabled: false
+        cache:
           enabled: true
+          mountPath: /var/cache/apt-cacher-ng
           retain: true
           accessMode: ReadWriteOnce
           size: 10Gi
