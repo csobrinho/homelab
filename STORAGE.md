@@ -66,7 +66,7 @@ Both RTX 5090s are passed through to VM 110 (`nvidia`):
 | PCIE2 | Adapter 2 | B      | `00:03.2` | `03:00.0` | nvme4 | `S7KGNU0Y701620B` | 4TB  | `library_d2`                                 |
 | PCIE2 | Adapter 2 | B      | —         | —         | —     | _empty_           | —    | —                                            |
 | PCIE2 | Adapter 2 | B      | —         | —         | —     | _empty_           | —    | —                                            |
-| M2_1  | onboard   | D      | `00:03.5` | `04:00.0` | nvme5 | `S73WNU0XA42755B` | 2TB  | unassigned                                   |
+| M2_1  | onboard   | D      | `00:03.5` | `04:00.0` | nvme5 | `S73WNU0XA42755B` | 2TB  | `db` (single-disk, **interim** — see Pools)   |
 | M2_2  | onboard   | C      | `40:01.1` | `41:00.0` | nvme2 | `S7KHNJ0X105718Z` | 2TB  | unassigned                                   |
 
 > **Bay numbering within each adapter is not confirmed.** Root port function
@@ -83,7 +83,7 @@ fleet.
 
 | Slot        | Domain | Member       | Size | Status                                 |
 | ----------- | ------ | ------------ | ---- | -------------------------------------- |
-| PCIE1 bay 1 | A      | `db`-1       | 4TB  | not racked                             |
+| PCIE1 bay 1 | A      | `db`-1       | 4TB  | not racked (`db` runs interim on M2_1) |
 | PCIE1 bay 2 | A      | `models`-1   | 2TB  | not racked                             |
 | PCIE1 bay 3 | A      | `models`-2   | 2TB  | not racked                             |
 | PCIE1 bay 4 | A      | `vms`-1      | 2TB  | ✅ `S7KHNJ0WC60232B`                   |
@@ -92,7 +92,7 @@ fleet.
 | PCIE2 bay 3 | B      | `data`-2     | 2TB  | awaiting RPi5 teardown                 |
 | PCIE2 bay 4 | B      | `library_d1` | 4TB  | ✅ `S7KGNU0Y225237B`                   |
 | M2_1        | D      | `library_d2` | 4TB  | `S7KGNU0Y701620B` (currently on PCIE2) |
-| M2_2        | C      | `db`-2       | 4TB  | not racked                             |
+| M2_2        | C      | `db`-2       | 4TB  | not racked (holds orphaned `pve` LVM)  |
 
 ### Placement rationale
 
@@ -123,6 +123,20 @@ fleet.
 
 Common to all: `compression=lz4`, `atime=off`, `autotrim=on` (pool), mirror vdev.
 
+> **`db` is running interim as a single 2TB disk on M2_1 (`S73WNU0XA42755B`,
+> domain D).** The target (2× 4TB mirror on A + C) can't be built until those
+> drives are racked. Consequences of the interim: no redundancy, and it sits on
+> a hot/contended domain — the opposite of the placement rationale below. When
+> the 4TB drives arrive, `db` gets rebuilt from scratch on the A+C mirror
+> (backup / restore or `zfs send`, not `attach` — the members change size), and
+> M2_1's 2TB drive is freed for `models`. All other props (`sync=standard`,
+> `logbias=latency`, `recordsize=16K`, `xattr=sa`, `acltype=posix`) are already
+> set as designed.
+
+StorageClass `local-db` (proxmox-csi, **ext4**, `reclaimPolicy: Retain`,
+`allowVolumeExpansion`, `WaitForFirstConsumer`) is in
+`kubernetes/apps/proxmox-csi/overlays/prod/`, alongside `local-data` / `local-s3`.
+
 Create commands:
 
 ```bash
@@ -142,11 +156,17 @@ zpool create -o ashift=12 -o autotrim=on \
 zfs create data/s3
 zfs set quota=250G data/s3
 
-# db
+# db — target: 2× 4TB mirror on A + C
 zpool create -o ashift=12 -o autotrim=on \
   -O compression=lz4 -O atime=off -O sync=standard -O logbias=latency \
   -O recordsize=16K -O xattr=sa -O acltype=posixacl \
   db mirror /dev/disk/by-id/... /dev/disk/by-id/...
+
+# db — interim single-disk (currently live) on M2_1
+zpool create -o ashift=12 -o autotrim=on \
+  -O compression=lz4 -O atime=off -O sync=standard -O logbias=latency \
+  -O recordsize=16K -O xattr=sa -O acltype=posixacl \
+  db /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S73WNU0XA42755B
 
 # models
 zpool create -o ashift=12 -o autotrim=on \
@@ -225,6 +245,7 @@ Branch members are mounted from `/etc/fstab` **by label**, not by-id. See
 | `local-vms`  | zfspool | `vms`        | `images`                     | `blocksize 16k`, `sparse 1`                                                                   |
 | `local-data` | zfspool | `data`       | `images`                     | `sparse 1`, `nodes infra-vm`                                                                  |
 | `local-s3`   | zfspool | `data/s3`    | `images`                     | `blocksize 64k`, `sparse 1`, `nodes infra-vm` — see [data/s3](#datas3--object-storage-rustfs) |
+| `local-db`   | zfspool | `db`         | `images`                     | `sparse 1`, `nodes infra-vm`. Pool currently interim single-disk — see [Pools](#zfs).         |
 | `local-zfs`  | zfspool | `rpool/data` | `rootdir`                    | boot mirror. **TODO:** still needs `--content ""` — nothing should land here.                 |
 
 Naming follows Proxmox's own convention (`local`, `local-zfs`), so all
@@ -235,6 +256,7 @@ consistent: `local-vms`, `local-data`, `local-s3`, `local-db`, `local-models`.
 pvesm add zfspool local-vms  --pool vms     --content images --blocksize 16k --sparse 1 --nodes infra-vm
 pvesm add zfspool local-data --pool data    --content images                --sparse 1 --nodes infra-vm
 pvesm add zfspool local-s3   --pool data/s3 --content images --blocksize 64k --sparse 1 --nodes infra-vm
+pvesm add zfspool local-db   --pool db      --content images                --sparse 1 --nodes infra-vm
 pvesm set local     --content vztmpl,import,iso,snippets
 pvesm set local-zfs --content ""
 ```
@@ -340,7 +362,14 @@ layered on top of that, not a substitute for it.
       `sync=disabled` / `autotrim=on` / `acltype=posix` on `data` and the
       `nvidia-user-data.yaml` snippet (the role currently only sets
       compression/atime/xattr, so a rebuild would regress these)
-- [ ] Rack 2× 4TB for the `db` mirror
+- [x] Create `db` pool (interim single-disk on M2_1 `S73WNU0XA42755B`) +
+      `local-db` Proxmox storage
+- [ ] Rack 2× 4TB for the `db` mirror, then rebuild `db` on the A+C mirror
+      (backup/restore or `zfs send` — members change size, so not `attach`) and
+      free M2_1's 2TB for `models`
+- [ ] Wipe the orphaned `pve` LVM + EFI on M2_2 (`S7KHNJ0X105718Z`, nvme2n1)
+      before it's reused for `db`-2 — not referenced by `storage.cfg`, box boots
+      from `rpool` on the SATA 850 PRO
 - [ ] Complete mirrors for `vms` and `data` after RPi5 teardown frees 2× 2TB —
       then `zpool attach data S7KHNU0X801652Y <partner>` (this also relocates
       `data`-1 PCIE1 → PCIE2 bay 2 per Target layout)
