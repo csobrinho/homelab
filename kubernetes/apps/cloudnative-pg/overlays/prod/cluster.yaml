@@ -16,28 +16,6 @@ spec:
     limits:
       memory: 1536Mi
   enableSuperuserAccess: true
-  # REPLICATION: START
-  externalClusters:
-    - name: cluster-old
-      connectionParameters:
-        host: infra-pgo
-        port: "5432"
-        user: streaming_replica
-        dbname: postgres
-        sslmode: prefer
-      sslKey:
-        name: cluster-replication-old
-        key: tls.key
-      sslCert:
-        name: cluster-replication-old
-        key: tls.crt
-  bootstrap:
-    pg_basebackup:
-      source: cluster-old
-  replica:
-    enabled: true
-    source: cluster-old
-  # REPLICATION: END
   managed:
     roles:
       - name: dispatcharr
