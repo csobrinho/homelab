@@ -16,12 +16,13 @@ spec:
     spec:
       containers:
         - name: binner
-          image: ghcr.io/csobrinho/binner-docker:main
+          image: binnerofficial/binner:v2.6.25@sha256:31c9e28c00b8c4ed733e0845c510769f8da3053bae3068d3dc6c205a4804b724
           imagePullPolicy: IfNotPresent
           resources:
+            requests:
+              cpu: 50m
             limits:
               memory: 384Mi
-              cpu: 200m
           ports:
             - containerPort: 8090
               name: main
