@@ -43,26 +43,14 @@ helmCharts:
     version: 0.1.0
     valuesInline:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 911
+      gid: 911
       persistence:
         mealie-data:
           retain: true
           accessMode: ReadWriteOnce
           size: 5Gi
           storageClass: local-data
-      backup:
-        mover:
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          podSecurityContext:
-            fsGroup: 0
-      populate:
-        mover:
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          podSecurityContext:
-            fsGroup: 0
 
 components:
   - ../../../../components/managed-sablier
