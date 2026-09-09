@@ -78,7 +78,7 @@ resources:
   - apps/unpackerr-app.yaml
   # - apps/velero-app.yaml
   - apps/whatsapp-app.yaml
-  # - apps/windmill-app.yaml
+  - apps/windmill-app.yaml
   # - apps/xfinity-usage-app.yaml
   # - apps/zwavejs2mqtt-app.yaml
 
