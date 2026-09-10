@@ -9,7 +9,6 @@ resources:
   - middleware-auth-forward.yaml
   - middleware-secure-headers.yaml
   - service-external.yaml
-  - service-mqtt.yaml
   - tls-option-none.yaml
   - tls-option-requested.yaml
   - tls-option-required.yaml

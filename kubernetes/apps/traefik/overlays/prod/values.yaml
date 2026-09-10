@@ -51,11 +51,6 @@ ports:
     http3:
       enabled: true
       advertisedPort: 443
-  mqtt:
-    port: 9883
-    expose:
-      default: false
-    exposedPort: 1883
 
 tolerations:
   - key: node.kubernetes.io/unreachable
