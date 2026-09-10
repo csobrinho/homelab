@@ -35,3 +35,21 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 256Mi
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: mosquitto-kopiur
+    namespace: mosquitto
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      backup:
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+      persistence:
+        mosquitto-data:
+          existingClaim: true
+        mosquitto-configinc:
+          existingClaim: true
