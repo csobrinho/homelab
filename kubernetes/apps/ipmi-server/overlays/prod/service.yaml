@@ -6,10 +6,8 @@ metadata:
 spec:
   selector:
     app: ipmi-server
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: main
-      nodePort: 31246
       port: 80
-      protocol: TCP
       targetPort: 80

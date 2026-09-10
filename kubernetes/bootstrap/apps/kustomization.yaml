@@ -50,7 +50,7 @@ resources:
   - apps/go-playground-app.yaml
   # - apps/home-assistant-app.yaml
   # - apps/intel-gpu-plugin-app.yaml
-  # - apps/ipmi-server-app.yaml
+  - apps/ipmi-server-app.yaml
   - apps/it-tools-app.yaml
   # - apps/jupyter-app.yaml
   - apps/keda-app.yaml
