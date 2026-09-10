@@ -56,7 +56,7 @@ resources:
   - apps/keda-app.yaml
   - apps/lidarr-app.yaml
   - apps/mealie-app.yaml
-  # - apps/mosquitto-app.yaml
+  - apps/mosquitto-app.yaml
   # - apps/mqtt-explorer-app.yaml
   # - apps/n8n-app.yaml
   - apps/node-red-app.yaml
