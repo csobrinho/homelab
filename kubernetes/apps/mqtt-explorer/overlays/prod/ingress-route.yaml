@@ -2,7 +2,7 @@ kind: IngressRoute
 apiVersion: traefik.io/v1alpha1
 metadata:
   name: mqtt-explorer-ingress
-  namespace: mqtt-explorer
+  namespace: tools
   annotations:
     external-dns.alpha.kubernetes.io/target: infra-int
 spec:
@@ -22,7 +22,7 @@ kind: Certificate
 apiVersion: cert-manager.io/v1
 metadata:
   name: mqtt-explorer-cert
-  namespace: mqtt-explorer
+  namespace: tools
 spec:
   secretName: mqtt-explorer-cert
   dnsNames:

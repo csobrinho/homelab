@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mqtt-explorer
-  namespace: mqtt-explorer
+  namespace: tools
 spec:
   selector:
     app: mqtt-explorer
