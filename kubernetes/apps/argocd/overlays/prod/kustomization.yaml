@@ -29,6 +29,7 @@ helmCharts:
         podAnnotations:
           secret.reloader.stakater.com/auto: "true"
           configmap.reloader.stakater.com/auto: "true"
+        revisionHistoryLimit: 0
       redis:
         enabled: false
       externalRedis:
