@@ -26,6 +26,9 @@ helmCharts:
         # policy denies it). Disable until the datapath is switched off DSR.
         networkPolicy:
           create: false
+        podAnnotations:
+          secret.reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/auto: "true"
       redis:
         enabled: false
       externalRedis:
