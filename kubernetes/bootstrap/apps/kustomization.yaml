@@ -39,6 +39,7 @@ resources:
   - apps/bazarr-app.yaml
   # - apps/bentopdf-app.yaml
   - apps/binner-app.yaml
+  - apps/blocky-app.yaml
   # - apps/changedetection-app.yaml
   - apps/cloudnative-pg-app.yaml
   - apps/cyberchef-app.yaml

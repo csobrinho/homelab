@@ -1,0 +1,19 @@
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/library/common/values.yaml
+# From https://github.com/trueforge-org/truecharts/blob/master/charts/stable/blocky/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - postgresql-database.yaml
+  - secrets/blocky-secret-enc.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: blocky
+    namespace: blocky
+    version: 5.1.0
+    includeCRDs: true
+    valuesFile: values.yaml

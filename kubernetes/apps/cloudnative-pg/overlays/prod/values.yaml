@@ -12,5 +12,5 @@ resources:
 monitoring:
   grafanaDashboard:
     create: true
-    namespace: prometheus
+    namespace: o11y
   podMonitorEnabled: true

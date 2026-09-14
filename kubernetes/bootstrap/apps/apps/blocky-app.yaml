@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: blocky
+  namespace: argocd
+spec:
+  destination:
+    namespace: blocky
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/blocky/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []
