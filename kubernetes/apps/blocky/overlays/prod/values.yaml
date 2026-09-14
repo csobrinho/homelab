@@ -1,0 +1,244 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-5.1.0/charts/other/app-template/values.schema.json
+defaultPodOptions:
+  automountServiceAccountToken: false
+  enableServiceLinks: false
+  topologySpreadConstraints:
+    # ScheduleAnyway, NOT requiredDuringScheduling anti-affinity — if the non EPYC tier is gone,
+    # we still want the replacement pod on EPYC, not Pending forever.
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone # Right now proxmox is "infra-vm".
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: blocky
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: blocky
+
+  securityContext:
+    fsGroup: 568
+    fsGroupChangePolicy: OnRootMismatch
+    supplementalGroups: [568]
+    sysctls:
+      # Without this an unprivileged container cannot bind a port below 1024 and blocky fails at
+      # startup with a hard bind error. Do not remove.
+      - name: net.ipv4.ip_unprivileged_port_start
+        value: "53"
+
+controllers:
+  blocky:
+    type: deployment
+    replicas: 2
+    revisionHistoryLimit: 0
+    strategy: RollingUpdate
+    rollingUpdate:
+      unavailable: 0
+      surge: 1
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      app:
+        image:
+          repository: ghcr.io/0xerr0r/blocky
+          tag: v0.35.0@sha256:4f165b63db0d76c96ecc47c7a8f57caeedc003a912bdce29abb0e283ce02e16b
+        lifecycle:
+          preStop:
+            sleep:
+              seconds: 10 # let Cilium withdraw the BGP route first.
+        env:
+          PGPASSFILE: /secrets/pgpass/.pgpass
+        probes:
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command: ["/app/blocky", "healthcheck"]
+              failureThreshold: 5
+              initialDelaySeconds: 10
+              periodSeconds: 10
+              successThreshold: 1
+              timeoutSeconds: 5
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command: ["/app/blocky", "healthcheck"]
+              failureThreshold: 5
+              initialDelaySeconds: 10
+              periodSeconds: 10
+              successThreshold: 2
+              timeoutSeconds: 5
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command: ["/app/blocky", "healthcheck"]
+              failureThreshold: 60
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              successThreshold: 1
+              timeoutSeconds: 2
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 568
+          runAsNonRoot: true
+          runAsUser: 568
+          seccompProfile:
+            type: RuntimeDefault
+
+service:
+  dns:
+    controller: blocky
+    type: LoadBalancer
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: infra-dns1
+    externalTrafficPolicy: Local
+    labels:
+      io.cilium/lb-pool: pool-infra-dns1
+    ports:
+      dns-udp:
+        port: 53
+        protocol: UDP
+      dns-tcp:
+        port: 53
+        protocol: TCP
+
+  api:
+    controller: blocky
+    type: ClusterIP # metrics, API, blocky-ui — keep off the DNS VIP
+    ports:
+      http:
+        port: 4000
+
+persistence:
+  config:
+    type: configMap
+    name: blocky
+    globalMounts:
+      - path: /app/config.yml
+        subPath: config.yml
+        readOnly: true
+  pgpass:
+    type: custom
+    volumeSpec:
+      secret:
+        secretName: blocky-secret
+        defaultMode: 384 # 0600
+        items:
+          - key: pgpass
+            path: .pgpass
+    globalMounts:
+      - path: /secrets/pgpass
+        readOnly: true
+  tmp:
+    type: emptyDir
+    globalMounts:
+      - path: /tmp
+
+configMaps:
+  config:
+    data:
+      config.yml: |
+        upstreams:
+          groups:
+            default:
+              - tcp+udp:10.10.2.1
+          timeout: 2s
+
+        # Blocklist downloads need DNS before Blocky is serving. Without this it
+        # falls back to the pod resolver → CoreDNS → possibly this VIP.
+        bootstrapDns:
+          - upstream: tcp+udp:10.10.2.1
+
+        connectIPVersion: v4
+
+        blocking:
+          denylists:
+            default:
+              - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+              - https://big.oisd.nl/domainswild
+              - https://nsfw.oisd.nl/domainswild
+              # Also see https://github.com/hagezi/dns-blocklists
+          allowlists:
+            default:
+              - https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/optional-list.txt
+              - https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt
+              - https://raw.githubusercontent.com/rahilpathan/pihole-whitelist/main/1.LowWL.txt
+              - |
+                # domainlist types 1 (exact allow) and 3 (regex allow)
+                # regexes as /pattern/ — RE2, not POSIX
+          clientGroupsBlock:
+            default:
+              - default
+          blockType: zeroIp
+          blockTTL: 1m
+          loading:
+            refreshPeriod: 4h
+            downloads:
+              timeout: 60s
+              attempts: 3
+              cooldown: 5s
+            concurrency: 8
+            strategy: fast  # serve DNS before lists finish loading
+            maxErrorsPerSource: 5
+
+        caching:
+          # Both zero deliberately: extending TTLs would serve IPs the UDM has
+          # dropped from its policy-route set.
+          minTime: 0
+          maxTime: 0
+          maxItemsCount: 0
+          cacheTimeNegative: 30m
+          prefetching: true
+          prefetchExpires: 2h
+          prefetchThreshold: 5
+
+        # replaces revServers — client names from UniFi's PTR records
+        clientLookup:
+          upstream: tcp+udp:10.10.2.1
+
+        ede:
+          enable: true # == dns.blocking.edns = "TEXT"
+
+        ports:
+          dns: 53
+          http: 4000
+
+        prometheus:
+          enable: true
+          path: /metrics
+
+        queryLog:
+          type: postgresql
+          target: postgres://blocky@infra-pg:5432/blocky?sslmode=disable
+          logRetentionDays: 7 # == database.maxDBdays
+          flushInterval: 30s
+          ignore:
+            sudn: true
+
+        redis:
+          address: valkey.infra.svc.cluster.local:6379
+          database: 3     # See kubernetes/apps/valkey/overlays/prod/kustomization.yaml
+          required: false # DNS must survive Valkey being down
+          connectionAttempts: 5
+          connectionCooldown: 2s
+
+        log:
+          level: info
+          format: text

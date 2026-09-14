@@ -18,6 +18,13 @@ spec:
   enableSuperuserAccess: true
   managed:
     roles:
+      - name: blocky
+        passwordSecret:
+          name: blocky-secret
+        login: true
+        connectionLimit: -1
+        ensure: present
+        inherit: true
       - name: dispatcharr
         passwordSecret:
           name: dispatcharr-secret
