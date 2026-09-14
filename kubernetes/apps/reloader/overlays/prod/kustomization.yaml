@@ -1,0 +1,39 @@
+# From https://github.com/stakater/Reloader/blob/master/deployments/kubernetes/chart/reloader/values.yaml
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: reloader
+    repo: oci://ghcr.io/stakater/charts
+    releaseName: reloader
+    namespace: reloader
+    version: 2.2.17
+    includeCRDs: true
+    valuesInline:
+      reloader:
+        reloadStrategy: annotations
+        watchGlobally: true
+        autoReloadAll: false
+        reloadOnCreate: true
+        reloadOnDelete: false
+        readOnlyRootFileSystem: true
+        logFormat: json
+        podMonitor:
+          enabled: true
+          namespace: o11y
+        deployment:
+          replicas: 1
+          containerSecurityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              memory: 512Mi

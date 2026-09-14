@@ -40,8 +40,16 @@ helmCharts:
           exec.enabled: true
           kustomize.buildOptions: --enable-helm --enable-alpha-plugins --enable-exec
           resource.customizations.ignoreDifferences.apps_Deployment: |
+            jsonPointers:
+              - /spec/template/metadata/annotations/reloader.stakater.com~1last-reloaded-from
             jqPathExpressions:
               - '.spec.template.spec.hostUsers'
+          resource.customizations.ignoreDifferences.apps_StatefulSet: |
+            jsonPointers:
+            - /spec/template/metadata/annotations/reloader.stakater.com~1last-reloaded-from
+          resource.customizations.ignoreDifferences.apps_DaemonSet: |
+            jsonPointers:
+            - /spec/template/metadata/annotations/reloader.stakater.com~1last-reloaded-from
           resource.exclusions: |
             - apiGroups:
               - "velero.io"

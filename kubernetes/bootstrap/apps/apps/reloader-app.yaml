@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reloader
+  namespace: argocd
+spec:
+  destination:
+    namespace: reloader
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/reloader/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []
