@@ -13,36 +13,59 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: esphome
     namespace: esphome
-    version: 25.12.0
+    version: 25.16.0
     includeCRDs: true
     valuesInline:
+      image:
+        repository: ghcr.io/esphome/esphome
+        pullPolicy: IfNotPresent
+        tag: 2026.9.0@sha256:f6509fcf917a732fd80058567b237d5b9286b9dc6c8dde1b655fbb69ebd600ad
       TZ: America/Los_Angeles
       podOptions:
+        defaultAffinity: false
         hostNetwork: true
+      securityContext:
+        container:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          privileged: false
+          runAsNonRoot: true
+          runAsGroup: 568
+          runAsUser: 568
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  ESPHOME_BUILD_PATH: /build
+                  CCACHE_DIR: /cache/ccache
+                  ESPHOME_DATA_DIR: /cache/data
+                  PLATFORMIO_CORE_DIR: /cache/pio
+                  PLATFORMIO_PLATFORMS_DIR: /cache/platformio/platforms
+                  PLATFORMIO_PACKAGES_DIR: /cache/platformio/packages
+                  PLATFORMIO_CACHE_DIR: /cache/platformio/cache
+                  ESPHOME_ESP_IDF_PREFIX: /cache/sdks/idf
+                  ESPHOME_SDK_NRF_PREFIX: /cache/sdks/nrf
+                  ESPHOME_TRUSTED_DOMAINS: esphome.sobrinho.pt
+                  XDG_CACHE_HOME: /cache/.cache
+                  ESPHOME_DASHBOARD_USE_PING: true
+                  ESPHOME_DASHBOARD_RELATIVE_URL: /
       persistence:
         config:
           enabled: true
-          retain: true
-          mountPath: /config
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 256Mi
-        platformio:
-          enabled: true
-          retain: true
-          mountPath: /root/.platformio
-          storageClass: "ceph-block"
-          accessMode: ReadWriteOnce
-          size: 8Gi
+          existingClaim: esphome-config
         cache:
           enabled: true
           retain: true
-          storageClass: "ceph-block"
+          storageClass: local-data
           accessMode: ReadWriteOnce
           size: 24Gi
         build:
           enabled: true
-          type: emptyDir
+          retain: true
+          storageClass: local-data
+          accessMode: ReadWriteOnce
           size: 12Gi
         dev:
           enabled: true
@@ -51,12 +74,28 @@ helmCharts:
           path: /mnt/library/dev/esphome/components
           mountPath: /development/components
       resources:
-        limits:
-          cpu: 750m
-          memory: 1Gi
         requests:
-          cpu: 500m
-          memory: 200Mi
+          cpu: 200m
+          memory: 128Mi
+        limits:
+          cpu: 0
+          memory: 5Gi
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: esphome-kopiur
+    namespace: esphome
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        esphome-config:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 256Mi
+          storageClass: local-data
 
 components:
   - ../../../../components/managed-sablier

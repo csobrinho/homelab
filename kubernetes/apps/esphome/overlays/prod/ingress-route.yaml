@@ -27,6 +27,7 @@ spec:
   secretName: esphome-cert
   dnsNames:
     - esphome.sobrinho.pt
+    - "*.esphome.sobrinho.pt"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
