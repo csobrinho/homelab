@@ -17,3 +17,5 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
+      podOptions:
+        defaultAffinity: false
