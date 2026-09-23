@@ -110,7 +110,6 @@ params:
   net.core.default_qdisc: fq
   net.core.rmem_max: "67108864"
   net.core.wmem_max: "67108864"
-  net.ipv4.ip_local_port_range: 1024 65535
   net.ipv4.neigh.default.gc_thresh1: "4096"
   net.ipv4.neigh.default.gc_thresh2: "8192"
   net.ipv4.neigh.default.gc_thresh3: "16384"
@@ -121,10 +120,7 @@ params:
   net.ipv4.tcp_notsent_lowat: "131072"
   net.ipv4.tcp_rmem: 4096 131072 67108864
   net.ipv4.tcp_slow_start_after_idle: "0"
-  net.ipv4.tcp_window_scaling: "1"
   net.ipv4.tcp_wmem: 4096 65536 67108864
-  sunrpc.tcp_max_slot_table_entries: "128"
-  sunrpc.tcp_slot_table_entries: "128"
   user.max_user_namespaces: "11255"
 ---
 apiVersion: v1alpha1
