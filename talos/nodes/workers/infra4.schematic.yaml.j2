@@ -9,6 +9,8 @@
 # 595.91.07 for v1.14.0-rc.2); the pair must share a driver version. Re-check
 # names/versions on the Image Factory and bump alongside Talos upgrades.
 customization:
+  extraKernelArgs:
+    - console=ttyS0,115200n8
   systemExtensions:
     officialExtensions:
       - siderolabs/qemu-guest-agent

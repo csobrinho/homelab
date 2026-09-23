@@ -1,20 +1,15 @@
-# Provisions the Talos VMs on Proxmox - control plane (var.nodes) and workers
-# (var.workers). Talos machine config is NOT managed here; it is rendered and
-# applied with `just talos apply-node <node>` once a VM is up on the Image
-# Factory ISO.
+# Provisions the Talos VMs on Proxmox (control plane + workers). Talos machine
+# config itself is applied separately with `just talos apply-node <node>`.
 
 locals {
-  # Arch stem (metal-amd64) is part of the name: the schematic ID is the same for
-  # every arch of a schematic, so without it an arm64 ISO would collide with the
-  # amd64 one on Proxmox storage.
+  # Arch stem in the name: schematic ID is shared across arches, so without it
+  # an arm64 ISO would collide with amd64 on Proxmox storage.
   talos_iso_file_name = "talos-${var.talos_version}-${substr(var.talos_schematic_id, 0, 8)}-${trimsuffix(var.talos_image, ".iso")}.iso"
   talos_iso_url       = "https://factory.talos.dev/image/${var.talos_schematic_id}/${var.talos_version}/${var.talos_image}"
 
-  # Every VM is built from the same resource block below; role only changes the
-  # tags, the sizing defaults, and whether PCI devices are passed through. Fold
-  # both input maps into one normalised map so that block is written once.
-  #   - var.nodes   : control plane, uniform sizing (the cpu_cores/memory/disk_size vars)
-  #   - var.workers : per-node cpu_cores/memory/disk_size overrides + optional hostpci
+  # One resource block for every VM; role just changes tags/sizing/hostpci.
+  #   - var.nodes   : control plane, uniform sizing
+  #   - var.workers : per-node cpu_cores/memory/disk_size overrides + hostpci
   vms = merge(
     {
       for name, n in var.nodes : name => {
@@ -43,8 +38,7 @@ locals {
   )
 }
 
-# Pull the schematic ISO straight onto Proxmox storage via the PVE download-url API.
-# Only while var.attach_iso is set - see the cdrom block and that variable.
+# Pulls the schematic ISO onto Proxmox storage. Only while var.attach_iso.
 resource "proxmox_download_file" "talos" {
   count = var.attach_iso ? 1 : 0
 
@@ -54,7 +48,7 @@ resource "proxmox_download_file" "talos" {
   file_name    = local.talos_iso_file_name
   url          = local.talos_iso_url
 
-  # The schematic ID already pins the contents; never silently re-download.
+  # Schematic ID already pins the contents; never silently re-download.
   overwrite = false
 }
 
@@ -73,10 +67,11 @@ resource "proxmox_virtual_environment_vm" "node" {
   on_boot         = var.start_on_boot
   stop_on_destroy = true
 
-  # Never let the provider silently power-cycle a node to apply a change - an
-  # offline-requiring update fails the apply instead. On the control plane that
-  # is what keeps etcd members going down one at a time, deliberately (use
-  # -target); on a worker it keeps a reboot from yanking running workloads.
+  # Headless, no console interaction - drop the emulated USB tablet.
+  tablet_device = false
+
+  # Never silently power-cycle a node - fail the apply instead (use -target
+  # for an intentional one-at-a-time change).
   reboot_after_update = false
 
   agent {
@@ -85,24 +80,32 @@ resource "proxmox_virtual_environment_vm" "node" {
 
   cpu {
     cores = each.value.cpu_cores
-    # "host" (var.cpu_type default): best performance for the plain nodes, and
-    # required for GPU passthrough / for the NVIDIA driver to see the real CPU.
+    # "host": best perf, and required for GPU passthrough / NVIDIA driver.
     type = var.cpu_type
     numa = var.cpu_numa
   }
 
   memory {
-    # No `floating` -> ballooning off, so guest RAM is pinned. Required for any
-    # node with hostpci (VFIO locks the whole guest map anyway).
+    # No `floating` -> ballooning off, guest RAM pinned (required with hostpci).
     dedicated = each.value.memory
   }
 
-  # Pairs with talos WatchdogTimerConfig (/dev/watchdog0): the hypervisor resets
-  # the guest if the Talos watchdog stops being petted.
+  # Pairs with talos WatchdogTimerConfig: hypervisor resets the guest if the
+  # Talos watchdog stops being petted.
   watchdog {
     enabled = true
     model   = "i6300esb"
     action  = "reset"
+  }
+
+  # No display needed; drops the VGA framebuffer device (and its idle-power
+  # redraw cost) in favor of a plain serial console.
+  serial_device {
+    device = "socket"
+  }
+
+  vga {
+    type = "serial0"
   }
 
   dynamic "efi_disk" {
@@ -113,8 +116,7 @@ resource "proxmox_virtual_environment_vm" "node" {
     }
   }
 
-  # local-vms is a ZFS mirror (zfspool): disks are raw zvols, so file_format is
-  # left computed rather than pinned.
+  # local-vms is a ZFS zvol pool; file_format left computed rather than pinned.
   disk {
     datastore_id = var.vm_datastore_id
     interface    = "scsi0"
@@ -124,10 +126,9 @@ resource "proxmox_virtual_environment_vm" "node" {
     ssd          = true
   }
 
-  # GPU / PCI passthrough (workers only; empty for the control plane). Devices
-  # must already be bound to vfio-pci on the Proxmox host, with IOMMU + "above
-  # 4G decoding" / ReBAR enabled in its BIOS. `mapping` (a PVE resource mapping)
-  # rather than `id` so an API token can set it - see var.workers.
+  # GPU passthrough (workers only). Devices must already be bound to vfio-pci,
+  # with IOMMU + above-4G decoding enabled. `mapping` (not `id`) so an API
+  # token can set it.
   dynamic "hostpci" {
     for_each = { for h in each.value.hostpci : h.device => h }
     content {
@@ -139,8 +140,7 @@ resource "proxmox_virtual_environment_vm" "node" {
     }
   }
 
-  # Only while var.attach_iso is set (first boot / node rebuild). q35 exposes
-  # ide0/ide2 only.
+  # First boot / rebuild only. q35 exposes ide0/ide2 only.
   dynamic "cdrom" {
     for_each = var.attach_iso ? [1] : []
     content {
@@ -149,9 +149,7 @@ resource "proxmox_virtual_environment_vm" "node" {
     }
   }
 
-  # Empty disk on first boot -> falls through to the ISO, which installs Talos to
-  # scsi0; subsequent boots come off scsi0 directly. Once var.attach_iso is off
-  # there is no ide2 to list.
+  # Falls through to the ISO on first boot; scsi0 directly after.
   boot_order = var.attach_iso ? ["scsi0", "ide2"] : ["scsi0"]
 
   network_device {
