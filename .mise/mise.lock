@@ -437,6 +437,53 @@ checksum = "sha256:bba299f1877913979831543a008f2e104995d2ea4ac8f23d7f49c0444857d
 url = "https://github.com/derailed/k9s/releases/download/v0.51.0/k9s_Windows_amd64.zip"
 url_api = "https://api.github.com/repos/derailed/k9s/releases/assets/440224317"
 
+[[tools.kubecolor]]
+version = "0.8.0"
+backend = "aqua:kubecolor/kubecolor"
+specifiers = ["0.8.0"]
+
+[tools.kubecolor."platforms.linux-arm64"]
+checksum = "sha256:8a53d33769dc2c984338973f6490ffdad60f130d60d172bef8109a76332c0c60"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890534"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.linux-arm64-musl"]
+checksum = "sha256:8a53d33769dc2c984338973f6490ffdad60f130d60d172bef8109a76332c0c60"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890534"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.linux-x64"]
+checksum = "sha256:87289f8641ba18f4cb491ad6b30baa0da5f769c688aa7ce05489604da6099b28"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890521"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.linux-x64-musl"]
+checksum = "sha256:87289f8641ba18f4cb491ad6b30baa0da5f769c688aa7ce05489604da6099b28"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890521"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.macos-arm64"]
+checksum = "sha256:c3a771a74dc1ac9b74c5b738e85715f530c660d27e480f8d9c859d8cbff33984"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890494"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.macos-x64"]
+checksum = "sha256:f97f55b7bdfdc6836e332717846c152643c7271ebf2d7c39fa69f657f86a9715"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890496"
+provenance = "github-attestations"
+
+[tools.kubecolor."platforms.windows-x64"]
+checksum = "sha256:64e1b12fc56662bf4bb67a760a396b0d7306c30774a52714e26c9ac075cef20b"
+url = "https://github.com/kubecolor/kubecolor/releases/download/v0.8.0/kubecolor_0.8.0_windows_amd64.zip"
+url_api = "https://api.github.com/repos/kubecolor/kubecolor/releases/assets/574890550"
+provenance = "github-attestations"
+
 [[tools.kubeseal]]
 version = "0.40.0"
 backend = "aqua:bitnami/sealed-secrets"
