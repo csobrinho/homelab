@@ -60,7 +60,6 @@ resources:
   # - apps/n8n-app.yaml
   - apps/node-red-app.yaml
   # - apps/ollama-app.yaml
-  # - apps/overseerr-app.yaml
   - apps/plex-app.yaml
   - apps/prowlarr-app.yaml
   # - apps/qbittorrent-app.yaml
