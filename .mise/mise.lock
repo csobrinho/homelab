@@ -198,44 +198,44 @@ url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-win
 url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358777"
 
 [[tools.claude]]
-version = "2.1.280"
+version = "2.1.282"
 backend = "aqua:anthropics/claude-code"
-specifiers = ["2.1.280"]
+specifiers = ["2.1.282"]
 
 [tools.claude."platforms.linux-arm64"]
-checksum = "sha256:e6cdd9f07fba8d181b7d6d0dedd9406f1be6ba4f5302a56a61ab4ebb43c5a569"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709747"
+checksum = "sha256:62ed261b4ad0838eac468f119524ba58502bc09da8152eddce9194229ba20ac3"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282787"
 
 [tools.claude."platforms.linux-arm64-musl"]
-checksum = "sha256:3a5ebe41b78d94ea2bfafee539dde4c9a53afc9658abbc72d918c45477524b28"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-linux-arm64-musl.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709746"
+checksum = "sha256:c7206ee0e5fc0f898b5bc337812f54086f976b824f006e776eef1d6106fbe277"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-linux-arm64-musl.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282790"
 
 [tools.claude."platforms.linux-x64"]
-checksum = "sha256:4239c476881f46f5bd2cccee97c10b1c8073f4ab4ae40e3c829493210e757764"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709942"
+checksum = "sha256:2972e823268974dd084734d5f69fedc227eb4cb3bc9c398ceb7776280e836991"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282940"
 
 [tools.claude."platforms.linux-x64-musl"]
-checksum = "sha256:35e3435305e5608abac726ca2ced1f1a651980dff43099606628c10a44d05101"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-linux-x64-musl.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709745"
+checksum = "sha256:27b59bd660e6cd534dbb24ee81cd8d792b8a56ea153467ec30607c75f64417b5"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-linux-x64-musl.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282785"
 
 [tools.claude."platforms.macos-arm64"]
-checksum = "sha256:872a1fa1f770165202bfa0e1771a8b02ce0a13b5f6de4f4489ec4ff268946b56"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-darwin-arm64.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709751"
+checksum = "sha256:09e4c31cbd44ddcf95d1157533f3f66fd630da11a8e115f3fc678110cb19ee24"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282789"
 
 [tools.claude."platforms.macos-x64"]
-checksum = "sha256:96c54208699e555f67da028f12d7ab594b6bbb844b5d65b47640c086c65ad959"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-darwin-x64.tar.gz"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709749"
+checksum = "sha256:a182bc43e63421f8a89e903d5e3a3eff7cf8a54e8774b05956ccacbc21c9352d"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-darwin-x64.tar.gz"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282788"
 
 [tools.claude."platforms.windows-x64"]
-checksum = "sha256:907679d82257d07c75088052553ad8c0cd2813e588a79e2c965281e9c50f5977"
-url = "https://github.com/anthropics/claude-code/releases/download/v2.1.280/claude-win32-x64.zip"
-url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/581709967"
+checksum = "sha256:01e1945a47291e16c979c5b8da9e459bb8b0e51a02164d59b67889cff4dd854b"
+url = "https://github.com/anthropics/claude-code/releases/download/v2.1.282/claude-win32-x64.zip"
+url_api = "https://api.github.com/repos/anthropics/claude-code/releases/assets/586282969"
 
 [[tools."github:mitsuhiko/minijinja"]]
 version = "2.24.0"
