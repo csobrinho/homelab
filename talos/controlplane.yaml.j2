@@ -28,6 +28,9 @@ apiVersion: v1alpha1
 kind: KubeNodeConfig
 labels:
   node-role.kubernetes.io/control-plane: ""
+# Keep app workloads on the workers; CP VMs only have 8 GiB.
+taints:
+  node-role.kubernetes.io/control-plane: NoSchedule
 ---
 apiVersion: v1alpha1
 kind: KubeAPIServerConfig
