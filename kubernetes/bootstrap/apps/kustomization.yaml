@@ -72,6 +72,7 @@ resources:
   - apps/sonarr-app.yaml
   # - apps/streamflow-app.yaml
   - apps/supermarket-app.yaml
+  - apps/talos-backup-app.yaml
   - apps/tautulli-app.yaml
   # - apps/teamarr-app.yaml
   - apps/unpackerr-app.yaml
