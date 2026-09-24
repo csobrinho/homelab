@@ -15,7 +15,7 @@ spec:
       kind: Rule
       services:
         - name: actual-budget
-          port: main
+          port: http
   tls:
     secretName: actual-budget-cert
 ---

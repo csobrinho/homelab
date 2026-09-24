@@ -33,7 +33,7 @@ resources:
   - apps/snapshot-controller-app.yaml
 
   # sync-wave: 0
-  # - apps/actual-budget-app.yaml
+  - apps/actual-budget-app.yaml
   - apps/apt-cacher-ng-app.yaml
   # - apps/bambuddy-app.yaml
   - apps/bazarr-app.yaml
