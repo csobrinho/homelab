@@ -76,7 +76,6 @@ resources:
   - apps/tautulli-app.yaml
   # - apps/teamarr-app.yaml
   - apps/unpackerr-app.yaml
-  # - apps/velero-app.yaml
   - apps/whatsapp-app.yaml
   - apps/windmill-app.yaml
   - apps/xfinity-usage-app.yaml

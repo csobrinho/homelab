@@ -54,13 +54,6 @@ helmCharts:
           resource.customizations.ignoreDifferences.apps_DaemonSet: |
             jsonPointers:
             - /spec/template/metadata/annotations/reloader.stakater.com~1last-reloaded-from
-          resource.exclusions: |
-            - apiGroups:
-              - "velero.io"
-              kinds:
-              - "Backup"
-              clusters:
-              - "*"
         rbac:
           policy.csv: |
             # Global monitoring role with read access to everything
