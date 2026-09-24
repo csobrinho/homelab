@@ -63,7 +63,7 @@ helmCharts:
             app:
               image:
                 repository: ghcr.io/maziggy/bambuddy
-                tag: 1.2.5.3@sha256:c670164aaa3b0c5af715ca00e9745cdf3a4d7d337fc11d96fc85180371952698
+                tag: 1.2.5.6@sha256:38ab9d681550c40ac4025892e34eb7bc39cce4e84e9ab507b144b345a29ff367
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
