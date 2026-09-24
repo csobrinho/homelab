@@ -37,6 +37,7 @@ helmCharts:
         enabled: true
         serviceMonitor:
           enabled: true
+          scrapeTimeout: 60
       validator:
         plugin:
           env:
