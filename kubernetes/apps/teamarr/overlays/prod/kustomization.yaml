@@ -6,5 +6,21 @@ resources:
   - ../../base
   - deployment.yaml
   - ingress-route.yaml
-  - pvc.yaml
   - service.yaml
+
+helmCharts:
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: teamarr-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        teamarr-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 512Mi
+          storageClass: local-db

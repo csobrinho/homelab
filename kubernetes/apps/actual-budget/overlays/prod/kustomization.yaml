@@ -1,5 +1,5 @@
 # From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
-# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -15,7 +15,6 @@ helmCharts:
     namespace: actual-budget
     valuesFile: values-empty.yaml
     valuesInline:
-      # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
       controllers:
         app:
           revisionHistoryLimit: 0
@@ -94,7 +93,6 @@ helmCharts:
     namespace: actual-budget
     version: 0.1.0
     valuesInline:
-      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
       uid: 568
       gid: 568
       persistence:

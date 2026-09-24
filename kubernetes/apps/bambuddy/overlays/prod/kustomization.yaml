@@ -91,9 +91,6 @@ helmCharts:
                   memory: 512Mi
         slicers:
           strategy: Recreate
-          pod:
-            nodeSelector:
-              kubernetes.io/arch: "amd64"
           defaultContainerOptions:
             securityContext:
               allowPrivilegeEscalation: false
@@ -136,12 +133,8 @@ helmCharts:
                   cpu: 200m
                   memory: 512Mi
       persistence:
-        data:
-          type: persistentVolumeClaim
-          accessMode: ReadWriteOnce
-          size: 10Gi
-          storageClass: ceph-block
-          retain: true
+        bambuddy-data:
+          existingClaim: bambuddy-data
           advancedMounts:
             main:
               main:
@@ -156,13 +149,30 @@ helmCharts:
             main:
               main:
                 - path: /app/logs
-        data-bambustudio:
-          type: persistentVolumeClaim
-          accessMode: ReadWriteOnce
-          size: 4Gi
-          storageClass: ceph-block
-          retain: true
+        bambustudio-data:
+          existingClaim: bambustudio-data
           advancedMounts:
             slicers:
               bambustudio:
                 - path: /app/data
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: bambuddy-kopiur
+    namespace: tools
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        bambuddy-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 10Gi
+          storageClass: local-db
+        bambustudio-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 4Gi
+          storageClass: local-data
