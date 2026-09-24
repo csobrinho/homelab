@@ -14,7 +14,7 @@ helmCharts:
     repo: https://kubernetes-sigs.github.io/node-feature-discovery/charts
     releaseName: node-feature-discovery
     namespace: tools
-    version: 0.18.3
+    version: 0.19.0
     includeCRDs: true
     valuesInline:
       prometheus:
