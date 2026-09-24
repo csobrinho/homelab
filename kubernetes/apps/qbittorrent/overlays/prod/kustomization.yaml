@@ -28,6 +28,12 @@ helmCharts:
           server: infra-vm
           path: /mnt/library
           mountPath: /data
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 0
+          memory: 512Mi
       gluetunImage:
         repository: ghcr.io/qdm12/gluetun
         tag: v3.41
