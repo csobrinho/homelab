@@ -13,9 +13,10 @@ disk_size = 64   # GiB
 # --- Worker sizing (defaults; override per node in the workers map below) -------
 # Host budget: 128 threads / 512 GiB, 2x RTX 5090. Reserve ~8 threads / ~48 GiB
 # for Proxmox + ZFS ARC; control plane takes 12 threads / 24 GiB; infra4 (GPU)
-# is pinned at 12 threads / 64 GiB. That leaves the three general workers at
-# 24 threads / 96 GiB each with headroom to spare.
-worker_cpu_cores = 24
+# is pinned at 12 threads / 64 GiB. General workers at 16 threads / 96 GiB each -
+# 16 vCPUs = 8 physical cores = exactly one whole CCD per worker via `qm
+# affinity`, keeping CCD5-7 fully unpinned for idle power. See MIGRATION.md.
+worker_cpu_cores = 16
 worker_memory    = 98304 # 96 GiB
 worker_disk_size = 200   # GiB
 

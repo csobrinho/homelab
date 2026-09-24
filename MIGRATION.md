@@ -189,3 +189,44 @@ modules` on first boot) and is tainted `nvidia.com/gpu=present:NoSchedule`.
 - **`tofu/terraform.tfstate`** is committed, encrypted (OpenTofu native
   `aes_gcm`/`pbkdf2`, passphrase in `proxmox.sops.yaml`). Re-commit after every
   `just tofu apply`. Losing the age key = unrecoverable state and secrets.
+- **CPU affinity (idle-power tuning, 2026-09-23):** host is a single-socket EPYC
+  7J13, 8 CCDs × 8 physical cores (64c/128t, SMT siblings are `N`/`N+64` —
+  confirmed via `/sys/.../cache/index3/shared_cpu_list`, not the interleaved
+  scheme). `qm set <id> -affinity <cpuset>` only writes config — confirmed by
+  testing live on infra1: `taskset -pc <pid>` was unchanged after `qm set`
+  with the VM still running. It only takes effect on the next VM start (full
+  stop+start, not a guest-level reboot — same as the `vga`/`tablet_device`
+  change below, since it's applied at QEMU-process-launch time).
+  Goal: pack pinned work onto as few CCDs as possible so whole CCDs can stay
+  fully idle (CCD-level power gating saves far more than per-core C-states —
+  this host's `cpuidle` only exposes shallow C1/C2, no C6, likely a BIOS power
+  profile limit, unconfirmed). Layout:
+    - CCD0 (`0-7,64-71`): all 3 control-plane nodes together (`infra1: 0-1,64-65`,
+      `infra2: 2-3,66-67`, `infra3: 4-5,68-69`) — keeps etcd on one L3 domain,
+      nothing else pinned here.
+    - CCD1 (`8-15,72-79`): infra4 (GPU worker) alone, isolated (`8-13,72-77`).
+    - CCD2/3/4: infra5/6/7 one full CCD each, exclusive (`16-23,80-87` /
+      `24-31,88-95` / `32-39,96-103`). Workers dropped from 24 to 16 vCPUs
+      (`worker_cpu_cores` in `terraform.tfvars`) specifically so each one is
+      exactly 8 physical cores = one whole CCD, instead of 12 (1.5 CCDs,
+      forcing a shared boundary between workers). Cluster had plenty of
+      headroom free, so this was a deliberate capacity-for-power tradeoff,
+      not just a pinning detail.
+    - CCD5, CCD6, CCD7: fully unpinned — 24 physical cores / 48 threads with
+      nothing scheduled there by any VM.
+  `cpu.affinity` can't be tofu-managed at all: Proxmox restricts writing it to
+  password/ticket auth, API tokens (including `tofu@pve!controlplane`) can
+  never set it, no privilege fixes this (unlike `hostpci`'s PCI-mapping
+  workaround). Confirmed against a live apply and matches a known upstream
+  report (bpg/terraform-provider-proxmox#1180). `main.tf` has
+  `lifecycle { ignore_changes = [cpu[0].affinity] }` on the VM resource so
+  `tofu apply` stops trying to reconcile it back to unset and failing. Stays
+  purely imperative via `qm set <id> -affinity <cpuset>`, applied by hand
+  after any resize.
+    - Leftover cracks in CCD0/CCD1 (`6-7,14-15,70-71,78-79`, 4 cores) are the
+      host/ZFS ARC reserve — not pinned to anything, just left unclaimed.
+    - CCD7 left fully untouched — the actual power-gating candidate.
+  Tried via `qm set` first (imperative, easy to test/revert); once confirmed
+  to help, port into `tofu/main.tf` as `cpu.affinity` (needs verifying the
+  bpg provider actually exposes that argument — couldn't check in-session,
+  `tofu providers schema` needs the state passphrase).

@@ -163,4 +163,13 @@ resource "proxmox_virtual_environment_vm" "node" {
   operating_system {
     type = "l26"
   }
+
+  # cpu.affinity is managed imperatively (`qm set`), not here - Proxmox
+  # restricts writing it to password/ticket auth, API tokens can't set it at
+  # all (bpg/terraform-provider-proxmox#1180), so tofu can never own this
+  # field. Without ignore_changes, every apply tries to reconcile the live
+  # value back to "unset" and fails the same way. See MIGRATION.md.
+  lifecycle {
+    ignore_changes = [cpu[0].affinity]
+  }
 }
