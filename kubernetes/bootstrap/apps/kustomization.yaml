@@ -3,12 +3,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - apps/actual-budget-app.yaml
+  # - apps/actual-budget-app.yaml
   # - apps/apt-cacher-ng-app.yaml
   - apps/argocd-app.yaml
   - apps/bambuddy-app.yaml
   # - apps/bazarr-app.yaml
-  - apps/bentopdf-app.yaml
+  # - apps/bentopdf-app.yaml
   # - apps/binner-app.yaml
   - apps/cert-manager-app.yaml
   - apps/changedetection-app.yaml
@@ -17,14 +17,14 @@ resources:
   # - apps/cyberchef-app.yaml
   - apps/descheduler-app.yaml
   # - apps/dispatcharr-app.yaml
-  - apps/esphome-app.yaml
-  - apps/esphome-fleet-app.yaml
+  # - apps/esphome-app.yaml
+  # - apps/esphome-fleet-app.yaml
   # - apps/external-dns-app.yaml
   # - apps/external-reverse-proxy-app.yaml
   # - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
   - apps/initial-setup-app.yaml
-  - apps/intel-gpu-plugin-app.yaml
+  # - apps/intel-gpu-plugin-app.yaml
   - apps/ipmi-server-app.yaml
   - apps/it-tools-app.yaml
   - apps/jupyter-app.yaml
@@ -40,7 +40,7 @@ resources:
   # - apps/nvidia-gpu-exporter-app.yaml
   # - apps/nvidia-gpu-operator-app.yaml
   # - apps/ollama-app.yaml
-  - apps/overseerr-app.yaml
+  # - apps/overseerr-app.yaml
   - apps/pihole-app.yaml
   # - apps/plex-app.yaml
   # - apps/prometheus-app.yaml
