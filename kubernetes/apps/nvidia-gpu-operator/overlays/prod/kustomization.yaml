@@ -15,7 +15,7 @@ helmCharts:
     releaseName: gpu-operator
     repo: https://nvidia.github.io/gpu-operator
     includeCRDs: true
-    version: v26.3.1
+    version: v26.7.0
     valuesInline:
       nfd:
         enabled: false # Already installed.
