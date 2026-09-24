@@ -37,3 +37,18 @@ helmCharts:
                   WEBDRIVER_URL: "http://chromium:3000/wd/hub"
                   PLAYWRIGHT_DRIVER_URL: "ws://chromium:3000"
 
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: changedetection-kopiur
+    namespace: tools
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      backup:
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+      persistence:
+        changedetection-io-datastore:
+          existingClaim: true
