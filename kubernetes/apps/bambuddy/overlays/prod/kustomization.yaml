@@ -1,5 +1,5 @@
 # From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
-# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -23,10 +23,10 @@ helmCharts:
           supplementalGroups:
             - *uid
       service:
-        main:
-          controller: main
+        bambuddy:
+          controller: bambuddy
           ports:
-            main:
+            app:
               port: &port-main 8000
               # 3000          Virtual printer bind/detect
               # 3002          Virtual printer bind/detect
@@ -39,10 +39,10 @@ helmCharts:
         bambustudio:
           controller: slicers
           ports:
-            main:
+            app:
               port: &port-bs 3001
       controllers:
-        main:
+        bambuddy:
           strategy: Recreate
           defaultContainerOptions:
             securityContext:
@@ -60,7 +60,7 @@ helmCharts:
               seccompProfile:
                 type: RuntimeDefault
           containers:
-            main:
+            app:
               image:
                 repository: ghcr.io/maziggy/bambuddy
                 tag: 1.2.5.3@sha256:c670164aaa3b0c5af715ca00e9745cdf3a4d7d337fc11d96fc85180371952698
@@ -84,11 +84,11 @@ helmCharts:
                 startup:
                   <<: *probe-main
               resources:
+                requests:
+                  cpu: 100m
+                  memory: 512Mi
                 limits:
                   memory: 2Gi
-                requests:
-                  cpu: 200m
-                  memory: 512Mi
         slicers:
           strategy: Recreate
           defaultContainerOptions:
@@ -127,27 +127,24 @@ helmCharts:
                 startup:
                   <<: *probe-bs
               resources:
-                limits:
-                  memory: 1Gi
                 requests:
                   cpu: 200m
                   memory: 512Mi
+                limits:
+                  memory: 1Gi
       persistence:
         bambuddy-data:
           existingClaim: bambuddy-data
           advancedMounts:
-            main:
-              main:
+            bambuddy:
+              app:
                 - path: /app/data
-        logs:
-          type: persistentVolumeClaim
-          accessMode: ReadWriteOnce
-          size: 512Mi
-          storageClass: ceph-block
-          retain: true
+        bambuddy-logs:
+          type: emptyDir
+          sizeLimit: 512Mi
           advancedMounts:
-            main:
-              main:
+            bambuddy:
+              app:
                 - path: /app/logs
         bambustudio-data:
           existingClaim: bambustudio-data
