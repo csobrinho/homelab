@@ -10,5 +10,5 @@ helmCharts:
     repo: https://prometheus-community.github.io/helm-charts
     releaseName: prometheus-operator-crds
     namespace: prometheus
-    version: 31.0.1
+    version: 32.0.0
     includeCRDs: true
