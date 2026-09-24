@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/csobrinho/homelab/main/kubernetes/fixes/kustomization.schema.json",
+  "title": "Kustomization + bjw-s app-template + kopiur-pvc",
+  "description": "Extends the stock kustomization schema so that helmCharts[].valuesInline is validated against the real chart schema, picked by helmCharts[].name. Entries for charts not listed here fall back to the stock schema's permissive valuesInline (no regression).",
+  "allOf": [
+    { "$ref": "https://www.schemastore.org/kustomization" },
+    {
+      "type": "object",
+      "properties": {
+        "helmCharts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "required": ["name"],
+                  "properties": { "name": { "const": "app-template" } }
+                },
+                "then": {
+                  "properties": {
+                    "valuesInline": {
+                      "$ref": "https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "required": ["name"],
+                  "properties": { "name": { "const": "kopiur-pvc" } }
+                },
+                "then": {
+                  "properties": {
+                    "valuesInline": {
+                      "$ref": "https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
