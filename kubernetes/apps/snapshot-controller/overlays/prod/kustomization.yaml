@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://ghcr.io/home-operations/charts
     releaseName: snapshot-controller
     namespace: kube-system
-    version: 0.1.0
+    version: 0.1.1
     includeCRDs: true
     valuesInline:
       replicaCount: 2
