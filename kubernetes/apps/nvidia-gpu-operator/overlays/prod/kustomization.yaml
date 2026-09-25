@@ -33,11 +33,6 @@ helmCharts:
           create: false
           name: time-slicing-config-all
           default: any
-      dcgmExporter:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-          scrapeTimeout: 60
       validator:
         plugin:
           env:
