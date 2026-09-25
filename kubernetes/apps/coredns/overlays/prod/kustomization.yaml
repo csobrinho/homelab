@@ -61,6 +61,11 @@ helmCharts:
             - name: log
               configBlock: |-
                 class error
+            # Dont resolve domains to IPv6.
+            - name: template
+              parameters: IN AAAA .
+              configBlock: |-
+                rcode NOERROR
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
