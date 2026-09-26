@@ -25,13 +25,6 @@ helmCharts:
           labels:
             io.cilium/lb-pool: pool-infra-plex
           type: LoadBalancer
-      workload:
-        main:
-          podSpec:
-            containers:
-              main:
-                env:
-                  CUDA_DISABLE_PERF_BOOST: "1" # Don't jump to high clocks for NVENC/NVDEC.
       persistence:
         config:
           existingClaim: plex-config
