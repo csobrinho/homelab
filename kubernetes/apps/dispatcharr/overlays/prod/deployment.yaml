@@ -134,11 +134,9 @@ spec:
               mountPath: /data
           resources:
             requests:
-              cpu: 500m
-              nvidia.com/gpu: "1"
+              cpu: 250m
             limits:
               memory: 2Gi
-              nvidia.com/gpu: "1"
           livenessProbe:
             exec:
               command: ["celery", "-A", "dispatcharr", "inspect", "ping"]
