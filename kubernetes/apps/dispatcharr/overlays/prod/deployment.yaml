@@ -32,6 +32,24 @@ spec:
               "-c",
               "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done",
             ]
+        - name: build-nvenc-fix
+          image: gcc:14
+          command:
+            [
+              "gcc",
+              "-shared",
+              "-fPIC",
+              "-O2",
+              "-o",
+              "/shim/libnvenc_fix.so",
+              "/src/nvenc_fix.c",
+              "-ldl",
+            ]
+          volumeMounts:
+            - name: nvenc-fix-src
+              mountPath: /src
+            - name: nvenc-fix
+              mountPath: /shim
       containers:
         - name: dispatcharr
           image: ghcr.io/dispatcharr/dispatcharr:0.31.0@sha256:f81924fa3dbfeb463b3908be7e086bf58aacbd2ba56062bfb555ee3a471acf8f
@@ -82,6 +100,13 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: data
+            - mountPath: /shim
+              name: nvenc-fix
+              readOnly: true
+            - mountPath: /etc/ld.so.preload
+              name: nvenc-fix-src
+              subPath: ld.so.preload
+              readOnly: true
           readinessProbe:
             httpGet:
               path: /api/core/version/
@@ -161,3 +186,8 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: dispatcharr-data
+        - name: nvenc-fix-src
+          configMap:
+            name: nvenc-fix
+        - name: nvenc-fix
+          emptyDir: {}
