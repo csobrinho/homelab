@@ -1,0 +1,264 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# One app-template release per workload (big LLM on gpu1; small LLMs, TTS, STT
+# on gpu0 later). GPU claims come from apps/resource-claims.
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  # OpenAI-compatible API at http://vllm.llm.svc.cluster.local:8000/v1.
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: vllm
+    version: 5.2.1
+    namespace: llm
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        vllm:
+          strategy: Recreate # One GPU; the new pod can't get a claim until the old one is gone.
+          revisionHistoryLimit: 0
+          pod:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: &uid 568
+              runAsGroup: *uid
+              fsGroup: *uid
+              fsGroupChangePolicy: OnRootMismatch
+              supplementalGroups: [*uid]
+              seccompProfile:
+                type: RuntimeDefault
+            resourceClaims:
+              - name: llm-gpu1
+                resourceClaimTemplateName: llm-gpu1 # All of GPU 1.
+            tolerations:
+              - key: nvidia.com/gpu
+                operator: Exists
+                effect: NoSchedule
+          containers:
+            app:
+              image:
+                repository: vllm/vllm-openai # CUDA 13 build; has sm_120 (RTX 5090) kernels.
+                tag: v0.30.0@sha256:8a69ffad015f138d7170c4ddc429e230a3bc1c1719f67e14324749df200a4b90
+                pullPolicy: IfNotPresent
+              # Entrypoint is `vllm serve`.
+              # Qwen3.8-27B in NVFP4 (~22GB on disk, W4A4 on Blackwell) + its built-in
+              # MTP head for speculative decoding + FP8 KV cache: full 256K context
+              # on one 32GB card. TurboQuant KV is known to break with spec decode.
+              #
+              # To try Qwen's official FP8 instead (~31GB, better fidelity):
+              #   - One card: model Qwen/Qwen3.8-27B-FP8, drop --max-model-len to ~16384
+              #     (almost nothing is left for KV).
+              #   - Both cards: claim llm-gpus (pod + container) + --tensor-parallel-size=2.
+              # To try DFlash2 instead of MTP (reported faster by some, needs a vLLM
+              # build with DFlash2 and may require --kv-cache-dtype=auto):
+              #   --speculative-config={"method":"dflash","model":"z-lab/Qwen3.8-27B-DFlash2","num_speculative_tokens":6}
+              args:
+                - nvidia/Qwen3.8-27B-NVFP4
+                - --served-model-name=qwen3.8-27b
+                - --host=0.0.0.0
+                - --port=8000
+                - --max-model-len=262144
+                - --kv-cache-dtype=fp8_e4m3
+                - --gpu-memory-utilization=0.95
+                - --max-num-seqs=4
+                - --enable-prefix-caching
+                - --reasoning-parser=qwen3
+                - --enable-auto-tool-choice
+                - --tool-call-parser=qwen3_coder
+                - '--speculative-config={"method":"mtp","num_speculative_tokens":2}'
+              env:
+                TZ: America/Los_Angeles
+                # Everything cacheable (weights, FlashInfer JIT, Triton, torch.compile)
+                # lives on the models PVC so restarts skip the download/compile.
+                HOME: /models/home
+                HF_HOME: /models/huggingface
+                TORCHINDUCTOR_CACHE_DIR: /models/home/.cache/torchinductor
+                USER: vllm # getpass.getuser() fails for a uid without a passwd entry.
+              probes:
+                liveness: &probe
+                  enabled: true
+                  custom: true
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: &port 8000
+                    periodSeconds: 30
+                    timeoutSeconds: 10
+                    failureThreshold: 5
+                readiness:
+                  <<: *probe
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 3
+                startup:
+                  <<: *probe
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port
+                    # First boot downloads ~22GB and JIT-compiles kernels: allow 1h.
+                    periodSeconds: 20
+                    timeoutSeconds: 5
+                    failureThreshold: 180
+              resources:
+                requests:
+                  cpu: "2"
+                  memory: 16Gi
+                limits:
+                  memory: 40Gi # Weight loading + CUDA graph capture are RAM-hungry.
+                claims:
+                  - name: llm-gpu1
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: false
+                capabilities: { drop: ["ALL"] }
+      service:
+        app:
+          controller: vllm
+          ports:
+            http:
+              port: *port
+      persistence:
+        models:
+          type: persistentVolumeClaim
+          forceRename: vllm-models
+          # Weights are re-downloadable: no kopiur backup.
+          # NVFP4 ~22GB + FP8 ~31GB (to compare) + DFlash drafter ~2GB + compile caches.
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 100Gi
+          retain: true
+          globalMounts:
+            - path: /models
+        shm:
+          type: emptyDir
+          medium: Memory
+          sizeLimit: 8Gi
+          globalMounts:
+            - path: /dev/shm
+        tmp:
+          type: emptyDir
+          globalMounts:
+            - path: /tmp
+
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: open-webui
+    version: 5.2.1
+    namespace: llm
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        open-webui:
+          strategy: Recreate
+          revisionHistoryLimit: 0
+          containers:
+            app:
+              # Runs as root: the image's /app is root-owned and it writes there at startup.
+              image:
+                repository: ghcr.io/open-webui/open-webui
+                tag: v0.11.4@sha256:9591b13f13843c7721c2b8eaf7382846c81b3ffe126526d1888d1fed50c6a33f
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                PORT: &port-webui 8080
+                # Single-user mode. Only valid on a fresh install (no users yet); turning
+                # auth on later needs an admin account created first.
+                WEBUI_AUTH: "False"
+                WEBUI_URL: https://llm.sobrinho.pt
+                # Persist the generated JWT key with the data instead of /app/backend.
+                WEBUI_SECRET_KEY_FILE: /app/backend/data/.webui_secret_key
+                ENABLE_OLLAMA_API: "False"
+                ENABLE_OPENAI_API: "True"
+                OPENAI_API_BASE_URL: http://vllm.llm.svc.cluster.local:8000/v1
+                OPENAI_API_KEY: none # vLLM runs without --api-key.
+                DEFAULT_MODELS: qwen3.8-27b
+                ANONYMIZED_TELEMETRY: "False"
+                DO_NOT_TRACK: "True"
+                SCARF_NO_ANALYTICS: "True"
+              probes:
+                liveness: &probe-webui
+                  enabled: true
+                  custom: true
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port-webui
+                    periodSeconds: 30
+                    timeoutSeconds: 10
+                    failureThreshold: 5
+                readiness:
+                  <<: *probe-webui
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port-webui
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 3
+                startup:
+                  <<: *probe-webui
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port-webui
+                    # First boot downloads the RAG embedding model.
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 512Mi
+                limits:
+                  memory: 4Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+      service:
+        app:
+          controller: open-webui
+          ports:
+            http:
+              port: *port-webui
+      persistence:
+        data:
+          existingClaim: open-webui-data
+          globalMounts:
+            - path: /app/backend/data
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: open-webui-kopiur
+    namespace: llm
+    version: 0.1.0
+    valuesInline:
+      persistence:
+        open-webui-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          storageClass: local-data
+      backup: # Must run as root.
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0
+      populate:
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0

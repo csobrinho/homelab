@@ -54,6 +54,7 @@ resources:
   # - apps/jupyter-app.yaml
   - apps/keda-app.yaml
   - apps/lidarr-app.yaml
+  - apps/llm-app.yaml
   - apps/mealie-app.yaml
   - apps/mosquitto-app.yaml
   - apps/mqtt-explorer-app.yaml
