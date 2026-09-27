@@ -1,0 +1,21 @@
+# Shared by all transcoding pods (resourceClaimName: transcode-gpu), so they
+# land on the same GPU (0) and share one 1Gi request. spec is immutable.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaim
+metadata:
+  name: transcode-gpu
+  namespace: media
+spec:
+  devices:
+    requests:
+      - name: gpu
+        exactly:
+          deviceClassName: gpu.nvidia.com
+          allocationMode: ExactCount
+          count: 1
+          capacity:
+            requests:
+              memory: 1Gi
+          selectors:
+            - cel:
+                expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:02:00.0'

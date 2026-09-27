@@ -29,7 +29,6 @@ helmCharts:
                   limits:
                     cpu: "3"
                     memory: 26Gi
-                    nvidia.com/gpu: 2
                   requests:
                     cpu: 500m
                     memory: 2Gi
@@ -38,7 +37,6 @@ helmCharts:
                   OLLAMA_NUM_THREADS: "4"
                   OLLAMA_MAX_LOADED_MODELS: "2"
                   OLLAMA_DEBUG: "true"
-                  NVIDIA_VISIBLE_DEVICES: all
             runtimeClassName: nvidia
             tolerations:
               - key: nvidia.com/gpu
@@ -63,3 +61,21 @@ helmCharts:
           retain: true
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
+
+patches:
+  # GPU claim; TrueCharts can't set resourceClaims.
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/resourceClaims
+        value:
+          - name: gpu
+            resourceClaimTemplateName: llm-gpus # or llm-gpu0 / llm-gpu1
+      - op: add
+        path: /spec/template/spec/containers/0/resources/claims
+        value:
+          - name: gpu
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: ollama

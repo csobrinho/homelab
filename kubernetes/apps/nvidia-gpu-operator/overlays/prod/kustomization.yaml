@@ -6,7 +6,7 @@ namespace: nvidia-gpu-operator
 
 resources:
   - ../../base
-  - time-slicing-config-all.yaml
+  - dcgm-exporter-dra-rbac.yaml
   - kernel-module-params.yaml
 
 helmCharts:
@@ -27,14 +27,44 @@ helmCharts:
         enabled: false
       hostPaths:
         driverInstallDir: /usr/local # where Talos puts the driver.
+      # Off: dra-driver-nvidia-gpu (below) allocates GPUs; both would double-book.
       devicePlugin:
-        enabled: true
-        config:
-          create: false
-          name: time-slicing-config-all
-          default: any
+        enabled: false
+      dcgmExporter:
+        env:
+          # Pod labels via ResourceClaims; needs dcgm-exporter-dra-rbac.yaml.
+          - name: KUBERNETES_ENABLE_DRA
+            value: "true"
       validator:
         plugin:
           env:
             - name: TZ
               value: "America/Los_Angeles"
+
+  # From https://github.com/kubernetes-sigs/dra-driver-nvidia-gpu/blob/main/deployments/helm/dra-driver-nvidia-gpu/values.yaml
+  # Standalone: the operator's GPUCluster CR can't set driver root /usr/local.
+  - name: dra-driver-nvidia-gpu
+    namespace: nvidia-gpu-operator
+    releaseName: dra-driver-nvidia-gpu
+    repo: oci://registry.k8s.io/dra-driver-nvidia/charts
+    version: 0.5.0
+    includeCRDs: false # Shipped by gpu-operator.
+    valuesInline:
+      nvidiaDriverRoot: /usr/local # where Talos puts the driver.
+      # kustomize renders offline; can't autodetect.
+      resourceApiVersion: resource.k8s.io/v1
+      # Required ack that devicePlugin is off.
+      gpuResourcesEnabledOverride: true
+      resources:
+        gpus:
+          enabled: true
+        computeDomains:
+          enabled: false # Multi-node NVLink only.
+      # Claims share a GPU by capacity.requests.memory (min 1Mi; omitted = whole
+      # card). Scheduling only, not enforced.
+      featureGates:
+        ConsumableShares: true
+      consumableShares: memory
+      kubeletPlugin:
+        nodeSelector:
+          nvidia.com/gpu.present: "true"

@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: resource-claims
+  namespace: argocd
+spec:
+  # No namespace: each claim sets its own; consumer apps create them.
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/resource-claims/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

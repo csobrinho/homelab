@@ -1,0 +1,73 @@
+# LLM GPU claims (ollama, vllm). RTX 5090 = 32606Mi each.
+#   llm-gpu0: GPU 0 minus transcode's 1Gi (31582Mi).
+#   llm-gpu1: all of GPU 1.
+#   llm-gpus: both.
+# GPU 0 = 0000:02:00.0 (host 81:00, slot 7, top card).
+# GPU 1 = 0000:01:00.0 (host 01:00, slot 5, lower card). spec is immutable.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: llm-gpu0
+  namespace: llm
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 1
+            capacity:
+              requests:
+                memory: 31582Mi
+            selectors:
+              - cel:
+                  expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:02:00.0'
+---
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: llm-gpu1
+  namespace: llm
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 1
+            selectors:
+              - cel:
+                  expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:01:00.0'
+---
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: llm-gpus
+  namespace: llm
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu0
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 1
+            capacity:
+              requests:
+                memory: 31582Mi
+            selectors:
+              - cel:
+                  expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:02:00.0'
+        - name: gpu1
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 1
+            selectors:
+              - cel:
+                  expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:01:00.0'

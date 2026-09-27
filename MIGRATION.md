@@ -152,8 +152,13 @@ modules` on first boot) and is tainted `nvidia.com/gpu=present:NoSchedule`.
   (`driver.usePrecompiled`, `toolkit.enabled`, k3s containerd paths). On Talos
   the extension already ships the driver + toolkit + `nvidia` RuntimeClass, so
   flip to `driver.enabled: false`, `toolkit.enabled: false`, drop the k3s
-  `CONTAINERD_*` env, keep the device plugin + `time-slicing-config-all` +
-  dcgm-exporter. Do this as part of wave E (ArgoCD), not before.
+  `CONTAINERD_*` env, keep dcgm-exporter. Do this as part of wave E (ArgoCD), not before.
+  GPUs are allocated via **DRA**: device plugin off, `dra-driver-nvidia-gpu`
+  (`nvidiaDriverRoot: /usr/local`, `consumableShares: memory`). Claims live in
+  `apps/resource-claims`: `media/transcode-gpu` (GPU 0, 1Gi, shared by all
+  transcoders) and `llm/llm-gpu0|llm-gpu1|llm-gpus`. **Cutover:** scale GPU
+  consumers to 0, sync the operator, confirm `nvidia.com/gpu` allocatable is `0`
+  and a `gpu.nvidia.com` ResourceSlice exists, then sync the consumers.
 - **RPi5 workers** (arm64): not tofu — flash the Talos arm64 SBC image. Needs an
   arm64 schematic (`nodes/workers/<node>.schematic.yaml.j2`) and arm64-safe
   workload scheduling (`kubernetes.io/arch` nodeAffinity or multi-arch images).

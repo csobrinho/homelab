@@ -57,10 +57,10 @@ spec:
           resources:
             requests:
               cpu: 500m
-              nvidia.com/gpu: "1"
             limits:
               memory: 2Gi
-              nvidia.com/gpu: "1"
+            claims:
+              - name: transcode-gpu
           ports:
             - containerPort: 9191
               name: main
@@ -169,6 +169,9 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 5
             failureThreshold: 4
+      resourceClaims:
+        - name: transcode-gpu
+          resourceClaimName: transcode-gpu
       tolerations:
         - effect: NoSchedule
           key: nvidia.com/gpu
