@@ -1,5 +1,5 @@
 # From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
-# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -48,8 +48,10 @@ helmCharts:
                 pullPolicy: IfNotPresent
               # Entrypoint is `vllm serve`.
               # Qwen3.8-27B in NVFP4 (~22GB on disk, W4A4 on Blackwell) + its built-in
-              # MTP head for speculative decoding + FP8 KV cache: full 256K context
-              # on one 32GB card. TurboQuant KV is known to break with spec decode.
+              # MTP head for speculative decoding + FP8 KV cache on one 32GB card.
+              # Weights take ~20.7GiB, leaving ~6GiB of KV: enough for ~150K tokens,
+              # not the full 256K (needs ~9.1GiB). TurboQuant KV is known to break
+              # with spec decode.
               #
               # To try Qwen's official FP8 instead (~31GB, better fidelity):
               #   - One card: model Qwen/Qwen3.8-27B-FP8, drop --max-model-len to ~16384
@@ -63,9 +65,9 @@ helmCharts:
                 - --served-model-name=qwen3.8-27b
                 - --host=0.0.0.0
                 - --port=8000
-                - --max-model-len=262144
+                - --max-model-len=131072
                 - --kv-cache-dtype=fp8_e4m3
-                - --gpu-memory-utilization=0.95
+                - --gpu-memory-utilization=0.97
                 - --max-num-seqs=4
                 - --enable-prefix-caching
                 - --reasoning-parser=qwen3
