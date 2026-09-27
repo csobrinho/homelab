@@ -72,6 +72,8 @@ spec:
               value: "modular"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: video,compute,utility
+            - name: CUDA_DISABLE_PERF_BOOST # Don't jump to high clocks for NVENC/NVDEC.
+              value: "1"
             - name: POSTGRES_HOST
               value: "infra-pg"
             - name: POSTGRES_PORT
@@ -127,8 +129,6 @@ spec:
           env:
             - name: DISPATCHARR_ENV
               value: "modular"
-            - name: NVIDIA_DRIVER_CAPABILITIES
-              value: video,compute,utility
             - name: POSTGRES_HOST
               value: "infra-pg"
             - name: POSTGRES_PORT
