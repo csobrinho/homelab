@@ -33,7 +33,7 @@ spec:
               "until nc -z valkey.infra.svc.cluster.local 6379; do echo waiting for valkey; sleep 2; done",
             ]
         - name: build-nvenc-fix
-          image: gcc:14
+          image: gcc:16
           command:
             [
               "gcc",
