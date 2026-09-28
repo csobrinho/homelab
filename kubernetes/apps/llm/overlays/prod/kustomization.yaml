@@ -174,9 +174,7 @@ helmCharts:
               env:
                 TZ: America/Los_Angeles
                 PORT: &port-webui 8080
-                # Single-user mode. Only valid on a fresh install (no users yet); turning
-                # auth on later needs an admin account created first.
-                WEBUI_AUTH: "False"
+                WEBUI_AUTH: "True"
                 WEBUI_URL: https://llm.sobrinho.pt
                 # Persist the generated JWT key with the data instead of /app/backend.
                 WEBUI_SECRET_KEY_FILE: /app/backend/data/.webui_secret_key
