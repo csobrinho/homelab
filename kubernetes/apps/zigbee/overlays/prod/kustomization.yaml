@@ -29,8 +29,8 @@ helmCharts:
                 connector: serialdev,/dev/zigbee,115200n81,local,nobreak
                 options:
                   kickolduser: true
-                  # ser2net only logs errors; trace to stdout for connects/disconnects + traffic.
-                  trace-both: /dev/stdout
+                  # ser2net only logs errors; the trace (connects + traffic) is tailed to stdout.
+                  trace-both: /trace/zigbee.log
                   trace-hexdump: true
                   trace-timestamp: true
       controllers:
@@ -52,6 +52,13 @@ helmCharts:
                 repository: ghcr.io/jippi/docker-ser2net
                 tag: 4.6.8@sha256:349ebeade8ed0ad0d2b97b7002576adbf1f9b101c248ee1cbc1b2a8f617ec4da
                 pullPolicy: IfNotPresent
+              # ser2net can't trace to a pipe (it seeks): tail its trace file, ser2net stays main.
+              command:
+                - tini
+                - --
+                - sh
+                - -c
+                - tail -n +1 -F /trace/zigbee.log & exec ser2net -d -l -c /etc/ser2net/ser2net.yaml
               resources:
                 requests:
                   cpu: 10m
@@ -81,3 +88,8 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /var/lock
+        trace:
+          type: emptyDir
+          sizeLimit: 256Mi
+          globalMounts:
+            - path: /trace
