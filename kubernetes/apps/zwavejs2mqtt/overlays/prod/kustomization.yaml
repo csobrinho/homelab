@@ -19,6 +19,15 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         defaultAffinity: false
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  # One hop (Traefik): trust its X-Forwarded-For so express-rate-limit sees the real
+                  # client IP (ERR_ERL_UNEXPECTED_X_FORWARDED_FOR). `true` is too permissive.
+                  TRUST_PROXY: "1"
       service:
         ws:
           enabled: true
