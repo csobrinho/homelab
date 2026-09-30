@@ -37,7 +37,7 @@ helmCharts:
               # 2024-2026     Virtual printer proprietary ports (A1/P1S)
               # 50000-50100   Virtual printer FTP passive data
         bambustudio:
-          controller: slicers
+          controller: bambustudio
           ports:
             app:
               port: &port-bs 3001
@@ -89,8 +89,9 @@ helmCharts:
                   memory: 512Mi
                 limits:
                   memory: 2Gi
-        slicers:
+        bambustudio:
           strategy: Recreate
+          forceRename: bambustudio
           defaultContainerOptions:
             securityContext:
               allowPrivilegeEscalation: false
@@ -149,7 +150,7 @@ helmCharts:
         bambustudio-data:
           existingClaim: bambustudio-data
           advancedMounts:
-            slicers:
+            bambustudio:
               bambustudio:
                 - path: /app/data
 
