@@ -29,6 +29,10 @@ helmCharts:
                 connector: serialdev,/dev/zigbee,115200n81,local,nobreak
                 options:
                   kickolduser: true
+                  # ser2net only logs errors; trace to stdout for connects/disconnects + traffic.
+                  trace-both: /dev/stdout
+                  trace-hexdump: true
+                  trace-timestamp: true
       controllers:
         zigbee:
           strategy: Recreate
@@ -48,13 +52,6 @@ helmCharts:
                 repository: ghcr.io/jippi/docker-ser2net
                 tag: 4.6.8@sha256:349ebeade8ed0ad0d2b97b7002576adbf1f9b101c248ee1cbc1b2a8f617ec4da
                 pullPolicy: IfNotPresent
-              probes:
-                liveness: &probe
-                  enabled: true
-                  type: TCP
-                  port: &port-zigbee 6638
-                readiness:
-                  <<: *probe
               resources:
                 requests:
                   cpu: 10m
@@ -65,9 +62,11 @@ helmCharts:
       service:
         zigbee:
           controller: zigbee
+          type: NodePort # FIXME: back to ClusterIP once HA runs in this cluster.
           ports:
             ezsp:
-              port: *port-zigbee
+              port: 6638
+              nodePort: 30047
       persistence:
         zigbee-config:
           type: configMap
