@@ -7,8 +7,9 @@ machine:
     crt: {{ sops.certs.os.crt }}
 ---
 # Stable /dev names for passed-through USB sticks (same 1a86:55d4 id, so match on product string).
+# GROUP 568 lets non-root pods (568:568) open them.
 apiVersion: v1alpha1
 kind: UdevRulesConfig
 rules:
-  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Z-Wave*", SYMLINK+="zwave"
-  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Zigbee*", SYMLINK+="zigbee"
+  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Z-Wave*", SYMLINK+="zwave", GROUP="568", MODE="0660"
+  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Zigbee*", SYMLINK+="zigbee", GROUP="568", MODE="0660"
