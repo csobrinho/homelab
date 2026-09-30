@@ -142,10 +142,7 @@ resource "proxmox_virtual_environment_vm" "node" {
     }
   }
 
-  # USB passthrough (workers only), e.g. the Z-Wave stick. `mapping` (not `host`) for the same
-  # reason as hostpci: only root@pam can set a raw vendor:product / port. Hotplugged under PVE's
-  # default `hotplug` (includes usb). In the guest, talos/workers.yaml.j2 udev rules give each
-  # device a stable /dev/<name>.
+  # USB passthrough (workers only). `mapping` (not `host`): only root@pam can set a raw id.
   dynamic "usb" {
     for_each = each.value.usb
     content {

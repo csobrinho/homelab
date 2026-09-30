@@ -6,11 +6,9 @@ machine:
   ca:
     crt: {{ sops.certs.os.crt }}
 ---
-# Stable device names for USB hardware passed through from Proxmox (tofu workers.<node>.usb). On
-# every worker so a stick can move between VMs without touching this file; a rule only fires where
-# its device is present. generic-device-plugin exposes each symlink to pods as devic.es/<name>.
+# Stable /dev names for passed-through USB sticks (same 1a86:55d4 id, so match on product string).
 apiVersion: v1alpha1
 kind: UdevRulesConfig
 rules:
-  # Zooz 800 Z-Wave stick -> /dev/zwave
-  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{serial}=="533D004242", SYMLINK+="zwave"
+  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Z-Wave*", SYMLINK+="zwave"
+  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{product}=="*Zigbee*", SYMLINK+="zigbee"

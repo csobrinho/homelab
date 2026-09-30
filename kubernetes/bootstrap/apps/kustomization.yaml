@@ -80,6 +80,7 @@ resources:
   - apps/whatsapp-app.yaml
   - apps/windmill-app.yaml
   - apps/xfinity-usage-app.yaml
+  - apps/zigbee-app.yaml
   - apps/zwavejs2mqtt-app.yaml
 
 components:

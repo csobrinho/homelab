@@ -30,7 +30,6 @@ helmCharts:
       dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
         kubernetes.io/arch: arm64
-        feature.node.kubernetes.io/usb-zigbee.present: "true"
       securityContext:
         privileged: true
       persistence:
@@ -41,16 +40,10 @@ helmCharts:
         storageClass: "ceph-block"
       additionalVolumes:
         - hostPath:
-            path: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
-            type: CharDevice
-          name: usb-zigbee
-        - hostPath:
             path: /run/dbus
             type: Directory
           name: dbus
       additionalMounts:
-        - mountPath: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
-          name: usb-zigbee
         - mountPath: /run/dbus
           name: dbus
       addons:

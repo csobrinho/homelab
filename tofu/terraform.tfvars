@@ -60,8 +60,8 @@ nodes = {
 #   gpu1 -> 0000:01:00  (RTX 5090, PCIe slot 5; iommu group 73)
 # Both cards are identical, so which is gpu0/gpu1 is cosmetic - infra4 gets both.
 #
-# usb `mapping`: name of a PVE datacenter USB resource mapping, same reasoning.
-#   zwave -> 1a86:55d4  (Zooz 800 Z-Wave Stick, serial 533D004242)
+# usb `mapping`: PVE datacenter USB resource mapping, same reasoning.
+#   usb-serial -> 1a86:55d4, shared by the Z-Wave and Zigbee sticks; one slot per stick.
 workers = {
   infra4 = {
     vm_id       = 214
@@ -77,8 +77,9 @@ workers = {
     vm_id       = 215
     mac_address = "52:54:00:0a:02:15"
     usb = [
-      # usb2: the stick is full-speed only; a USB3 (xhci) port adds noise for nothing.
-      { mapping = "zwave", usb3 = false }, # Zooz 800 Z-Wave stick -> /dev/zwave (talos udev rule)
+      # Z-Wave + Zigbee; usb2 (full-speed sticks).
+      { mapping = "usb-serial", usb3 = false },
+      { mapping = "usb-serial", usb3 = false },
     ]
   }
   infra6 = { vm_id = 216, mac_address = "52:54:00:0a:02:16" }

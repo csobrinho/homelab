@@ -1,0 +1,84 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://github.com/cminyard/ser2net/blob/master/ser2net.yaml
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# Zigbee dongle over TCP (ser2net) so Home Assistant needs no local hardware.
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: zigbee
+    version: 5.2.1
+    namespace: home-assistant
+    valuesFile: values-empty.yaml
+    valuesInline:
+      configMaps:
+        zigbee:
+          data:
+            # ZHA: EZSP, socket://zigbee.home-assistant.svc.cluster.local:6638.
+            ser2net.yaml: |
+              %YAML 1.1
+              ---
+              connection: &zigbee
+                accepter: tcp,6638
+                enable: on
+                connector: serialdev,/dev/zigbee,115200n81,local,nobreak
+                options:
+                  kickolduser: true
+      controllers:
+        zigbee:
+          strategy: Recreate
+          defaultContainerOptions:
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            app:
+              image:
+                repository: ghcr.io/jippi/docker-ser2net
+                tag: 4.6.8@sha256:349ebeade8ed0ad0d2b97b7002576adbf1f9b101c248ee1cbc1b2a8f617ec4da
+                pullPolicy: IfNotPresent
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: TCP
+                  port: &port-zigbee 6638
+                readiness:
+                  <<: *probe
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+                  devic.es/zigbee: 1
+      service:
+        zigbee:
+          controller: zigbee
+          ports:
+            ezsp:
+              port: *port-zigbee
+      persistence:
+        zigbee-config:
+          type: configMap
+          identifier: zigbee
+          advancedMounts:
+            zigbee:
+              app:
+                - path: /etc/ser2net/ser2net.yaml
+                  subPath: ser2net.yaml
+                  readOnly: true
+        lock:
+          type: emptyDir
+          globalMounts:
+            - path: /var/lock

@@ -149,32 +149,15 @@ Then `just tofu apply`, add DHCP reservations from `just tofu output workers`, a
 (`talos/nodes/workers/infra4.schematic.yaml.j2`) via its per-node installer
 image — nothing GPU-specific is needed here beyond the `hostpci` block.
 
-**USB passthrough (`infra5`, Z-Wave stick)** — same token restriction as `hostpci` (a raw `host`
-id is `root@pam` only), so `terraform.tfvars` references a datacenter USB mapping by name.
-**As `root@pam`**, once:
+**USB passthrough (`infra5`)** — the Z-Wave and Zigbee sticks share id `1a86:55d4`, so one mapping
+listed twice in `terraform.tfvars` (QEMU gives each slot one matching device); Talos udev rules then
+name them `/dev/zwave` / `/dev/zigbee`. **As `root@pam`**, once:
 
 ```sh
-pvesh create /cluster/mapping/usb --id zwave \
-  --description "Zooz 800 Z-Wave Stick (serial 533D004242)" \
-  --map node=<pve-node>,id=1a86:55d4
+pvesh create /cluster/mapping/usb --id usb-serial --map node=<pve-node>,id=1a86:55d4
 ```
 
-(or Datacenter → Resource Mappings → Add → USB). The token's existing `Mapping.Use` covers it if
-that role is granted on `/` (or `/mapping/usb`). `just tofu apply`; PVE hotplugs USB by default
-(`hotplug` includes `usb`), but if `qm config 215` shows it as pending, drain + stop/start `infra5`
-(`reboot_after_update = false` never does that for you). Inside the guest the Talos udev rule in
-`talos/workers.yaml.j2` (all workers, so the stick can move to another VM by changing only its
-`usb` entry) symlinks it to `/dev/zwave`, and `generic-device-plugin` exposes it to pods as
-`devic.es/zwave`.
-
-### Migrating off the old split resources
-
-`main.tf` used to have separate `proxmox_virtual_environment_vm.controlplane`
-and `.worker` resources; it is now one `.node` resource over a merged map. The
-`moved {}` blocks in `main.tf` renumber the existing `infra1-3` state on the
-next `just tofu apply` — no VM is recreated. (Equivalently, one-time:
-`just tofu run state mv 'proxmox_virtual_environment_vm.controlplane["infra1"]' 'proxmox_virtual_environment_vm.node["infra1"]'`,
-×3.) Delete the `moved {}` blocks once applied.
+Needs `Mapping.Use` on the token. Any other `1a86:55d4` device on the host could take a free slot.
 
 ### First bring-up
 
@@ -185,7 +168,7 @@ next `just tofu apply` — no VM is recreated. (Equivalently, one-time:
    installer on first boot; Talos installs to `scsi0` and reboots off it.
 4. `just talos apply-node infra1` (then `infra2`, `infra3`) to push machine config.
 5. Bootstrap etcd on the first node: `talosctl -n infra1 bootstrap`.
-6. Bring up the workers (see below) while `attach_iso` is still `true`.
+6. Bring up the workers ([above](#adding-the-workers)) while `attach_iso` is still `true`.
 7. Once every node is installed and healthy, set `attach_iso = false` in
    `terraform.tfvars` and `just tofu apply` - this deletes the ISO and detaches
    the CD-ROM, so later `talos/versions.yaml` bumps don't churn the VMs. OS

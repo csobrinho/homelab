@@ -36,13 +36,20 @@ helmCharts:
                 - --domain=devic.es
                 - --log-level=info
                 - --device
-                # Zooz 800 Z-Wave stick; /dev/zwave is a udev symlink from talos/workers.yaml.j2.
+                # udev symlinks, see talos/workers.yaml.j2.
                 - |
                   name: zwave
                   groups:
                     - paths:
                         - path: /dev/zwave
                           mountPath: /dev/zwave
+                - --device
+                - |
+                  name: zigbee
+                  groups:
+                    - paths:
+                        - path: /dev/zigbee
+                          mountPath: /dev/zigbee
               securityContext:
                 privileged: true
               resources:
