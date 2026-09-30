@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: generic-device-plugin
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-50"
+spec:
+  destination:
+    namespace: generic-device-plugin
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/generic-device-plugin/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

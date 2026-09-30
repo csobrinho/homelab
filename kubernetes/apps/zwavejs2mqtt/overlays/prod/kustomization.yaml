@@ -19,8 +19,6 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         defaultAffinity: false
-        nodeSelector:
-          feature.node.kubernetes.io/usb-zwave.present: "true"
       service:
         ws:
           enabled: true
@@ -33,7 +31,7 @@ helmCharts:
       securityContext:
         container:
           readOnlyRootFilesystem: true
-          privileged: true
+          privileged: false
           runAsNonRoot: false
           runAsGroup: 0
           runAsUser: 0
@@ -44,9 +42,9 @@ helmCharts:
           storageClass: "ceph-block"
           accessMode: ReadWriteOnce
           size: 1Gi
-        usb-zwave:
-          enabled: true
-          type: hostPath
-          mountPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-          hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-          hostPathType: CharDevice
+      # The stick is allocated by generic-device-plugin, not hostPath: the scheduler places the pod
+      # on whichever node has it and it shows up as /dev/zwave (set that as the serial port in the
+      # Z-Wave JS UI).
+      resources:
+        limits:
+          devic.es/zwave: 1

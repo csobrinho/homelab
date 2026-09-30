@@ -149,6 +149,24 @@ Then `just tofu apply`, add DHCP reservations from `just tofu output workers`, a
 (`talos/nodes/workers/infra4.schematic.yaml.j2`) via its per-node installer
 image — nothing GPU-specific is needed here beyond the `hostpci` block.
 
+**USB passthrough (`infra5`, Z-Wave stick)** — same token restriction as `hostpci` (a raw `host`
+id is `root@pam` only), so `terraform.tfvars` references a datacenter USB mapping by name.
+**As `root@pam`**, once:
+
+```sh
+pvesh create /cluster/mapping/usb --id zwave \
+  --description "Zooz 800 Z-Wave Stick (serial 533D004242)" \
+  --map node=<pve-node>,id=1a86:55d4
+```
+
+(or Datacenter → Resource Mappings → Add → USB). The token's existing `Mapping.Use` covers it if
+that role is granted on `/` (or `/mapping/usb`). `just tofu apply`; PVE hotplugs USB by default
+(`hotplug` includes `usb`), but if `qm config 215` shows it as pending, drain + stop/start `infra5`
+(`reboot_after_update = false` never does that for you). Inside the guest the Talos udev rule in
+`talos/workers.yaml.j2` (all workers, so the stick can move to another VM by changing only its
+`usb` entry) symlinks it to `/dev/zwave`, and `generic-device-plugin` exposes it to pods as
+`devic.es/zwave`.
+
 ### Migrating off the old split resources
 
 `main.tf` used to have separate `proxmox_virtual_environment_vm.controlplane`

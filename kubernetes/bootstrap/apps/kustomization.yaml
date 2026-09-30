@@ -27,6 +27,7 @@ resources:
 
   # sync-wave: -50
   - apps/argocd-app.yaml
+  - apps/generic-device-plugin-app.yaml
   - apps/node-feature-discovery-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml

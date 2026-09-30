@@ -7,9 +7,9 @@ locals {
   talos_iso_file_name = "talos-${var.talos_version}-${substr(var.talos_schematic_id, 0, 8)}-${trimsuffix(var.talos_image, ".iso")}.iso"
   talos_iso_url       = "https://factory.talos.dev/image/${var.talos_schematic_id}/${var.talos_version}/${var.talos_image}"
 
-  # One resource block for every VM; role just changes tags/sizing/hostpci.
+  # One resource block for every VM; role just changes tags/sizing/hostpci/usb.
   #   - var.nodes   : control plane, uniform sizing
-  #   - var.workers : per-node cpu_cores/memory/disk_size overrides + hostpci
+  #   - var.workers : per-node cpu_cores/memory/disk_size overrides + hostpci/usb
   vms = merge(
     {
       for name, n in var.nodes : name => {
@@ -21,6 +21,7 @@ locals {
         memory      = var.memory
         disk_size   = var.disk_size
         hostpci     = []
+        usb         = []
       }
     },
     {
@@ -33,6 +34,7 @@ locals {
         memory      = coalesce(w.memory, var.worker_memory)
         disk_size   = coalesce(w.disk_size, var.worker_disk_size)
         hostpci     = w.hostpci
+        usb         = w.usb
       }
     },
   )
@@ -137,6 +139,19 @@ resource "proxmox_virtual_environment_vm" "node" {
       id      = hostpci.value.id
       pcie    = hostpci.value.pcie
       rombar  = hostpci.value.rombar
+    }
+  }
+
+  # USB passthrough (workers only), e.g. the Z-Wave stick. `mapping` (not `host`) for the same
+  # reason as hostpci: only root@pam can set a raw vendor:product / port. Hotplugged under PVE's
+  # default `hotplug` (includes usb). In the guest, talos/workers.yaml.j2 udev rules give each
+  # device a stable /dev/<name>.
+  dynamic "usb" {
+    for_each = each.value.usb
+    content {
+      mapping = usb.value.mapping
+      host    = usb.value.host
+      usb3    = usb.value.usb3
     }
   }
 

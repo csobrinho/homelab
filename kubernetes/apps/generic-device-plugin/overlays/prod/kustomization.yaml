@@ -1,0 +1,64 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://github.com/squat/generic-device-plugin/blob/main/manifests/generic-device-plugin.yaml
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: generic-device-plugin
+    version: 5.2.1
+    namespace: generic-device-plugin
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        generic-device-plugin:
+          type: daemonset
+          pod:
+            priorityClassName: system-node-critical
+            tolerations:
+              - operator: Exists
+                effect: NoExecute
+              - operator: Exists
+                effect: NoSchedule
+          containers:
+            app:
+              image:
+                repository: ghcr.io/squat/generic-device-plugin
+                tag: latest@sha256:dc192e164c69b03f156765793a1be62ca437709ae477b27ca7d8f3dcf5021576
+                pullPolicy: IfNotPresent
+              # Pods request a device with `resources.limits: {devic.es/<name>: 1}`.
+              args:
+                - --domain=devic.es
+                - --log-level=info
+                - --device
+                # Zooz 800 Z-Wave stick; /dev/zwave is a udev symlink from talos/workers.yaml.j2.
+                - |
+                  name: zwave
+                  groups:
+                    - paths:
+                        - path: /dev/zwave
+                          mountPath: /dev/zwave
+              securityContext:
+                privileged: true
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+      persistence:
+        device-plugins:
+          type: hostPath
+          hostPath: /var/lib/kubelet/device-plugins
+          globalMounts:
+            - path: /var/lib/kubelet/device-plugins
+        dev:
+          type: hostPath
+          hostPath: /dev
+          globalMounts:
+            - path: /dev

@@ -56,6 +56,14 @@ variable "workers" {
       pcie    = optional(bool, true)
       rombar  = optional(bool, true)
     })), [])
+    # USB passthrough. Same rule as hostpci: set exactly one of
+    #   mapping - name of a PVE datacenter USB resource mapping (token-safe).
+    #   host    - raw "vendor:product" or bus-port, e.g. "1a86:55d4". root@pam only.
+    usb = optional(list(object({
+      mapping = optional(string)
+      host    = optional(string)
+      usb3    = optional(bool, false)
+    })), [])
   }))
   default = {}
 }

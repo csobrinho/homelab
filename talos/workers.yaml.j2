@@ -5,3 +5,12 @@ machine:
   # supplies machine.ca.crt, but repeating it here keeps the role patch honest.
   ca:
     crt: {{ sops.certs.os.crt }}
+---
+# Stable device names for USB hardware passed through from Proxmox (tofu workers.<node>.usb). On
+# every worker so a stick can move between VMs without touching this file; a rule only fires where
+# its device is present. generic-device-plugin exposes each symlink to pods as devic.es/<name>.
+apiVersion: v1alpha1
+kind: UdevRulesConfig
+rules:
+  # Zooz 800 Z-Wave stick -> /dev/zwave
+  - SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", ATTRS{serial}=="533D004242", SYMLINK+="zwave"
