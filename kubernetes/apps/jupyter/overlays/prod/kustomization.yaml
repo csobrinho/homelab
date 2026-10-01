@@ -82,7 +82,7 @@ helmCharts:
     valuesInline:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
       persistence:
-        jupyter-pvc-sobrinho:
+        hub-db-dir:
           existingClaim: true
       backup: # Must run as root.
         schedule:
