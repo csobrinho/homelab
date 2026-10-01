@@ -30,7 +30,6 @@ helmCharts:
       dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
         kubernetes.io/arch: arm64
-        feature.node.kubernetes.io/usb-zigbee.present: "true"
       securityContext:
         privileged: true
       persistence:
@@ -41,21 +40,41 @@ helmCharts:
         storageClass: "ceph-block"
       additionalVolumes:
         - hostPath:
-            path: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
-            type: CharDevice
-          name: usb-zigbee
-        - hostPath:
             path: /run/dbus
             type: Directory
           name: dbus
       additionalMounts:
-        - mountPath: /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230831101002-if00
-          name: usb-zigbee
         - mountPath: /run/dbus
           name: dbus
       addons:
         codeserver:
           enabled: true
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: home-assistant-kopiur
+    namespace: home-assistant
+    version: 0.1.0
+    valuesInline:
+      persistence:
+        home-assistant-home-assistant-0:
+          existingClaim: true
+      backup: # Must run as root.
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0
+      populate:
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0
 
 patches:
   - patch: |-
