@@ -32,6 +32,7 @@ helmCharts:
         extraConfig:
           auth.py: |
             import os
+            c.Authenticator.allowed_users = {os.environ["JUPYTERHUB_USERNAME"]}
             c.Authenticator.admin_users = {os.environ["JUPYTERHUB_USERNAME"]}
             c.SharedPasswordAuthenticator.admin_password = os.environ["JUPYTERHUB_PASSWORD"]
         db:
