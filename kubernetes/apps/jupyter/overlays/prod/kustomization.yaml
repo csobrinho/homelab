@@ -17,6 +17,8 @@ helmCharts:
     includeCRDs: true
     valuesInline:
       hub:
+        annotations:
+          reloader.stakater.com/auto: "true"
         extraEnv:
           TZ: America/Los_Angeles
           JUPYTERHUB_USERNAME:
@@ -57,6 +59,8 @@ helmCharts:
         hook:
           enabled: false
       proxy:
+        annotations:
+          reloader.stakater.com/auto: "true"
         service:
           type: ClusterIP
       scheduling:
