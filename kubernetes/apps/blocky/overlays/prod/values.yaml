@@ -118,10 +118,12 @@ service:
       dns-tcp:
         port: 53
         protocol: TCP
+      http:
+        port: 4000
 
   api:
     controller: blocky
-    type: ClusterIP # metrics, API, blocky-ui — keep off the DNS VIP
+    type: ClusterIP # In-cluster API/metrics/blocky-ui.
     ports:
       http:
         port: 4000
