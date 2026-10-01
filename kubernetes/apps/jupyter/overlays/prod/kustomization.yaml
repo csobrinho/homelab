@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress-route.yaml
+  - secrets/jupyter-auth-enc.yaml
 
 helmCharts:
   - name: jupyterhub
@@ -18,6 +19,21 @@ helmCharts:
       hub:
         extraEnv:
           TZ: America/Los_Angeles
+          JUPYTERHUB_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: jupyter-auth
+                key: username
+          JUPYTERHUB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: jupyter-auth
+                key: password
+        extraConfig:
+          auth.py: |
+            import os
+            c.Authenticator.admin_users = {os.environ["JUPYTERHUB_USERNAME"]}
+            c.SharedPasswordAuthenticator.admin_password = os.environ["JUPYTERHUB_PASSWORD"]
         db:
           type: other
           url: sqlite:////srv/jupyterhub/jupyterhub.sqlite
@@ -35,13 +51,8 @@ helmCharts:
           runAsUser: 568
           runAsGroup: 568
         config:
-          Authenticator:
-            admin_users:
-              - sobrinho
-          DummyAuthenticator:
-            password: admin
           JupyterHub:
-            authenticator_class: dummy
+            authenticator_class: shared-password
           IdentityProvider:
             token: ""
       prePuller:
@@ -54,7 +65,7 @@ helmCharts:
           type: ClusterIP
       singleuser:
         uid: 568
-        fsGid: 568
+        fsGid: 100 # docker-stacks: /opt/conda and home are group-writable for `users` (100).
         defaultUrl: /lab
         storage:
           dynamic:
@@ -73,8 +84,8 @@ helmCharts:
           #       type: Directory
           #     name: dev-bus-usb
         image:
-          name: ghcr.io/csobrinho/jupyter-singleuser-hardware
-          tag: main
+          name: quay.io/jupyter/base-notebook
+          tag: 2026-09-29@sha256:4ef9cfd552d265799bd9e959a87fb674da8cea738145ce49e7d286cb967ad1d7
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
