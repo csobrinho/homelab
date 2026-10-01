@@ -60,7 +60,7 @@ spec:
             requests:
               cpu: 100m
             limits:
-              memory: 512Mi
+              memory: 650Mi
           ports:
             - name: main
               containerPort: 3000

@@ -69,8 +69,9 @@ helmCharts:
               resources:
                 requests:
                   cpu: 250m
+                  memory: 1536Mi
                 limits:
-                  memory: 1Gi
+                  memory: 2Gi
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
