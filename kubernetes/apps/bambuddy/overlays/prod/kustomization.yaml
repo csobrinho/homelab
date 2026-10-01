@@ -130,7 +130,7 @@ helmCharts:
               resources:
                 requests:
                   cpu: 200m
-                  memory: 512Mi
+                  memory: 256Mi
                 limits:
                   memory: 1Gi
       persistence:

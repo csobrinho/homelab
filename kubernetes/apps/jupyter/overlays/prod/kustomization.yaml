@@ -69,6 +69,8 @@ helmCharts:
         userPlaceholder:
           enabled: false
       singleuser:
+        memory:
+          guarantee: 256M
         cloudMetadata:
           blockWithIptables: false # No cloud metadata endpoint on Proxmox.
         defaultUrl: /lab

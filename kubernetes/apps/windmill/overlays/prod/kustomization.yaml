@@ -26,6 +26,12 @@ helmCharts:
         frontendReplicas: 1
         workerReplicas: 2
         lspReplicas: 1
+        app:
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 2Gi
         databaseUrlSecretName: "windmill-secret"
         databaseUrlSecretKey: url
       ingress:

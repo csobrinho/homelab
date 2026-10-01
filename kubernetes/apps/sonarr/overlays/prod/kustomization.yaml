@@ -19,6 +19,11 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         defaultAffinity: false
+      resources:
+        requests:
+          memory: 576Mi
+        limits:
+          cpu: 0
       persistence:
         config:
           enabled: true

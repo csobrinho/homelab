@@ -22,6 +22,11 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         defaultAffinity: false
+      resources:
+        requests:
+          memory: 640Mi
+        limits:
+          cpu: 0
       workload:
         main:
           podSpec:
