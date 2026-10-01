@@ -45,11 +45,8 @@ helmCharts:
                 db: 2 # See kubernetes/apps/valkey/overlays/prod/kustomization.yaml
         persistence:
           enabled: true
-          type: dynamic
-          storageClass: "ceph-block"
-          accessModes:
-            - ReadWriteOnce
-          size: 4Gi
+          type: existing
+          existingClaim: n8n
         extraEnv:
           EXECUTIONS_MODE:
             value: "regular"
@@ -73,3 +70,18 @@ helmCharts:
         enabled: false
       valkey:
         enabled: false
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: n8n-kopiur
+    namespace: n8n
+    version: 0.1.0
+    valuesInline:
+      uid: 1000
+      gid: 1000
+      persistence:
+        n8n:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 4Gi
+          storageClass: local-db

@@ -19,8 +19,21 @@ helmCharts:
         extraEnv:
           TZ: America/Los_Angeles
         db:
-          pvc:
-            storageClassName: "ceph-block"
+          type: other
+          url: sqlite:////srv/jupyterhub/jupyterhub.sqlite
+          upgrade: true
+        extraVolumes:
+          - name: hub-db-dir
+            persistentVolumeClaim:
+              claimName: hub-db-dir
+        extraVolumeMounts:
+          - name: hub-db-dir
+            mountPath: /srv/jupyterhub
+        podSecurityContext:
+          fsGroup: 568
+        containerSecurityContext:
+          runAsUser: 568
+          runAsGroup: 568
         config:
           Authenticator:
             admin_users:
@@ -40,23 +53,14 @@ helmCharts:
         service:
           type: ClusterIP
       singleuser:
-        uid: 0
-        fsGid: 0
-        allowPrivilegeEscalation: true
+        uid: 568
+        fsGid: 568
         defaultUrl: /lab
-        extraEnv:
-          CHOWN_HOME: "yes"
-          CHOWN_HOME_OPTS: -R
-          GRANT_SUDO: "yes"
-          NOTEBOOK_ARGS: "--allow-root"
-        extraPodConfig:
-          securityContext:
-            fsGroup: 100
         storage:
           dynamic:
             pvcNameTemplate: jupyter-pvc-{username}
             volumeNameTemplate: jupyter-pv-{username}
-            storageClass: "ceph-block"
+            storageClass: local-data
           capacity: 5Gi
           homeMountPath: /home/jovyan
           # Disable until the helm chart is fixed?
@@ -68,11 +72,24 @@ helmCharts:
           #       path: /dev/bus/usb
           #       type: Directory
           #     name: dev-bus-usb
-        nodeSelector:
-          feature.node.kubernetes.io/usb-chipwhisperer.present: "true"
         image:
           name: ghcr.io/csobrinho/jupyter-singleuser-hardware
           tag: main
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: jupyter-kopiur
+    namespace: jupyter
+    version: 0.1.0
+    valuesInline:
+      uid: 568
+      gid: 568
+      persistence:
+        hub-db-dir:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 1Gi
+          storageClass: local-db
 
 components:
   - ../../../../components/managed-sablier
