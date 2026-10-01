@@ -39,17 +39,12 @@ helmCharts:
           url: sqlite:////srv/jupyterhub/jupyterhub.sqlite
           upgrade: true
         extraVolumes:
-          - name: hub-db-dir
+          - name: jupyter-hub
             persistentVolumeClaim:
-              claimName: hub-db-dir
+              claimName: jupyter-hub
         extraVolumeMounts:
-          - name: hub-db-dir
+          - name: jupyter-hub
             mountPath: /srv/jupyterhub
-        podSecurityContext:
-          fsGroup: 568
-        containerSecurityContext:
-          runAsUser: 568
-          runAsGroup: 568
         config:
           JupyterHub:
             authenticator_class: shared-password
@@ -63,17 +58,16 @@ helmCharts:
       proxy:
         service:
           type: ClusterIP
+      scheduling:
+        userScheduler:
+          enabled: false
       singleuser:
-        uid: 568
-        fsGid: 100 # docker-stacks: /opt/conda and home are group-writable for `users` (100).
         defaultUrl: /lab
         storage:
-          dynamic:
-            pvcNameTemplate: jupyter-pvc-{username}
-            volumeNameTemplate: jupyter-pv-{username}
-            storageClass: local-data
-          capacity: 5Gi
-          homeMountPath: /home/jovyan
+          type: static
+          static:
+            pvcName: jupyter-home
+            subPath: "" # Single user: the whole volume is the home.
           # Disable until the helm chart is fixed?
           # extraVolumeMounts:
           #   - mountPath: /dev/bus/usb
@@ -83,9 +77,6 @@ helmCharts:
           #       path: /dev/bus/usb
           #       type: Directory
           #     name: dev-bus-usb
-        image:
-          name: quay.io/jupyter/base-notebook
-          tag: 2026-09-29@sha256:4ef9cfd552d265799bd9e959a87fb674da8cea738145ce49e7d286cb967ad1d7
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
@@ -93,10 +84,16 @@ helmCharts:
     namespace: jupyter
     version: 0.1.0
     valuesInline:
-      uid: 568
-      gid: 568
+      uid: 1000
+      gid: 1000
       persistence:
-        hub-db-dir:
+        jupyter-home:
+          gid: 100
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          storageClass: local-data
+        jupyter-hub:
           retain: true
           accessMode: ReadWriteOnce
           size: 1Gi
