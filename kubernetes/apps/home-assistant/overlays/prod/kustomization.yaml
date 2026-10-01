@@ -1,5 +1,5 @@
-# From https://github.com/pajikos/home-assistant-helm-chart/blob/main/charts/home-assistant/values.yaml
-# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -8,69 +8,134 @@ resources:
   - ingress-route.yaml
 
 helmCharts:
-  - name: home-assistant
-    repo: http://pajikos.github.io/home-assistant-helm-chart/
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: home-assistant
+    version: 5.2.1
     namespace: home-assistant
-    version: 0.3.83
-    includeCRDs: true
+    valuesFile: values-empty.yaml
     valuesInline:
-      env:
-        - name: TZ
-          value: America/Los_Angeles
+      controllers:
+        app:
+          revisionHistoryLimit: 0
+          strategy: Recreate
+          containers:
+            app:
+              image:
+                repository: ghcr.io/home-operations/home-assistant
+                tag: 2026.9.4@sha256:cd5ffc0a3bc873b35f20189ef22ee7ee9e8875fe666928dfee263cd464cc053d
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: TCP
+                  port: &port 8123
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+                  spec:
+                    periodSeconds: 5
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 512Mi
+                limits:
+                  memory: 4Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+            codeserver:
+              image:
+                repository: ghcr.io/coder/code-server
+                tag: 4.135.0@sha256:ccd326184d71efc5ebb94155eda7bb30153902342a35dbc8525450d81aa55012
+                pullPolicy: IfNotPresent
+              args:
+                - --auth
+                - none
+                - --user-data-dir
+                - /config/.vscode
+                - --extensions-dir
+                - /config/.vscode
+                - --port
+                - "12321"
+                - /config
+              env:
+                HOME: /tmp # The image's home (/home/coder) isn't writable as 568.
+              probes:
+                liveness: &probe-cs
+                  enabled: true
+                  type: TCP
+                  port: &port-cs 12321
+                readiness:
+                  <<: *probe-cs
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 128Mi
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+      defaultPodOptions:
+        automountServiceAccountToken: false
+        enableServiceLinks: false
+        # Host network for discovery (mDNS/SSDP/HomeKit, ESPHome BT proxies).
+        hostNetwork: true
+        dnsPolicy: ClusterFirstWithHostNet
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: &uid 568
+          runAsGroup: *uid
+          fsGroup: *uid
+          fsGroupChangePolicy: OnRootMismatch
+          supplementalGroups: [*uid]
+          seccompProfile:
+            type: RuntimeDefault
       service:
-        type: LoadBalancer
-        port: 8123
-        annotations:
-          external-dns.alpha.kubernetes.io/hostname: infra-home-assistant
-      hostPort:
-        enabled: true
-        port: 8123
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
-      nodeSelector:
-        kubernetes.io/arch: arm64
-      securityContext:
-        privileged: true
-      persistence:
-        enabled: true
-        retain: true
-        accessMode: ReadWriteOnce
-        size: 12Gi
-        storageClass: "ceph-block"
-      additionalVolumes:
-        - hostPath:
-            path: /run/dbus
-            type: Directory
-          name: dbus
-      additionalMounts:
-        - mountPath: /run/dbus
-          name: dbus
-      addons:
+        app:
+          forceRename: home-assistant
+          primary: true
+          type: LoadBalancer
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: infra-home-assistant
+          labels:
+            io.cilium/lb-pool: pool-infra-home-assistant
+          ports:
+            http:
+              port: *port
         codeserver:
-          enabled: true
+          controller: app
+          ports:
+            codeserver:
+              port: *port-cs
+      persistence:
+        config:
+          existingClaim: home-assistant-data
+          globalMounts:
+            - path: /config
+        tmp:
+          type: emptyDir
+          globalMounts:
+            - path: /tmp
 
-patches:
-  - patch: |-
-      - op: add
-        path: /spec/volumeClaimTemplates/0/apiVersion
-        value: v1
-      - op: add
-        path: /spec/volumeClaimTemplates/0/kind
-        value: PersistentVolumeClaim
-      - op: add
-        path: /spec/template/spec/containers/1/securityContext/runAsUser
-        value: 0
-    target:
-      group: apps
-      version: v1
-      kind: StatefulSet
-      name: home-assistant
-  - patch: |-
-      - op: add
-        path: /metadata/labels/io.cilium~1lb-pool
-        value: pool-infra-home-assistant
-    target:
-      version: v1
-      kind: Service
-      name: home-assistant
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: home-assistant-kopiur
+    namespace: home-assistant
+    version: 0.1.0
+    valuesInline:
+      uid: 568
+      gid: 568
+      persistence:
+        home-assistant-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 20Gi
+          storageClass: local-db
