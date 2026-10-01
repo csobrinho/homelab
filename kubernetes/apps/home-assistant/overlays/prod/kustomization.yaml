@@ -139,28 +139,3 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 20Gi
           storageClass: local-db
-
-patches:
-  # One-off: restore from the old cluster's backup (policy home-assistant-home-assistant-0).
-  # Remove after the first restore.
-  - patch: |-
-      - op: remove
-        path: /spec/source/fromPolicy
-      - op: add
-        path: /spec/source/identity
-        value:
-          username: home-assistant-home-assistant-0
-          hostname: home-assistant
-          sourcePath: /pvc/home-assistant-home-assistant-0
-      - op: add
-        path: /spec/repository
-        value:
-          kind: ClusterRepository
-          name: primary
-      - op: replace
-        path: /spec/policy/onMissingSnapshot
-        value: Fail
-    target:
-      group: kopiur.home-operations.com
-      kind: Restore
-      name: home-assistant-data
