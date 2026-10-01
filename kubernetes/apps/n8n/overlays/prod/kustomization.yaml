@@ -52,18 +52,56 @@ helmCharts:
             value: "regular"
           N8N_PROXY_HOPS:
             value: "1"
+          N8N_PORT:
+            value: "5678"
+          N8N_MIGRATE_FS_STORAGE_PATH:
+            value: "true"
+          N8N_UNVERIFIED_PACKAGES_ENABLED:
+            value: "true"
+          N8N_RUNNERS_TASK_TIMEOUT:
+            value: "300"
+          N8N_COMPRESSION_NODE_MAX_DECOMPRESSED_SIZE_BYTES:
+            value: "2147483648"
+          N8N_COMPRESSION_NODE_MAX_ZIP_ENTRIES:
+            value: "5000"
           N8N_ENCRYPTION_KEY:
             valueFrom:
               secretKeyRef:
                 name: n8n-secret
                 key: encryption-key
+          N8N_RUNNERS_MODE:
+            value: "external"
+          N8N_NATIVE_PYTHON_RUNNER:
+            value: "true"
+          N8N_RUNNERS_AUTH_TOKEN:
+            valueFrom:
+              secretKeyRef:
+                name: n8n-secret
+                key: runners-auth-token
+        initContainers:
+          - name: task-runners
+            image: ghcr.io/n8n-io/runners:2.41.3@sha256:1522f8179b76adcdb7900864c18b2ec57d63af472baeed874ed220bab3e66ecc
+            restartPolicy: Always
+            env:
+              - name: N8N_RUNNERS_TASK_BROKER_URI
+                value: http://127.0.0.1:5679
+              - name: N8N_RUNNERS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: n8n-secret
+                    key: runners-auth-token
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
         resources:
-          limits:
-            cpu: 750m
-            memory: 768Mi
           requests:
             cpu: 100m
             memory: 128Mi
+          limits:
+            memory: 768Mi
       worker:
         enabled: false
       webhook:
