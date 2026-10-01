@@ -66,7 +66,11 @@ helmCharts:
       scheduling:
         userScheduler:
           enabled: false
+        userPlaceholder:
+          enabled: false
       singleuser:
+        cloudMetadata:
+          blockWithIptables: false # No cloud metadata endpoint on Proxmox.
         defaultUrl: /lab
         storage:
           type: static
