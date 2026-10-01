@@ -121,13 +121,6 @@ service:
       http:
         port: 4000
 
-  api:
-    controller: blocky
-    type: ClusterIP # In-cluster API/metrics/blocky-ui.
-    ports:
-      http:
-        port: 4000
-
 persistence:
   config:
     type: configMap
