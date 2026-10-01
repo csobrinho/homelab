@@ -73,3 +73,19 @@ helmCharts:
         enabled: false
       valkey:
         enabled: false
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: n8n-kopiur
+    namespace: n8n
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 1000
+      gid: 1000
+      backup:
+        schedule:
+          cron: "" # Disable the automatic backup schedule.
+      persistence:
+        n8n:
+          existingClaim: true
