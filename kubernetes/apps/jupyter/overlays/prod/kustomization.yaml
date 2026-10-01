@@ -68,15 +68,6 @@ helmCharts:
           static:
             pvcName: jupyter-home
             subPath: "" # Single user: the whole volume is the home.
-          # Disable until the helm chart is fixed?
-          # extraVolumeMounts:
-          #   - mountPath: /dev/bus/usb
-          #     name: dev-bus-usb
-          # extraVolumes:
-          #   - hostPath:
-          #       path: /dev/bus/usb
-          #       type: Directory
-          #     name: dev-bus-usb
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
@@ -84,16 +75,17 @@ helmCharts:
     namespace: jupyter
     version: 0.1.0
     valuesInline:
-      uid: 1000
-      gid: 1000
       persistence:
         jupyter-home:
+          uid: 1000
           gid: 100
           retain: true
           accessMode: ReadWriteOnce
           size: 5Gi
           storageClass: local-data
         jupyter-hub:
+          uid: 1000
+          gid: 1000
           retain: true
           accessMode: ReadWriteOnce
           size: 1Gi
