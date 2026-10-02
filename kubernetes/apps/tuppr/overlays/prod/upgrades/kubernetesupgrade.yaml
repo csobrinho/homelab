@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/tuppr.home-operations.com/kubernetesupgrade_v1alpha1.json
+apiVersion: tuppr.home-operations.com/v1alpha1
+kind: KubernetesUpgrade
+metadata:
+  name: kubernetes
+spec:
+  kubernetes:
+    # Keep in sync with talos/versions.yaml (.version.kubernetes).
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+    version: v1.37.1
+  healthChecks:
+    - apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Snapshot
+      expr: |-
+        status.phase != 'Running'
+    - apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Restore
+      expr: |-
+        !(status.phase in ['Resolving', 'Restoring'])

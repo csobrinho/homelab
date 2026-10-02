@@ -34,11 +34,32 @@
       "enabled": false
     },
     {
-      "description": "Talos/Kubernetes in talos/versions.yaml: don't let the installer 'latest' tag block RC->stable bumps",
-      "matchFileNames": ["talos/versions.yaml"],
+      "description": "Kubernetes in talos/versions.yaml and tuppr: don't let the kubelet 'latest' tag block RC->stable bumps",
+      "matchFileNames": ["talos/versions.yaml", "kubernetes/apps/tuppr/**"],
       "respectLatest": false
+    },
+    {
+      "description": "Talos group: mise talosctl joins talos/versions.yaml + tuppr TalosUpgrade (merging rolls the cluster)",
+      "matchManagers": ["mise"],
+      "matchDepNames": ["talos"],
+      "groupName": "talos",
+      "automerge": false
+    },
+    {
+      "description": "Talos group: siderolabs/talos refs in talos/versions.yaml and the tuppr TalosUpgrade",
+      "matchPackageNames": ["siderolabs/talos"],
+      "groupName": "talos",
+      "automerge": false
     }
   ],
+  "customDatasources": {
+    "talos-factory": {
+      "description": "Only offers Talos versions the image factory can build (from home-operations/renovate-presets)",
+      "defaultRegistryUrlTemplate": "https://factory.talos.dev/versions",
+      "format": "json",
+      "transformTemplates": ["{\"releases\": [$.{\"version\": $}]}"]
+    }
+  },
   "helm-values": {
     "managerFilePatterns": ["/\\.ya?ml$/"]
   },
@@ -65,8 +86,8 @@
     },
     {
       "customType": "regex",
-      "description": "Talos and Kubernetes versions in talos/versions.yaml",
-      "managerFilePatterns": ["/talos/versions\\.ya?ml$/"],
+      "description": "Talos and Kubernetes versions in talos/versions.yaml and the tuppr upgrade CRs",
+      "managerFilePatterns": ["/talos/versions\\.ya?ml$/", "/kubernetes/apps/tuppr/.+\\.ya?ml$/"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s+[a-zA-Z_]+:\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
       ],
