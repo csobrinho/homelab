@@ -8,14 +8,14 @@
 set -eu -o pipefail
 id="$1"
 version="$2"
-[[ "$id" -ge 4 && "$id" -le 12 ]] || {
-	echo "infra id must be between 4..12"
+[[ "$id" -ge 2 && "$id" -le 12 ]] || {
+	echo "infra id must be between 2..12"
 	exit 1
 }
 
 k3sup join \
 	--ip "10.10.3.1$id" \
-	--server-url "https://infra-adm:6443" \
+	--server-url "https://infra31:6443" \
 	--k3s-channel stable \
 	--k3s-version "$version" \
 	--user sobrinho \
