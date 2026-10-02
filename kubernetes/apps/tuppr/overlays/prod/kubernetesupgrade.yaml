@@ -4,6 +4,10 @@ apiVersion: tuppr.home-operations.com/v1alpha1
 kind: KubernetesUpgrade
 metadata:
   name: kubernetes
+  annotations:
+    # CRDs ship in the same sync; the validating webhook (failurePolicy: Fail) must be up first.
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   kubernetes:
     # Keep in sync with talos/versions.yaml (.version.kubernetes).

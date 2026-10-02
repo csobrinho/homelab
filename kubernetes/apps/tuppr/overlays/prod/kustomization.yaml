@@ -6,7 +6,8 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - upgrades
+  - kubernetesupgrade.yaml
+  - talosupgrade.yaml
 
 helmCharts:
   - name: tuppr
