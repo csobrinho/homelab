@@ -1,0 +1,31 @@
+# From https://github.com/home-operations/tuppr/blob/main/charts/tuppr/values.yaml
+# From https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/system-upgrade/tuppr
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - kubernetesupgrade.yaml
+  - talosupgrade.yaml
+
+helmCharts:
+  - name: tuppr
+    repo: oci://ghcr.io/home-operations/charts
+    releaseName: tuppr
+    namespace: system-upgrade
+    version: 0.5.7
+    includeCRDs: true
+    valuesInline:
+      replicaCount: 2
+      monitoring:
+        dashboards:
+          enabled: true
+          grafanaOperator:
+            enabled: true
+            matchLabels:
+              dashboards: grafana
+        prometheusRule:
+          enabled: true
+        serviceMonitor:
+          enabled: true

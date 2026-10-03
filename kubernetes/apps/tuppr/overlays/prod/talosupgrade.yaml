@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/tuppr.home-operations.com/talosupgrade_v1alpha1.json
+apiVersion: tuppr.home-operations.com/v1alpha1
+kind: TalosUpgrade
+metadata:
+  name: talos
+  annotations:
+    # CRDs ship in the same sync; the validating webhook (failurePolicy: Fail) must be up first.
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  talos:
+    # Keep in sync with talos/versions.yaml (.version.talos).
+    # renovate: datasource=custom.talos-factory depName=siderolabs/talos versioning=semver
+    version: v1.14.1
+  policy:
+    rebootMode: powercycle
+  healthChecks:
+    - apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Snapshot
+      expr: |-
+        status.phase != 'Running'
+    - apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Restore
+      expr: |-
+        !(status.phase in ['Resolving', 'Restoring'])

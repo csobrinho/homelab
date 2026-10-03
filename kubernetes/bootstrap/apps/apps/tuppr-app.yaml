@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tuppr
+  namespace: argocd
+spec:
+  destination:
+    namespace: system-upgrade
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/tuppr/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences:
+    # Controller self-signs the webhook cert and injects the CA.
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle

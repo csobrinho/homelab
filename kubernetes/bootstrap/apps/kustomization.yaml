@@ -76,6 +76,7 @@ resources:
   - apps/talos-backup-app.yaml
   - apps/tautulli-app.yaml
   - apps/teamarr-app.yaml
+  - apps/tuppr-app.yaml
   - apps/unpackerr-app.yaml
   - apps/whatsapp-app.yaml
   - apps/windmill-app.yaml
