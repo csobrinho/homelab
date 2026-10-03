@@ -42,6 +42,7 @@ resources:
   - apps/binner-app.yaml
   - apps/blocky-app.yaml
   - apps/changedetection-app.yaml
+  - apps/cleanuparr-app.yaml
   - apps/cloudnative-pg-app.yaml
   - apps/cyberchef-app.yaml
   - apps/descheduler-app.yaml

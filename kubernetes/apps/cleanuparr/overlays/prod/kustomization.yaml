@@ -1,0 +1,104 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://cleanuparr.github.io/Cleanuparr/docs/installation/detailed
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: cleanuparr
+    version: 5.2.1
+    namespace: media
+    valuesFile: values-empty.yaml
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+      defaultPodOptions:
+        securityContext:
+          fsGroup: &uid 568
+          fsGroupChangePolicy: OnRootMismatch
+          supplementalGroups:
+            - *uid
+      service:
+        app:
+          controller: cleanuparr
+          ports:
+            app:
+              port: &port 11011
+      controllers:
+        cleanuparr:
+          strategy: Recreate
+          defaultContainerOptions:
+            # Non-root start makes the entrypoint skip its gosu/chown path (rootless mode).
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: false
+              runAsGroup: *uid
+              runAsNonRoot: true
+              runAsUser: *uid
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            app:
+              image:
+                repository: ghcr.io/cleanuparr/cleanuparr
+                tag: 2.10.8@sha256:ec444338a67e429a20f6eef938e1ed771ce357ed4831765026096061a09bbbb7
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                PORT: *port
+                PUID: *uid
+                PGID: *uid
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: HTTP
+                  port: *port
+                  path: /health
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi
+      persistence:
+        config:
+          existingClaim: cleanuparr-config
+          globalMounts:
+            - path: /config
+        # Same /data view as qbittorrent so unlinked/orphaned-download cleanup paths match.
+        data:
+          type: nfs
+          server: infra-vm
+          path: /mnt/library
+          globalMounts:
+            - path: /data
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: cleanuparr-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      # yaml-language-server: $schema=https://raw.githubusercontent.com/csobrinho/helm-charts/refs/heads/main/charts/kopiur-pvc/values.schema.json
+      uid: 568
+      gid: 568
+      persistence:
+        cleanuparr-config:
+          enabled: true
+          retain: true
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 1Gi
