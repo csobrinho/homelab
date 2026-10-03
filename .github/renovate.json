@@ -46,9 +46,10 @@
       "automerge": false
     },
     {
-      "description": "Talos group: siderolabs/talos refs in talos/versions.yaml and the tuppr TalosUpgrade",
+      "description": "Talos group: siderolabs/talos refs in talos/versions.yaml and the tuppr TalosUpgrade (factory has no release timestamps, so don't let minimumReleaseAge drop them)",
       "matchPackageNames": ["siderolabs/talos"],
       "groupName": "talos",
+      "minimumReleaseAgeBehaviour": "timestamp-optional",
       "automerge": false
     }
   ],
