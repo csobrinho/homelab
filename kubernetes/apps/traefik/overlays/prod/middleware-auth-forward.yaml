@@ -91,7 +91,7 @@ metadata:
   name: middleware-auth-forward
   namespace: traefik
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-int
+    external-dns.kubernetes.io/target: infra-int
 spec:
   entryPoints:
     - websecure

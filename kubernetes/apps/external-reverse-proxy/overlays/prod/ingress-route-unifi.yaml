@@ -4,7 +4,7 @@ metadata:
   name: unifi-ingress
   namespace: infra
   annotations:
-    external-dns.alpha.kubernetes.io/target: unifi
+    external-dns.kubernetes.io/target: unifi
 spec:
   entryPoints:
     # - websecure Only external. Internal access goes directly.

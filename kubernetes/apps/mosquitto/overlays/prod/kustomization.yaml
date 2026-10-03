@@ -22,7 +22,7 @@ helmCharts:
         main:
           externalTrafficPolicy: Local
           annotations:
-            external-dns.alpha.kubernetes.io/hostname: infra-mqtt
+            external-dns.kubernetes.io/hostname: infra-mqtt
           labels:
             io.cilium/lb-pool: pool-infra-mqtt
           type: LoadBalancer

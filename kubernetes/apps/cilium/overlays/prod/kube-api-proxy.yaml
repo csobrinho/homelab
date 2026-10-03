@@ -71,7 +71,7 @@ metadata:
   name: kube-api-proxy
   namespace: kube-system
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: infra-adm
+    external-dns.kubernetes.io/hostname: infra-adm
   labels:
     io.cilium/lb-pool: pool-infra-adm
 spec:

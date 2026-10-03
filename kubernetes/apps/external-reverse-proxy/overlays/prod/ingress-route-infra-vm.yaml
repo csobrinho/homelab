@@ -4,7 +4,7 @@ metadata:
   name: infra-vm-ingress
   namespace: infra
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-vm
+    external-dns.kubernetes.io/target: infra-vm
 spec:
   entryPoints:
     # - websecure Only external. Internal access goes directly.

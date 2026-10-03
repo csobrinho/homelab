@@ -107,7 +107,7 @@ service:
     controller: blocky
     type: LoadBalancer
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: infra-dns1
+      external-dns.kubernetes.io/hostname: infra-dns1
     externalTrafficPolicy: Local
     labels:
       io.cilium/lb-pool: pool-infra-dns1

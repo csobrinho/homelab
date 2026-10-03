@@ -63,7 +63,7 @@ spec:
             metadata:
               name: "cluster"
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: infra-pg
+                external-dns.kubernetes.io/hostname: infra-pg
               labels:
                 io.cilium/lb-pool: pool-infra-pg
             spec:

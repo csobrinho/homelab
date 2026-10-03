@@ -21,7 +21,7 @@ helmCharts:
         main:
           externalTrafficPolicy: Local
           annotations:
-            external-dns.alpha.kubernetes.io/hostname: infra-plex
+            external-dns.kubernetes.io/hostname: infra-plex
           labels:
             io.cilium/lb-pool: pool-infra-plex
           type: LoadBalancer

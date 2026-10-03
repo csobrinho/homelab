@@ -4,7 +4,7 @@ metadata:
   name: grafana-ingress
   namespace: o11y
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-int
+    external-dns.kubernetes.io/target: infra-int
 spec:
   entryPoints:
     - websecure

@@ -5,7 +5,7 @@ metadata:
   name: open-webui-ingress
   namespace: llm
   annotations:
-    external-dns.alpha.kubernetes.io/target: infra-int
+    external-dns.kubernetes.io/target: infra-int
 spec:
   entryPoints:
     - websecure
