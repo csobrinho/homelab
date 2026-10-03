@@ -12,7 +12,7 @@ spec:
   talos:
     # Keep in sync with talos/versions.yaml (.version.talos).
     # renovate: datasource=custom.talos-factory depName=siderolabs/talos versioning=semver
-    version: v1.14.1
+    version: v1.14.2
   policy:
     rebootMode: powercycle
   healthChecks:
