@@ -13,6 +13,9 @@ helmCharts:
     namespace: kube-system
     version: 0.7.4
     includeCRDs: true
+    # The post-delete cleanup DaemonSet otherwise runs permanently and races spegel's init on
+    # boot, wiping the containerd mirror config.
+    skipHooks: true
     valuesInline:
       # Based on: https://github.com/onedr0p/home-ops/blob/52a4a767d0bec8f115563653c89bebc5e65bef41/kubernetes/apps/kube-system/spegel/app/helmrelease.yaml
       # TODO: Needs grafana operator to be installed in the cluster for this to work
