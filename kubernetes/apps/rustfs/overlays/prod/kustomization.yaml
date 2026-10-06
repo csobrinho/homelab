@@ -103,3 +103,6 @@ helmCharts:
           type: emptyDir
         logs:
           type: emptyDir
+
+components:
+  - ../../../../components/disable-revision-history

@@ -21,3 +21,6 @@ helmCharts:
           cpu: 100m
         limits:
           memory: 128Mi
+
+components:
+  - ../../../../components/disable-revision-history

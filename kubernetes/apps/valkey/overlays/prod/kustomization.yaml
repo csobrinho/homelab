@@ -91,3 +91,6 @@ patches:
       - op: add
         path: /metadata/namespace
         value: infra
+
+components:
+  - ../../../../components/disable-revision-history

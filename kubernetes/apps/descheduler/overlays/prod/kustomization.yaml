@@ -67,3 +67,6 @@ helmCharts:
                   - RemovePodsViolatingNodeTaints
                   - RemovePodsViolatingNodeAffinity
                   - RemovePodsViolatingInterPodAntiAffinity
+
+components:
+  - ../../../../components/disable-revision-history

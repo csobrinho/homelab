@@ -68,3 +68,6 @@ helmCharts:
       kubeletPlugin:
         nodeSelector:
           nvidia.com/gpu.present: "true"
+
+components:
+  - ../../../../components/disable-revision-history

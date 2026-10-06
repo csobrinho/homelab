@@ -29,3 +29,6 @@ helmCharts:
           enabled: true
         serviceMonitor:
           enabled: true
+
+components:
+  - ../../../../components/disable-revision-history

@@ -25,3 +25,6 @@ helmCharts:
             operator: "Equal"
             value: "present"
             effect: "NoSchedule"
+
+components:
+  - ../../../../components/disable-revision-history

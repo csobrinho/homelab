@@ -24,3 +24,6 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 64Mi
           storageClass: local-data
+
+components:
+  - ../../../../components/disable-revision-history

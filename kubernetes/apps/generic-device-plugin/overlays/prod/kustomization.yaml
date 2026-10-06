@@ -69,3 +69,6 @@ helmCharts:
           hostPath: /dev
           globalMounts:
             - path: /dev
+
+components:
+  - ../../../../components/disable-revision-history

@@ -84,3 +84,6 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /var/lock
+
+components:
+  - ../../../../components/disable-revision-history

@@ -29,3 +29,6 @@ helmCharts:
           - operator: Exists
       metrics:
         enabled: true
+
+components:
+  - ../../../../components/disable-revision-history

@@ -22,3 +22,6 @@ helmCharts:
           memory: 128Mi
       serviceMonitor:
         enabled: true
+
+components:
+  - ../../../../components/disable-revision-history

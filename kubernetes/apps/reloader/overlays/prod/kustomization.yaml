@@ -37,3 +37,6 @@ helmCharts:
               memory: 128Mi
             limits:
               memory: 512Mi
+
+components:
+  - ../../../../components/disable-revision-history

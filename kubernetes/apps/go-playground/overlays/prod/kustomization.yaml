@@ -22,3 +22,4 @@ helmCharts:
 
 components:
   - ../../../../components/managed-sablier
+  - ../../../../components/disable-revision-history

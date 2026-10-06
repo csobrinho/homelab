@@ -20,3 +20,6 @@ helmCharts:
     version: 0.29.1
     includeCRDs: true
     valuesFile: values.yaml
+
+components:
+  - ../../../../components/disable-revision-history

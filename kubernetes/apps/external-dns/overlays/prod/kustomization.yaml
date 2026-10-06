@@ -66,3 +66,6 @@ helmCharts:
       triggerLoopOnEvent: true # Triggers run loop on create/update/delete events in addition of regular interval.
       serviceMonitor:
         enabled: true
+
+components:
+  - ../../../../components/disable-revision-history

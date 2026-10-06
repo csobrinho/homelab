@@ -33,3 +33,6 @@ helmCharts:
         nameservers:
           - 1.1.1.1
           - 8.8.8.8
+
+components:
+  - ../../../../components/disable-revision-history

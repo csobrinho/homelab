@@ -33,3 +33,6 @@ helmCharts:
     valuesFile: values.yaml
     apiVersions:
       - monitoring.coreos.com/v1
+
+components:
+  - ../../../../components/disable-revision-history

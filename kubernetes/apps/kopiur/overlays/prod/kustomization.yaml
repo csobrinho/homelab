@@ -42,3 +42,6 @@ helmCharts:
       features:
         credentialProjection:
           enabled: true
+
+components:
+  - ../../../../components/disable-revision-history

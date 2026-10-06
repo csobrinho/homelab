@@ -39,3 +39,6 @@ helmCharts:
       enterprise:
         enabled: false
 
+
+components:
+  - ../../../../components/disable-revision-history
