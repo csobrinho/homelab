@@ -2,6 +2,6 @@
 set -x
 set -eu -o pipefail
 
-cd /mnt/library/config/homelab
+cd "$(dirname "$0")/.." || exit 1
 
 find -type d -wholename */prod/charts -exec rm -rv \{\} \+

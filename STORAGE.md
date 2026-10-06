@@ -117,7 +117,7 @@ fleet.
 | Pool     | Members        | ashift | recordsize | sync       | Other                          | Purpose                               |
 | -------- | -------------- | ------ | ---------- | ---------- | ------------------------------ | ------------------------------------- |
 | `vms`    | 2× 2TB (A + B) | 12     | — (zvols)  | `disabled` | `volblocksize=16K` via Proxmox | VM boot disks                         |
-| `data`   | 2× 2TB (B)     | 12     | `128K`     | `disabled` | `xattr=sa`, `acltype=posix`    | General k8s PVCs; parents `data/s3`   |
+| `data`   | 2× 2TB (B)     | 12     | `128K`     | `disabled` | `xattr=sa`, `acltype=posix`    | General k8s PVCs; `data/s3`, `data/config` |
 | `db`     | 2× 4TB (A + C) | 12     | `16K`      | `standard` | `logbias=latency`              | Postgres/CNPG, SQLite, Home Assistant |
 | `models` | 2× 2TB (A)     | 12     | `1M`       | `disabled` |                                | LLM weights                           |
 
@@ -155,6 +155,9 @@ zpool create -o ashift=12 -o autotrim=on \
 # Inherits sync=disabled / lz4 / atime=off / xattr=sa / acltype=posix from data.
 zfs create data/s3
 zfs set quota=250G data/s3
+
+# data/config — host-side working tree (see "data/config" below). Same inherited props.
+zfs create -o mountpoint=/mnt/config -o quota=25G data/config
 
 # db — target: 2× 4TB mirror on A + C
 zpool create -o ashift=12 -o autotrim=on \
@@ -221,6 +224,31 @@ durability needs.
 a single non-PLP SSD, no mirror yet. RustFS holds a _staging_ copy only — the old
 cluster keeps the source until each restore is verified. Don't delete anything on
 the old side early; watch pool usage (destination PVCs also land on `data`).
+
+### `data/config` — host working tree
+
+Filesystem dataset (not a zvol) mounted at **`/mnt/config`**. It replaces `/mnt/library/config`,
+which lives on the `library` mergerfs pool: XFS, no redundancy, no backups, and files may be
+split across `library_d1` / `library_d2`.
+
+|            |                                                                                                    |
+| ---------- | -------------------------------------------------------------------------------------------------- |
+| Dataset    | `data/config` — `quota=25G`, `mountpoint=/mnt/config`; inherits `sync=disabled` / `lz4` / `atime=off` / `xattr=sa` / `acltype=posix` / `recordsize=128K` from `data` |
+| Contents   | `homelab` (this repo), `helm-charts`, other source repos, local secret plaintexts (~1.7G)           |
+| Consumers  | host shell only — nothing in `/etc` (fstab, systemd, `storage.cfg`, exports) references the old path |
+
+**Why a dataset, not a zvol:** it's a plain file tree used directly on the host. A dataset gives
+per-file compression, no fixed size or inner filesystem, and browsable `.zfs/snapshot/`.
+
+**Why on `data`, not its own pool or `db`:** `data`'s props (128K records, `xattr=sa`, POSIX ACLs)
+fit general files, and the dataset becomes mirrored for free on the `data` `zpool attach`. `db`
+is tuned for 16K sync writes and is due for a rebuild.
+
+**Why `/mnt/config`, not over `/mnt/library/config`:** mounting ZFS inside the mergerfs FUSE tree
+depends on mount ordering and is fragile.
+
+**Caveat:** `data` is still single-disk, so until the mirror lands this buys checksums, snapshots
+and `zfs send` but **not** redundancy. Snapshots aren't a backup — point kopiur / `zfs send` at it.
 
 ### mergerfs — `library`
 
@@ -355,7 +383,10 @@ layered on top of that, not a substitute for it.
 
 - [x] Create `data` pool on `S7KHNU0X801652Y`
 - [x] Create `data/s3` dataset + `local-s3` storage + StorageClass
-- [ ] Deploy RustFS + its 200Gi PVC on `local-s3`
+- [x] Deploy RustFS + its 200Gi PVC on `local-s3`
+- [x] Create `data/config` at `/mnt/config`, rsync `/mnt/library/config/` into it, then retire
+      the old tree; repoint `scripts/new` and `scripts/rm-charts` (hardcode the old path)
+- [ ] Add a backup for `data/config` (snapshots + off-host `zfs send` or kopiur)
 - [ ] Clear `local-zfs` content types (`pvesm set local-zfs --content ""`) —
       still shows `content rootdir`
 - [ ] Move storage definitions into Ansible, incl. the hand-applied
