@@ -59,10 +59,11 @@ helmCharts:
             value: present
             effect: NoSchedule
       resources:
-        limits:
-          memory: 8Gi
         requests:
           cpu: 500m
+        limits:
+          cpu: 0 # Unlimited.
+          memory: 8Gi
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
