@@ -18,7 +18,6 @@ helmCharts:
       # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
       controllers:
         app:
-          revisionHistoryLimit: 0
           containers:
             app:
               image:
@@ -89,3 +88,4 @@ helmCharts:
 
 components:
   - ../../../../components/managed-sablier
+  - ../../../../components/disable-revision-history

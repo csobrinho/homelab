@@ -32,7 +32,6 @@ controllers:
   blocky:
     type: deployment
     replicas: 2
-    revisionHistoryLimit: 0
     strategy: RollingUpdate
     rollingUpdate:
       unavailable: 0

@@ -22,7 +22,6 @@ helmCharts:
       controllers:
         vllm:
           strategy: Recreate # One GPU; the new pod can't get a claim until the old one is gone.
-          revisionHistoryLimit: 0
           pod:
             securityContext:
               runAsNonRoot: true
@@ -163,7 +162,6 @@ helmCharts:
       controllers:
         open-webui:
           strategy: Recreate
-          revisionHistoryLimit: 0
           containers:
             app:
               # Runs as root: the image's /app is root-owned and it writes there at startup.
@@ -262,3 +260,6 @@ helmCharts:
             runAsGroup: 0
           podSecurityContext:
             fsGroup: 0
+
+components:
+  - ../../../../components/disable-revision-history

@@ -29,7 +29,6 @@ helmCharts:
         podAnnotations:
           secret.reloader.stakater.com/auto: "true"
           configmap.reloader.stakater.com/auto: "true"
-        revisionHistoryLimit: 0
       redis:
         enabled: false
       externalRedis:
@@ -113,3 +112,6 @@ helmCharts:
         volumes:
           - name: custom-tools
             emptyDir: {}
+
+components:
+  - ../../../../components/disable-revision-history

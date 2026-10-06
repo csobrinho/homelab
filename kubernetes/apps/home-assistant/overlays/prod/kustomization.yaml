@@ -17,7 +17,6 @@ helmCharts:
     valuesInline:
       controllers:
         app:
-          revisionHistoryLimit: 0
           strategy: Recreate
           containers:
             app:
@@ -139,3 +138,6 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 20Gi
           storageClass: local-db
+
+components:
+  - ../../../../components/disable-revision-history

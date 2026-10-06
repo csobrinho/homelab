@@ -5,7 +5,7 @@ metadata:
 
 patches:
   - patch: |
-      - op: replace
+      - op: add
         path: /spec/revisionHistoryLimit
         value: 0
     target:
