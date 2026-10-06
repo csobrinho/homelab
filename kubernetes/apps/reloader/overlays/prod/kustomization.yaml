@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://ghcr.io/stakater/charts
     releaseName: reloader
     namespace: reloader
-    version: 2.2.17
+    version: 2.2.18
     includeCRDs: true
     valuesInline:
       reloader:
