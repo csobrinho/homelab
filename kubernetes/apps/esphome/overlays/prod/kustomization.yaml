@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: esphome
     namespace: esphome
-    version: 25.16.1
+    version: 25.16.2
     includeCRDs: true
     valuesInline:
       image:
