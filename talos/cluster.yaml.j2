@@ -123,6 +123,17 @@ params:
   net.ipv4.tcp_wmem: 4096 65536 67108864
   user.max_user_namespaces: "11255"
 ---
+# Read by the nfsrahead extension's udev rule on each NFS bdi; 128 KiB default starves Plex reads.
+# Ignored on v1.14.x (bundled nfs4=16000), honoured once siderolabs/extensions#1255 ships.
+apiVersion: v1alpha1
+kind: EtcFileConfig
+name: nfs.conf
+mode: 0o644
+contents: |
+  [nfsrahead]
+  nfs4=16384
+  default=128
+---
 apiVersion: v1alpha1
 kind: EtcFileConfig
 name: nfsmount.conf
