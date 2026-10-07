@@ -213,7 +213,6 @@ helmCharts:
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
                 KV: k8v4
                 VISION: "no"
-                GPU: "0" # Only card visible in the pod.
                 # Experts pinned in RAM. setup reads /proc/meminfo (the node's total, not
                 # our limit), so pin the mode instead of trusting auto.
                 LOW_RAM: "off"
