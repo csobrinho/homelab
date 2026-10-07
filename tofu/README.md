@@ -6,7 +6,7 @@ provider:
 
 - **Control plane** — `infra1/2/3` (`var.nodes`), 4 vCPU / 8 GiB each.
 - **Workers** — `var.workers`, all `infra4+`: `infra4` is the GPU node (12 vCPU /
-  64 GiB) with both RTX 5090s passed through — it replaces the old k3s VM 110
+  128 GiB) with both RTX 5090s passed through — it replaces the old k3s VM 110
   (decommission that by hand — not managed here); `infra5/6/7` are general
   compute (24 vCPU / 96 GiB each).
 

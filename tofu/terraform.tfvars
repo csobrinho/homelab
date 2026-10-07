@@ -13,9 +13,10 @@ disk_size = 64   # GiB
 # --- Worker sizing (defaults; override per node in the workers map below) -------
 # Host budget: 128 threads / 512 GiB, 2x RTX 5090. Reserve ~8 threads / ~48 GiB
 # for Proxmox + ZFS ARC; control plane takes 12 threads / 24 GiB; infra4 (GPU)
-# is pinned at 12 threads / 64 GiB. General workers at 16 threads / 96 GiB each -
-# 16 vCPUs = 8 physical cores = exactly one whole CCD per worker via `qm
-# affinity`, keeping CCD5-7 fully unpinned for idle power. See MIGRATION.md.
+# is pinned at 12 threads / 128 GiB (Strata's resident experts + vLLM). General
+# workers at 16 threads / 96 GiB each - 16 vCPUs = 8 physical cores = exactly one
+# whole CCD per worker via `qm affinity`, keeping CCD5-7 fully unpinned for idle
+# power. See MIGRATION.md.
 worker_cpu_cores = 16
 worker_memory    = 98304 # 96 GiB
 worker_disk_size = 200   # GiB
@@ -67,7 +68,7 @@ workers = {
     vm_id       = 214
     mac_address = "52:54:00:0a:02:14"
     cpu_cores   = 12
-    memory      = 65536 # 64 GiB
+    memory      = 131072 # 128 GiB; ~24 GiB host budget left after this.
     hostpci = [
       { device = "hostpci0", mapping = "gpu0" }, # RTX 5090 #1
       { device = "hostpci1", mapping = "gpu1" }, # RTX 5090 #2
