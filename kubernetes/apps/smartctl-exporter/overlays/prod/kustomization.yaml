@@ -1,0 +1,12 @@
+# Based on: https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/o11y/smartctl-exporter
+# Exporter runs on the Proxmox host: Talos VMs only see virtio-scsi disks, not the NVMe drives.
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: o11y
+
+resources:
+  - ../../base
+  - grafana-dashboard.yaml
+  - prometheus-rule.yaml
+  - scrape-config.yaml

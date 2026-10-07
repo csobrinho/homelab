@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: smartctl-exporter
+spec:
+  scrapeInterval: 1m
+  scrapeTimeout: 30s
+  staticConfigs:
+    # smartctl_exporter on the Proxmox host.
+    - targets: ["infra-vm:9633"]
+      labels:
+        instance: infra-vm
+  metricsPath: /metrics
