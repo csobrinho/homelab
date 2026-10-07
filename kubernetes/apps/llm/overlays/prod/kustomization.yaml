@@ -181,12 +181,37 @@ helmCharts:
                 repository: ghcr.io/csobrinho/strata
                 tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
                 pullPolicy: IfNotPresent
+              # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
+              # (engine flags + config keys) into the saved config on every start. A REINSTALL
+              # start regenerates the config after this runs: the patch lands on the next start.
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  /opt/strata/.venv/bin/python - <<'EOF'
+                  import glob, json, os
+                  patch = json.loads(os.environ.get("STRATA_CONFIG_PATCH") or "{}")
+                  for path in glob.glob("/data/config/strata-*.json"):
+                      cfg = json.load(open(path))
+                      args = cfg.setdefault("args", [])
+                      for flag, value in patch.get("args", {}).items():
+                          if flag in args[:-1]:
+                              args[args.index(flag) + 1] = str(value)
+                          else:
+                              args += [flag, str(value)]
+                      cfg.update({k: v for k, v in patch.items() if k != "args"})
+                      with open(path + ".tmp", "w") as f:
+                          json.dump(cfg, f, indent=1)
+                      os.replace(path + ".tmp", path)
+                      print(f"[patch] {path}: {json.dumps(patch)}", flush=True)
+                  EOF
+                  exec ./docker-entrypoint.sh
               # Read by docker-entrypoint.sh on first start (setup + ~70GB download).
               # Change any of these later with REINSTALL=1 for one start.
               env:
                 TZ: America/Los_Angeles
-                MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM. 64GB+ pick.
-                CONTEXT: "131072"
+                MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
+                CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
+                REINSTALL: "1" # One start to apply CONTEXT; remove after.
                 KV: k8v4
                 VISION: "no"
                 GPU: "0" # Only card visible in the pod.
@@ -197,6 +222,14 @@ helmCharts:
                 # Names Open WebUI / in-cluster clients use; without an API key, Strata
                 # rejects any other Host (DNS-rebinding guard).
                 STRATA_ALLOWED_HOSTS: strata.llm.svc.cluster.local,strata.llm,strata
+                # - vram-reserve: keep ~1.4Gi of GPU 0 free for transcode (700 left only ~400Mi).
+                # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
+                #   avoids re-reading up to 262K tokens.
+                # - expert profile: start from the learned cache, kept on the volume.
+                STRATA_CONFIG_PATCH: >-
+                  {"args": {"--vram-reserve-mib": 1700, "--conversation-cache-mib": 12288,
+                  "--conversation-cache-slots": 4},
+                  "expert_profile_save": "/data/expert-profile-learned.bin"}
               probes:
                 liveness: &probe-strata
                   enabled: true
@@ -229,10 +262,11 @@ helmCharts:
                     failureThreshold: 360
               resources:
                 requests:
-                  cpu: "4" # CPU experts (AVX-512) do real work here.
-                  memory: 56Gi # Pinned expert arena + server; real, not burst.
+                  cpu: "4" # CPU experts (AVX2 on this EPYC) do real work here.
+                  # Pinned arena ~53Gi + 262K KV ~2.4Gi + conversation cache 12Gi.
+                  memory: 64Gi
                 limits:
-                  memory: 72Gi
+                  memory: 84Gi
                 claims:
                   - name: llm-gpu0
               securityContext:
