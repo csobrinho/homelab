@@ -152,6 +152,111 @@ helmCharts:
           globalMounts:
             - path: /tmp
 
+  # Strata (github.com/Niko1221/Strata): Qwen3.8-Flash-Next (125B MoE, ~6B active) with
+  # experts split across VRAM / RAM / disk. OpenAI + Anthropic API at
+  # http://strata.llm.svc.cluster.local:8080/v1.
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: strata
+    version: 5.2.1
+    namespace: llm
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        strata:
+          strategy: Recreate
+          pod:
+            resourceClaims:
+              - name: llm-gpu0
+                resourceClaimTemplateName: llm-gpu0 # GPU 0 minus transcode's 1Gi.
+            tolerations:
+              - key: nvidia.com/gpu
+                operator: Exists
+                effect: NoSchedule
+          containers:
+            app:
+              # No upstream image: built sm_120-only in github.com/csobrinho/custom-images.
+              # Runs as root: the entrypoint writes its config symlink into /opt/strata.
+              image:
+                repository: ghcr.io/csobrinho/strata
+                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
+                pullPolicy: IfNotPresent
+              # Read by docker-entrypoint.sh on first start (setup + ~70GB download).
+              # Change any of these later with REINSTALL=1 for one start.
+              env:
+                TZ: America/Los_Angeles
+                MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM. 64GB+ pick.
+                CONTEXT: "131072"
+                KV: k8v4
+                VISION: "no"
+                GPU: "0" # Only card visible in the pod.
+                # Experts pinned in RAM. setup reads /proc/meminfo (the node's total, not
+                # our limit), so pin the mode instead of trusting auto.
+                LOW_RAM: "off"
+                HF_HOME: /data/huggingface
+              probes:
+                liveness: &probe-strata
+                  enabled: true
+                  custom: true
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: &port-strata 8080
+                    periodSeconds: 30
+                    timeoutSeconds: 10
+                    failureThreshold: 5
+                readiness:
+                  <<: *probe-strata
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port-strata
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 3
+                startup:
+                  <<: *probe-strata
+                  spec:
+                    httpGet:
+                      path: /health
+                      port: *port-strata
+                    # First boot downloads ~70GB and builds the expert pack: allow 2h.
+                    periodSeconds: 20
+                    timeoutSeconds: 5
+                    failureThreshold: 360
+              resources:
+                requests:
+                  cpu: "4" # CPU experts (AVX-512) do real work here.
+                  memory: 56Gi # Pinned expert arena + server; real, not burst.
+                limits:
+                  memory: 72Gi
+                claims:
+                  - name: llm-gpu0
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: false
+      service:
+        app:
+          controller: strata
+          ports:
+            http:
+              port: *port-strata
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          forceRename: strata-data
+          # Re-downloadable: no kopiur backup. Model ~70GB + pack + MTP layer (~6GB).
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 200Gi
+          retain: true
+          globalMounts:
+            - path: /data
+        tmp:
+          type: emptyDir
+          globalMounts:
+            - path: /tmp
+
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: open-webui
@@ -178,8 +283,10 @@ helmCharts:
                 WEBUI_SECRET_KEY_FILE: /app/backend/data/.webui_secret_key
                 ENABLE_OLLAMA_API: "False"
                 ENABLE_OPENAI_API: "True"
-                OPENAI_API_BASE_URL: http://vllm.llm.svc.cluster.local:8000/v1
-                OPENAI_API_KEY: none # vLLM runs without --api-key.
+                # vLLM; Strata. Persisted in the DB after first boot: if Strata doesn't
+                # show up, add it under Admin > Settings > Connections.
+                OPENAI_API_BASE_URLS: http://vllm.llm.svc.cluster.local:8000/v1;http://strata.llm.svc.cluster.local:8080/v1
+                OPENAI_API_KEYS: none;none # Neither runs with an API key.
                 DEFAULT_MODELS: qwen3.8-27b
                 ANONYMIZED_TELEMETRY: "False"
                 DO_NOT_TRACK: "True"
