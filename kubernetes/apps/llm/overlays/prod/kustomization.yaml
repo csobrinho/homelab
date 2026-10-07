@@ -218,9 +218,10 @@ helmCharts:
                 # our limit), so pin the mode instead of trusting auto.
                 LOW_RAM: "off"
                 HF_HOME: /data/huggingface
-                # Names Open WebUI / in-cluster clients use; without an API key, Strata
-                # rejects any other Host (DNS-rebinding guard).
-                STRATA_ALLOWED_HOSTS: strata.llm.svc.cluster.local,strata.llm,strata
+                # Names the dashboard / Open WebUI / in-cluster clients use; without an API
+                # key, Strata rejects any other Host (DNS-rebinding guard).
+                STRATA_ALLOWED_HOSTS: >-
+                  strata.sobrinho.pt,strata.llm.svc.cluster.local,strata.llm,strata
                 # - vram-reserve: keep ~1.4Gi of GPU 0 free for transcode (700 left only ~400Mi).
                 # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
                 #   avoids re-reading up to 262K tokens.
