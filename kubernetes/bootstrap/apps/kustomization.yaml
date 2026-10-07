@@ -31,7 +31,6 @@ resources:
   - apps/node-feature-discovery-app.yaml
   - apps/nvidia-gpu-exporter-app.yaml
   - apps/nvidia-gpu-operator-app.yaml
-  - apps/smartctl-exporter-app.yaml
   - apps/snapshot-controller-app.yaml
 
   # sync-wave: 0
@@ -63,6 +62,7 @@ resources:
   - apps/mqtt-explorer-app.yaml
   - apps/n8n-app.yaml
   - apps/node-red-app.yaml
+  - apps/nut-exporter-app.yaml
   # - apps/ollama-app.yaml
   - apps/plex-app.yaml
   - apps/prowlarr-app.yaml
@@ -72,6 +72,7 @@ resources:
   - apps/resource-claims-app.yaml
   - apps/rustfs-app.yaml
   - apps/sablier-app.yaml
+  - apps/smartctl-exporter-app.yaml
   - apps/sonarr-app.yaml
   - apps/streamflow-app.yaml
   - apps/supermarket-app.yaml

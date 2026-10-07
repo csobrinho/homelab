@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: smartctl-exporter
+  name: nut-exporter
   namespace: argocd
 spec:
   destination:
@@ -9,6 +9,6 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: kubernetes/apps/smartctl-exporter/overlays/prod
+    path: kubernetes/apps/nut-exporter/overlays/prod
     repoURL: https://github.com/csobrinho/homelab
   ignoreDifferences: []

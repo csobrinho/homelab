@@ -1,0 +1,83 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# Exporter for the NUT server on the Proxmox host (UPS `rack`).
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: o11y
+
+resources:
+  - ../../base
+  - grafana-dashboard.yaml
+  - secrets/nut-exporter-secret-enc.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: nut-exporter
+    version: 5.2.1
+    namespace: o11y
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        app:
+          containers:
+            app:
+              image:
+                repository: ghcr.io/druggeri/nut_exporter
+                tag: 3.3.0@sha256:276460d141c732772f8b1fcd785a7de272473e6d39fd85c32b163efc2999cb9a
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                NUT_EXPORTER_SERVER: infra-vm
+                NUT_EXPORTER_USERNAME: monitor
+                # Default set plus what dashboard 19308 queries.
+                NUT_EXPORTER_VARIABLES: >-
+                  battery.charge,battery.charge.low,battery.charge.warning,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,output.voltage,ups.beeper.status,ups.load,ups.realpower.nominal,ups.status
+              envFrom:
+                - secretRef:
+                    name: nut-exporter-secret
+              probes:
+                liveness:
+                  enabled: true
+                readiness:
+                  enabled: true
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+      defaultPodOptions:
+        automountServiceAccountToken: false
+        enableServiceLinks: false
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: &uid 568
+          runAsGroup: *uid
+          seccompProfile:
+            type: RuntimeDefault
+      service:
+        app:
+          primary: true
+          ports:
+            http:
+              port: 9199
+      serviceMonitor:
+        app:
+          service:
+            identifier: app
+          endpoints:
+            - port: http
+              scheme: http
+              path: /ups_metrics
+              params:
+                ups: ["rack"]
+              interval: 1m
+              scrapeTimeout: 10s
+
+components:
+  - ../../../../components/disable-revision-history
