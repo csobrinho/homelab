@@ -4,10 +4,10 @@ metadata:
   name: infra-kvm-ingress
   namespace: infra
   annotations:
-    external-dns.kubernetes.io/target: infra-int
+    external-dns.kubernetes.io/target: infra-kvm
 spec:
   entryPoints:
-    - websecure
+    # - websecure - internal access goes directly.
     - websecure-ext
   routes:
     - match: Host(`infra-kvm.sobrinho.pt`)

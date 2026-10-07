@@ -7,7 +7,7 @@ metadata:
     external-dns.kubernetes.io/target: infra-vm
 spec:
   entryPoints:
-    # - websecure Only external. Internal access goes directly.
+    # - websecure - internal access goes directly.
     - websecure-ext
   routes:
     - match: Host(`infra-vm.sobrinho.pt`)
