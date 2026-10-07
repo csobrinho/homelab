@@ -1,0 +1,16 @@
+# Installed by `just host install-tools`; scraped by kubernetes/apps/smartctl-exporter.
+[Unit]
+Description=Prometheus smartctl exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Root: smartctl needs raw access to the NVMe devices.
+ExecStart=/usr/local/bin/smartctl_exporter \
+  --web.listen-address=:9633 \
+  --smartctl.path=/usr/sbin/smartctl \
+  --smartctl.interval=120s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

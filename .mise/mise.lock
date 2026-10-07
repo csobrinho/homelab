@@ -277,6 +277,46 @@ checksum = "sha256:5fca9cd605ec29b80722b7c8c4b4a8cb8a713117c147d4213aa04ee6ad89a
 url = "https://github.com/mitsuhiko/minijinja/releases/download/2.24.0/minijinja-cli-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/511868857"
 
+[[tools."github:prometheus-community/smartctl_exporter"]]
+version = "0.15.0"
+backend = "github:prometheus-community/smartctl_exporter"
+specifiers = ["0.15.0"]
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.linux-arm64"]
+checksum = "sha256:9a870fe6401748f51f5edcd73057f1c90c0b975f1f48d986eacc61443320276c"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614858300"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.linux-arm64-musl"]
+checksum = "sha256:9a870fe6401748f51f5edcd73057f1c90c0b975f1f48d986eacc61443320276c"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614858300"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.linux-x64"]
+checksum = "sha256:32ff269f2ca5708e2aa8209c715192efcc32f87bd575cae50a76d391a484976e"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614858255"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.linux-x64-musl"]
+checksum = "sha256:32ff269f2ca5708e2aa8209c715192efcc32f87bd575cae50a76d391a484976e"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614858255"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.macos-arm64"]
+checksum = "sha256:513345e9075a65dabad8b3de3e65e612c37024adfe10267d828fcaf22c12799b"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614857851"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.macos-x64"]
+checksum = "sha256:1732f5c0f259e8f548f5691059de6f12631728d0469b2a6cd77a7c68b00e169a"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614857822"
+
+[tools."github:prometheus-community/smartctl_exporter"."platforms.windows-x64"]
+checksum = "sha256:b9614dbe2e847ebe1337fe7426bf0fcfa7f0c98f454016045eed5b1ea5d9dcae"
+url = "https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.15.0/smartctl_exporter-0.15.0.windows-amd64.zip"
+url_api = "https://api.github.com/repos/prometheus-community/smartctl_exporter/releases/assets/614859339"
+
 [[tools.helm]]
 version = "4.3.0"
 backend = "aqua:helm/helm"

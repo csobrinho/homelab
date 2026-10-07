@@ -11,6 +11,7 @@ JUST_UNSTABLE = "1"
 [tools]
 actionlint = "1.7.12"
 "github:mitsuhiko/minijinja" = "2.24.0"
+"github:prometheus-community/smartctl_exporter" = "0.15.0"
 jq = "1.8.2"
 just = "1.58.0"
 lefthook = "2.1.17"

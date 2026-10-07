@@ -14,6 +14,10 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 # [group('Bootstrap')]
 # mod bootstrap "bootstrap"
 
+# Host Recipes
+[group('Host')]
+mod host "host"
+
 # Kube Recipes
 [group('Kube')]
 mod kube "kubernetes"
