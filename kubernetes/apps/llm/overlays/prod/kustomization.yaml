@@ -211,7 +211,6 @@ helmCharts:
                 TZ: America/Los_Angeles
                 MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
-                REINSTALL: "1" # One start to apply CONTEXT; remove after.
                 KV: k8v4
                 VISION: "no"
                 GPU: "0" # Only card visible in the pod.
