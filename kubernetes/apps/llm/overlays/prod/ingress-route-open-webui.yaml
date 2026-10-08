@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/traefik.io/ingressroute_v1alpha1.json
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: open-webui-ingress
+  namespace: llm
+  annotations:
+    external-dns.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`llm.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: open-webui
+          port: http
+  tls:
+    secretName: open-webui-cert
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: open-webui-cert
+  namespace: llm
+spec:
+  secretName: open-webui-cert
+  dnsNames:
+    - llm.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

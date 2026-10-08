@@ -8,7 +8,8 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ingress-route.yaml
+  - ingress-route-open-webui.yaml
+  - ingress-route-strata.yaml
 
 helmCharts:
   # OpenAI-compatible API at http://vllm.llm.svc.cluster.local:8000/v1.
