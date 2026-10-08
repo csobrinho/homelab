@@ -10,7 +10,7 @@ resources:
   - apps/cilium-app.yaml
   - apps/coredns-app.yaml
   - apps/metrics-server-app.yaml
-  - apps/sealed-secrets-app.yaml # Load the old sealed secrets.
+  - apps/sealed-secrets-app.yaml
   - apps/spegel-app.yaml
 
   # sync-wave: -80
@@ -63,7 +63,6 @@ resources:
   - apps/n8n-app.yaml
   - apps/node-red-app.yaml
   - apps/nut-exporter-app.yaml
-  # - apps/ollama-app.yaml
   - apps/plex-app.yaml
   - apps/prowlarr-app.yaml
   - apps/qbittorrent-app.yaml
