@@ -10,8 +10,6 @@ spec:
   selector:
     matchLabels:
       app: middleware-auth-forward
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -22,8 +20,9 @@ spec:
         - image: thomseddon/traefik-forward-auth:2.2.0@sha256:e875194d67e21c077f3de0b9d315bb3023a226f2cac81ddd9d02a4250ed89b4b
           name: middleware-auth-forward
           resources:
+            requests:
+              cpu: 10m
             limits:
-              cpu: 200m
               memory: 256Mi
           ports:
             - containerPort: 4181
