@@ -19,6 +19,17 @@ helmCharts:
       TZ: America/Los_Angeles
       podOptions:
         defaultAffinity: false
+      workload:
+        main:
+          podSpec:
+            containers:
+              main:
+                env:
+                  # Add the pod ip in the Allowed Hosts or else the probes break.
+                  POD_IP: { fieldRef: { fieldPath: status.podIP } }
+                  SONARR__AUTH__REQUIRED: Enabled
+                  SONARR__SERVER__TRUSTEDNETWORKS: 10.42.0.0/16
+                  SONARR__SERVER__ALLOWEDHOSTS: sonarr.sobrinho.pt,sonarr,$(POD_IP)
       resources:
         requests:
           memory: 576Mi
@@ -36,7 +47,7 @@ helmCharts:
           mountPath: /data
       metrics:
         main:
-          enabled: false
+          enabled: true
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
