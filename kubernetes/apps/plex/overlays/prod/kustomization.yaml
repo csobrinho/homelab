@@ -32,6 +32,8 @@ helmCharts:
               main:
                 env:
                   CUDA_DISABLE_PERF_BOOST: "1" # Don't jump to high clocks for NVENC/NVDEC.
+                  # NVIDIA CDI mounts cuda drivers in /usr/lib.
+                  LD_LIBRARY_PATH: /usr/lib
       persistence:
         config:
           existingClaim: plex-config
