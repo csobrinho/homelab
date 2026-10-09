@@ -1,12 +1,67 @@
-# From https://github.com/mneveroff/ipmi-server/blob/main/README.md
-# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://github.com/ateodorescu/home-assistant-addons/tree/main/ipmi-server-standalone
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
   - ../../base
-  - deployment.yaml
-  - service.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: ipmi-server
+    version: 5.2.1
+    namespace: tools
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        app:
+          strategy: RollingUpdate
+          containers:
+            app:
+              image:
+                repository: ghcr.io/ateodorescu/ipmi-server-standalone
+                tag: 2.7.6@sha256:ecf27f796d517679776a9b93ffc00515c620536f9c50045a53c58f104f2e0d20
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: HTTP
+                  port: &port 80
+                  path: /ui
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  memory: 256Mi
+              # Image is root-only (supervisord -> nginx + php-fpm); masters drop to nginx/www-data
+              # workers (SETUID/SETGID/CHOWN) and write into their dirs (DAC_OVERRIDE).
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+                  add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+      defaultPodOptions:
+        automountServiceAccountToken: false
+        enableServiceLinks: false
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
+      service:
+        app:
+          primary: true
+          ports:
+            http:
+              port: 9595
+              targetPort: *port
 
 components:
   - ../../../../components/disable-revision-history
