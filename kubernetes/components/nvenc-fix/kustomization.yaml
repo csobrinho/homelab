@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+# Fix for Nvidia drivers 595: "OpenEncodeSessionEx", "unsupported device", and "No capable devices
+# found" inside containers that only see one of the host GPUs.
+# Preloads the shim into the first container of the app's (single) Deployment.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+configMapGenerator:
+  # Renamed to <deployment>-nvenc-fix below so apps sharing a namespace don't clash.
+  - name: app-nvenc-fix
+    files:
+      - nvenc_fix.c
+    options:
+      disableNameSuffixHash: true
+
+patches:
+  # Strategic merge: creates initContainers/volumes when the Deployment has none.
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: any
+      spec:
+        template:
+          spec:
+            initContainers:
+              - name: build-nvenc-fix
+                image: gcc:16
+                # No libc deps, so it preloads into both glibc and musl (e.g. Plex) binaries.
+                # Fails the pod if a gcc/glibc bump breaks that, instead of preloading a .so
+                # that kills musl apps.
+                command:
+                  - sh
+                  - -ec
+                  - |
+                    so=/shim/libnvenc_fix.so
+                    gcc -shared -fPIC -O2 -std=gnu17 -nostdlib \
+                      -fno-stack-protector -U_FORTIFY_SOURCE -o "$so" /src/nvenc_fix.c
+                    if readelf -d "$so" | grep NEEDED; then
+                      echo "nvenc-fix: unexpected library dependency" >&2; exit 1
+                    fi
+                    # musl only aliases glibc's __isoc99_sscanf; any other __* symbol is glibc-only.
+                    bad=$(nm -D --undefined-only "$so" |
+                      awk '$2 ~ /^__/ && $2 != "__isoc99_sscanf" {print $2}')
+                    if [ -n "$bad" ]; then
+                      echo "nvenc-fix: glibc-only symbols: $bad" >&2; exit 1
+                    fi
+                volumeMounts:
+                  - name: nvenc-fix-src
+                    mountPath: /src
+                  - name: nvenc-fix
+                    mountPath: /shim
+            volumes:
+              - name: nvenc-fix-src
+                configMap:
+                  name: app-nvenc-fix
+              - name: nvenc-fix
+                emptyDir: {}
+    target:
+      kind: Deployment
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: nvenc-fix
+          mountPath: /shim
+          readOnly: true
+      # LD_PRELOAD, not /etc/ld.so.preload, which musl ignores.
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: LD_PRELOAD
+          value: /shim/libnvenc_fix.so
+    target:
+      kind: Deployment
+
+replacements:
+  - source:
+      kind: Deployment
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: ConfigMap
+          name: app-nvenc-fix
+        fieldPaths:
+          - metadata.name
+        options:
+          delimiter: "-"
+          index: 0
+      - select:
+          kind: Deployment
+        fieldPaths:
+          - spec.template.spec.volumes.[name=nvenc-fix-src].configMap.name
+        options:
+          delimiter: "-"
+          index: 0

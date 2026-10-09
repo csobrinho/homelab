@@ -28,8 +28,11 @@
  *   NVENC_FIX_DEBUG=/tmp/nvenc_fix.log  → log to file (appended)
  */
 
-#define _GNU_SOURCE
+/* No _GNU_SOURCE: glibc >= 2.38 would redirect sscanf to __isoc23_sscanf, which musl lacks. */
 #include <dlfcn.h>
+#ifndef RTLD_NEXT
+#define RTLD_NEXT ((void *)-1l) /* Same value in glibc and musl. */
+#endif
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>

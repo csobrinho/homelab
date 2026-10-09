@@ -12,15 +12,6 @@ resources:
   - service.yaml
   - secrets/dispatcharr-secret-enc.yaml
 
-configMapGenerator:
-  # Fix for Nvidia drivers 595: "OpenEncodeSessionEx", "unsupported device", and "No capable devices found" inside containers
-  - name: nvenc-fix
-    files:
-      - files/nvenc-fix-595/nvenc_fix.c
-      - files/nvenc-fix-595/ld.so.preload
-    options:
-      disableNameSuffixHash: true
-
 helmCharts:
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
@@ -52,3 +43,4 @@ helmCharts:
 
 components:
   - ../../../../components/disable-revision-history
+  - ../../../../components/nvenc-fix

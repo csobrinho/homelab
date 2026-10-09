@@ -103,3 +103,4 @@ patches:
 
 components:
   - ../../../../components/disable-revision-history
+  - ../../../../components/nvenc-fix
