@@ -27,6 +27,10 @@ helmCharts:
           size: 1Gi
           storageClass: local-db
       backup: # Must run as root.
+        extraSpec:
+          files:
+            # Re-fetchable logo/poster cache; its 0700 dirs are unreadable by the cap-less root mover.
+            ignoreRules: [/lost+found, /cache/]
         mover:
           securityContext:
             runAsUser: 0
