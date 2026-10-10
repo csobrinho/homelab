@@ -220,6 +220,12 @@ similar-profile and low-stakes; isolate per consumer with access keys + bucket
 quotas. Split a bucket into its own instance/PVC only if it diverges in size or
 durability needs.
 
+**`cnpg` bucket:** CNPG base backups (daily 05:00 PT, after kopiur's 02:00–04:30 PT window) +
+continuous WAL via the Barman Cloud plugin, `retentionPolicy: 30d`, under `s3://cnpg/cluster-v1/`
+(`serverName`, bumped on each rebuild-from-backup). Bucket quota 50G; dedicated user `cnpg` with a
+`cnpg-readwrite` policy scoped to this bucket. Same host as the `db` pool, so it covers logical
+loss and PITR, not loss of the host. An off-host copy is still a TODO.
+
 **Migration-window risk:** during the old→new cutover `data` is `sync=disabled`,
 a single non-PLP SSD, no mirror yet. RustFS holds a _staging_ copy only — the old
 cluster keeps the source until each restore is verified. Don't delete anything on
@@ -387,6 +393,7 @@ layered on top of that, not a substitute for it.
 - [x] Create `data/config` at `/mnt/config`, rsync `/mnt/library/config/` into it, then retire
       the old tree; repoint `scripts/new` and `scripts/rm-charts` (hardcode the old path)
 - [ ] Add a backup for `data/config` (snapshots + off-host `zfs send` or kopiur)
+- [ ] Replicate the RustFS `cnpg` bucket off-host (CNPG backups share a box with `db`)
 - [ ] Clear `local-zfs` content types (`pvesm set local-zfs --content ""`) —
       still shows `content rootdir`
 - [ ] Move storage definitions into Ansible, incl. the hand-applied

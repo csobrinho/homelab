@@ -16,6 +16,14 @@ spec:
     limits:
       memory: 1536Mi
   enableSuperuserAccess: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      enabled: true
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: rustfs
+        # Bump on rebuild and restore from the previous one; barman won't archive into a used path.
+        serverName: cluster-v1
   managed:
     roles:
       - name: blocky

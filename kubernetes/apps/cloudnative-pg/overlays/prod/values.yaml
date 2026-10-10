@@ -2,12 +2,14 @@
 crds:
   create: true
 replicaCount: 1
+additionalEnv:
+  - name: TZ
+    value: America/Los_Angeles
 resources:
   requests:
     cpu: 100m
     memory: 100Mi
   limits:
-    cpu: 200m
     memory: 200Mi
 monitoring:
   grafanaDashboard:

@@ -6,7 +6,12 @@ kind: Kustomization
 resources:
   - ../../base
   - cluster.yaml
+  - objectstore.yaml
+  - podmonitor.yaml
+  - prometheus-rule.yaml
+  - scheduledbackup.yaml
   - secrets/blocky-secret-enc.yaml
+  - secrets/cnpg-s3-secret-enc.yaml
   - secrets/dispatcharr-secret-enc.yaml
   - secrets/windmill-secret-enc.yaml
   - windmill/windmill-grant-privileges-sql.yaml
@@ -20,6 +25,23 @@ helmCharts:
     version: 0.29.1
     includeCRDs: true
     valuesFile: values.yaml
+  # From https://github.com/cloudnative-pg/charts/blob/main/charts/plugin-barman-cloud/values.yaml
+  - name: plugin-barman-cloud
+    repo: https://cloudnative-pg.github.io/charts
+    releaseName: plugin-barman-cloud
+    namespace: cnpg-system
+    version: 0.8.1
+    includeCRDs: true
+    valuesInline:
+      additionalEnv:
+        - name: TZ
+          value: America/Los_Angeles
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
 
 components:
   - ../../../../components/disable-revision-history

@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cloudnative-pg-rules
+  namespace: cnpg-system
+spec:
+  groups:
+    - name: cloudnative-pg.rules
+      rules:
+        - alert: CnpgWalArchivingFailing
+          expr: |-
+            cnpg_pg_stat_archiver_last_failed_time > cnpg_pg_stat_archiver_last_archived_time
+          for: 5m
+          annotations:
+            summary: >-
+              WAL archiving to S3 is failing on {{ $labels.pod }}; WAL piles up on the data volume
+          labels:
+            severity: critical
+
+        - alert: CnpgBackupFailed
+          expr: |-
+            barman_cloud_cloudnative_pg_io_last_failed_backup_timestamp
+              > barman_cloud_cloudnative_pg_io_last_available_backup_timestamp
+          for: 5m
+          annotations:
+            summary: >-
+              Last CNPG base backup failed ({{ $labels.pod }})
+          labels:
+            severity: critical
+
+        - alert: CnpgBackupStale
+          # Daily schedule; 26h leaves room for a slow run.
+          expr: |-
+            time() - max by (namespace) (barman_cloud_cloudnative_pg_io_last_available_backup_timestamp)
+              > 26 * 3600
+          for: 15m
+          annotations:
+            summary: >-
+              No successful CNPG base backup in {{ $labels.namespace }} for over 26h
+          labels:
+            severity: warning

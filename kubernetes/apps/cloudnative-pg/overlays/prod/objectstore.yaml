@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/barmancloud.cnpg.io/objectstore_v1.json
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: rustfs
+  namespace: cnpg-system
+spec:
+  retentionPolicy: 30d
+  configuration:
+    destinationPath: s3://cnpg/
+    endpointURL: https://s3.sobrinho.pt
+    s3Credentials:
+      accessKeyId:
+        name: cnpg-s3-secret
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: cnpg-s3-secret
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: zstd
+      maxParallel: 4
+    data:
+      compression: snappy
+      jobs: 2
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
