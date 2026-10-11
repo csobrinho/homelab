@@ -31,10 +31,24 @@ name: nvidia_uvm
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: nvidia_drm
+parameters:
+  # DRM KMS for Wolf's headless Wayland compositor + zero-copy NVENC (games namespace).
+  - modeset=1
 ---
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: nvidia_modeset
+---
+# Virtual gamepads for Wolf/Moonlight (games namespace): uinput for Xbox/Nintendo
+# pads, uhid for the virtual DualSense. Modules come from the siderolabs/uinput and
+# siderolabs/uhid extensions in infra4.schematic.yaml.j2.
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: uinput
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: uhid
 ---
 apiVersion: v1alpha1
 kind: SysctlConfig

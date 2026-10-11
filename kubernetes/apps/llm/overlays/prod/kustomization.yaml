@@ -169,7 +169,7 @@ helmCharts:
           pod:
             resourceClaims:
               - name: llm-gpu0
-                resourceClaimTemplateName: llm-gpu0 # GPU 0 minus transcode's 1Gi.
+                resourceClaimTemplateName: llm-gpu0 # GPU 0 minus transcode's 1Gi and games' 4Gi.
             tolerations:
               - key: nvidia.com/gpu
                 operator: Exists
@@ -222,12 +222,13 @@ helmCharts:
                 # key, Strata rejects any other Host (DNS-rebinding guard).
                 STRATA_ALLOWED_HOSTS: >-
                   strata.sobrinho.pt,strata.llm.svc.cluster.local,strata.llm,strata
-                # - vram-reserve: keep ~1.4Gi of GPU 0 free for transcode (700 left only ~400Mi).
+                # - vram-reserve: keep ~1.4Gi of GPU 0 free for transcode (700 left only ~400Mi),
+                #   plus Wolf's games-gpu claim; the DRA claims don't enforce it.
                 # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
                 #   avoids re-reading up to 262K tokens.
                 # - expert profile: start from the learned cache, kept on the volume.
                 STRATA_CONFIG_PATCH: >-
-                  {"args": {"--vram-reserve-mib": 1700, "--conversation-cache-mib": 12288,
+                  {"args": {"--vram-reserve-mib": 5796, "--conversation-cache-mib": 12288,
                   "--conversation-cache-slots": 4},
                   "expert_profile_save": "/data/expert-profile-learned.bin"}
               probes:

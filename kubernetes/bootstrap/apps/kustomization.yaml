@@ -49,6 +49,7 @@ resources:
   - apps/dispatcharr-app.yaml
   - apps/esphome-app.yaml
   - apps/external-reverse-proxy-app.yaml
+  - apps/games-app.yaml
   - apps/go-playground-app.yaml
   - apps/home-assistant-app.yaml
   - apps/ipmi-server-app.yaml

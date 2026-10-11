@@ -51,6 +51,16 @@
       "groupName": "talos",
       "minimumReleaseAgeBehaviour": "timestamp-optional",
       "automerge": false
+    },
+    {
+      "description": "Talos group: wolf-nvidia-driver is tagged by Talos release (its driver-version tags would look like a major bump), so it ships in the Talos PR, as soon as it's built",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/csobrinho/wolf-nvidia-driver"],
+      "allowedVersions": "/^v\\d+\\.\\d+\\.\\d+$/",
+      "groupName": "talos",
+      "schedule": ["at any time"],
+      "minimumReleaseAge": "0 days",
+      "automerge": false
     }
   ],
   "customDatasources": {

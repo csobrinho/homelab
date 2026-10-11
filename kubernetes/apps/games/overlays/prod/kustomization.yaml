@@ -1,0 +1,350 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://games-on-whales.github.io/wolf/stable/user/quickstart.html
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# Wolf streams on-demand virtual desktops to Moonlight clients. Each app (Steam, ES-DE,
+# RetroArch, ...) is a container Wolf starts through a Docker API, so the pod carries its
+# own dockerd (dind sidecar); Talos has no Docker socket to borrow.
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: wolf
+    version: 5.2.1
+    namespace: games
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        app:
+          strategy: Recreate
+          initContainers:
+            # The only container that references the claim, so only it gets the claimed
+            # /dev/nvidiaN injected; it records that GPU's PCI bus ID for wolf.
+            gpu-select:
+              image:
+                repository: busybox
+                tag: "1.38"
+                pullPolicy: IfNotPresent
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  set -- /dev/nvidia[0-9]*
+                  if [ "$#" -ne 1 ] || [ ! -c "$1" ]; then
+                    echo "gpu-select: expected exactly one GPU from the claim, got: $*" >&2
+                    exit 1
+                  fi
+                  minor=${1#/dev/nvidia}
+                  for info in /proc/driver/nvidia/gpus/*/information; do
+                    if [ "$(awk -F: '/^Device Minor/ {gsub(/[ \t]/, "", $2); print $2}' "$info")" = "$minor" ]; then
+                      pci=$(basename "$(dirname "$info")")
+                      echo "gpu-select: $1 -> $pci"
+                      echo "$pci" >/run/gpu/pci
+                      exit 0
+                    fi
+                  done
+                  echo "gpu-select: no /proc/driver/nvidia entry for $1" >&2
+                  exit 1
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+                claims:
+                  - name: games-gpu
+            # Copies the userspace driver (incl. the 32-bit libs Steam needs) into /etc/wolf,
+            # where wolf and every app container mount it from. Tagged by Talos release, so
+            # Renovate bumps it in the Talos PR; the check below holds the pod until the node
+            # runs the matching driver.
+            nvidia-driver:
+              dependsOn: gpu-select
+              image:
+                repository: ghcr.io/csobrinho/wolf-nvidia-driver
+                # Keep in sync with talos/versions.yaml (.version.talos).
+                tag: v1.14.2@sha256:9255e14551dca8f017404f1526833b38ea32bcbbebf4064f81197cb7762a95df
+                pullPolicy: IfNotPresent
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  node=$(cat /sys/module/nvidia/version)
+                  set -- /usr/nvidia/lib/libnvidia-*.so."$node"
+                  if [ ! -e "$1" ]; then
+                    echo "nvidia-driver: the node runs driver $node, this image doesn't: tag it with the node's Talos release" >&2
+                    exit 1
+                  fi
+                  dst=/etc/wolf/nvidia-driver
+                  if [ "$(cat "$dst/.version" 2>/dev/null || true)" != "$node" ]; then
+                    rm -rf "$dst.new"
+                    mkdir -p "$dst.new/share/vulkan/icd.d"
+                    cp -a /usr/nvidia/. "$dst.new/"
+                    cp /etc/vulkan/icd.d/nvidia_icd.json "$dst.new/share/vulkan/icd.d/"
+                    echo "$node" >"$dst.new/.version"
+                    rm -rf "$dst"
+                    mv "$dst.new" "$dst"
+                  fi
+                  echo "nvidia-driver: $node ready"
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  memory: 512Mi
+            # Native sidecar: up (and answering) before wolf, stopped after it. App
+            # containers live in this container's cgroup, so games count against it.
+            dind:
+              dependsOn: nvidia-driver
+              image:
+                repository: docker
+                tag: 29.9.0-dind
+                pullPolicy: IfNotPresent
+              restartPolicy: Always
+              args:
+                - --host=unix:///var/run/dind/docker.sock
+              env:
+                DOCKER_TLS_CERTDIR: "" # Unix socket only: no TCP listener, no TLS.
+              probes:
+                startup:
+                  enabled: true
+                  custom: true
+                  spec:
+                    exec:
+                      command: ["docker", "-H", "unix:///var/run/dind/docker.sock", "info"]
+                    periodSeconds: 2
+                    failureThreshold: 90
+              resources:
+                requests:
+                  cpu: "1"
+                  memory: 2Gi
+                # No limits: this cgroup holds the games themselves.
+              securityContext:
+                privileged: true
+              # /dev is the host's: keep kubelet's termination-log file off it.
+              terminationMessagePath: /tmp/termination-log
+          containers:
+            app:
+              image:
+                repository: ghcr.io/games-on-whales/wolf
+                tag: stable@sha256:b0ef253739f9bd49b71eba7e150c955fd05990c0d409e666d89236995351551a
+                pullPolicy: IfNotPresent
+              command: ["/bin/bash", "-ec"]
+              args:
+                - |
+                  # renderD numbering isn't stable across reboots; the PCI bus ID is.
+                  pci=$(cat /run/gpu/pci)
+                  set -- /sys/bus/pci/devices/"${pci}"/drm/renderD*
+                  node=$(basename "$1")
+                  if [ ! -c "/dev/dri/${node}" ]; then
+                    echo "wolf: no render node for ${pci} (got '${node}')" >&2
+                    exit 1
+                  fi
+                  export WOLF_RENDER_NODE="/dev/dri/${node}"
+                  echo "wolf: ${pci} -> ${WOLF_RENDER_NODE}"
+                  exec /entrypoint.sh
+              env:
+                TZ: America/Los_Angeles
+                CUDA_DEVICE_ORDER: PCI_BUS_ID # Wolf maps the render node to a CUDA index in PCI order.
+                # Wolf keeps its CUDA context after the first stream; without this, the card
+                # stays at boost clocks while idle.
+                CUDA_DISABLE_PERF_BOOST: "1"
+                WOLF_DOCKER_SOCKET: /var/run/dind/docker.sock
+                # Wolf can't find its own container in dind (it logs "automatic mounts
+                # matching is disabled"), so these paths are used as-is: keep them equal.
+                HOST_APPS_STATE_FOLDER: /etc/wolf
+                XDG_RUNTIME_DIR: /tmp/sockets
+                # An absolute path, so dockerd bind-mounts the driver copy into each app.
+                NVIDIA_DRIVER_VOLUME_NAME: /etc/wolf/nvidia-driver
+                WOLF_STOP_CONTAINER_ON_EXIT: "TRUE"
+                WOLF_LOG_LEVEL: INFO
+              probes:
+                liveness: &probe
+                  enabled: true
+                  type: TCP
+                  port: 47989
+                readiness:
+                  <<: *probe
+                startup:
+                  <<: *probe
+                  spec:
+                    failureThreshold: 30
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 1Gi
+                limits:
+                  memory: 4Gi
+              securityContext:
+                privileged: true # uinput/uhid + hotplugged devices under host /dev.
+              terminationMessagePath: /tmp/termination-log # /dev is the host's.
+      defaultPodOptions:
+        automountServiceAccountToken: false
+        enableServiceLinks: false
+        terminationGracePeriodSeconds: 60
+        nodeSelector:
+          nvidia.com/gpu.present: "true"
+        tolerations:
+          - key: nvidia.com/gpu
+            operator: Equal
+            value: present
+            effect: NoSchedule
+        resourceClaims:
+          - name: games-gpu
+            resourceClaimName: games-gpu
+      service:
+        app:
+          primary: true
+          type: LoadBalancer
+          externalTrafficPolicy: Local
+          annotations:
+            external-dns.kubernetes.io/hostname: infra-games
+          labels:
+            io.cilium/lb-pool: pool-infra-games
+          # Moonlight: add the host by its DNS name; mDNS discovery doesn't cross the LB.
+          ports:
+            https:
+              port: 47984
+              protocol: TCP
+            http:
+              port: 47989
+              protocol: TCP
+            rtsp:
+              port: 48010
+              protocol: TCP
+            control:
+              port: 47999
+              protocol: UDP
+            video:
+              port: 48100
+              protocol: UDP
+            audio:
+              port: 48200
+              protocol: UDP
+      # Paths Wolf hands to dockerd as bind sources must exist at the same path in wolf
+      # and dind: /etc/wolf, /tmp/sockets (Wayland, PulseAudio, wolf.sock), /dev, /run/udev.
+      persistence:
+        wolf-state:
+          existingClaim: wolf-state
+          advancedMounts:
+            app:
+              app:
+                - path: /etc/wolf
+                - path: /usr/nvidia
+                  subPath: nvidia-driver
+                  readOnly: true
+              nvidia-driver:
+                - path: /etc/wolf
+              dind:
+                - path: /etc/wolf
+        # dind's /var/lib/docker: re-pullable app images, so no kopiur backup.
+        wolf-docker:
+          type: persistentVolumeClaim
+          forceRename: wolf-docker
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 64Gi
+          retain: true
+          advancedMounts:
+            app:
+              dind:
+                - path: /var/lib/docker
+        gpu:
+          type: emptyDir
+          advancedMounts:
+            app:
+              gpu-select:
+                - path: /run/gpu
+              app:
+                - path: /run/gpu
+                  readOnly: true
+        dind-socket:
+          type: emptyDir
+          advancedMounts:
+            app:
+              dind:
+                - path: /var/run/dind
+              app:
+                - path: /var/run/dind
+        sockets:
+          type: emptyDir
+          advancedMounts:
+            app:
+              dind:
+                - path: /tmp/sockets
+              app:
+                - path: /tmp/sockets
+        dev:
+          type: hostPath
+          hostPath: /dev
+          hostPathType: Directory
+          advancedMounts:
+            app:
+              dind:
+                - path: /dev
+              app:
+                - path: /dev
+        udev:
+          type: hostPath
+          hostPath: /run/udev
+          hostPathType: DirectoryOrCreate
+          advancedMounts:
+            app:
+              dind:
+                - path: /run/udev
+              app:
+                - path: /run/udev
+        # Apps see it once their entry in /etc/wolf/cfg/config.toml mounts it,
+        # e.g. "/roms:/home/retro/ROMs:ro" for ES-DE.
+        roms:
+          type: nfs
+          server: infra-vm
+          path: /mnt/library/roms
+          advancedMounts:
+            app:
+              dind:
+                - path: /roms
+                  readOnly: true
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: wolf-kopiur
+    namespace: games
+    version: 0.1.0
+    valuesInline:
+      persistence:
+        # /etc/wolf: config.toml + pairing certs, per-profile app homes (saves,
+        # emulator config, Steam), and the NVIDIA driver copy.
+        wolf-state:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 50Gi
+          storageClass: local-data
+      backup: # Must run as root: Wolf writes as root, apps as 1000.
+        extraSpec:
+          files:
+            # Re-downloadable: game installs, shader caches, the driver copy.
+            ignoreRules:
+              - /lost+found
+              - /nvidia-driver/
+              - "**/steamapps/common/"
+              - "**/steamapps/downloading/"
+              - "**/steamapps/shadercache/"
+              - "**/.cache/"
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0
+      populate:
+        mover:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          podSecurityContext:
+            fsGroup: 0
+
+components:
+  - ../../../../components/disable-revision-history
