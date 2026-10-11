@@ -5,7 +5,7 @@ set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
 # Binaries copied from mise (versions pinned in .mise/config.toml) into /usr/local/bin.
-tools := "smartctl_exporter"
+tools := "smartctl_exporter k9s claude"
 
 [doc('Install mise-pinned host tools into /usr/local/bin, then their systemd units')]
 install-tools: && install-systemd
