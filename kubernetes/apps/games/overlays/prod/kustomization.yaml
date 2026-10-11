@@ -86,6 +86,10 @@ helmCharts:
                     rm -rf "$dst"
                     mv "$dst.new" "$dst"
                   fi
+                  # The image's ld.so.conf entry for lib/ is broken (dash's echo -e), so its
+                  # soname links (libnvidia-egl-wayland.so.1, ...) were never made; wolf and
+                  # the apps mount the copy read-only and can't make them either.
+                  ldconfig -n "$dst/lib" "$dst/lib32"
                   echo "nvidia-driver: $node ready"
               resources:
                 requests:
@@ -143,6 +147,9 @@ helmCharts:
                   fi
                   export WOLF_RENDER_NODE="/dev/dri/${node}"
                   echo "wolf: ${pci} -> ${WOLF_RENDER_NODE}"
+                  # /dev is the host's, and Talos has no /dev/fd: point supervisord's log
+                  # targets at what /dev/fd links to.
+                  sed -i 's#/dev/fd/#/proc/self/fd/#g' /etc/supervisord.conf
                   exec /entrypoint.sh
               env:
                 TZ: America/Los_Angeles
