@@ -161,7 +161,7 @@ helmCharts:
                 # Wolf can't find its own container in dind (it logs "automatic mounts
                 # matching is disabled"), so these paths are used as-is: keep them equal.
                 HOST_APPS_STATE_FOLDER: /etc/wolf
-                XDG_RUNTIME_DIR: /tmp/sockets
+                XDG_RUNTIME_DIR: /var/run/wolf
                 # An absolute path, so dockerd bind-mounts the driver copy into each app.
                 NVIDIA_DRIVER_VOLUME_NAME: /etc/wolf/nvidia-driver
                 WOLF_STOP_CONTAINER_ON_EXIT: "TRUE"
@@ -230,7 +230,7 @@ helmCharts:
               port: 48200
               protocol: UDP
       # Paths Wolf hands to dockerd as bind sources must exist at the same path in wolf
-      # and dind: /etc/wolf, /tmp/sockets (Wayland, PulseAudio, wolf.sock), /dev, /run/udev.
+      # and dind: /etc/wolf, /var/run/wolf (Wayland, PulseAudio, wolf.sock), /dev, /run/udev.
       persistence:
         wolf-state:
           existingClaim: wolf-state
@@ -274,14 +274,15 @@ helmCharts:
                 - path: /var/run/dind
               app:
                 - path: /var/run/dind
+        # Not under /tmp: the dind entrypoint mounts a tmpfs over /tmp, hiding it from dockerd.
         sockets:
           type: emptyDir
           advancedMounts:
             app:
               dind:
-                - path: /tmp/sockets
+                - path: /var/run/wolf
               app:
-                - path: /tmp/sockets
+                - path: /var/run/wolf
         dev:
           type: hostPath
           hostPath: /dev
