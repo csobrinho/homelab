@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: games
+  labels:
+    # Wolf + its Docker-in-Docker sidecar are privileged: host /dev for the virtual
+    # gamepads (uinput/uhid) and a nested dockerd for the app containers.
+    pod-security.kubernetes.io/enforce: privileged

@@ -1,5 +1,5 @@
 # LLM GPU claims (ollama, vllm). RTX 5090 = 32606Mi each.
-#   llm-gpu0: GPU 0 minus transcode's 1Gi (31582Mi).
+#   llm-gpu0: GPU 0 minus transcode's 1Gi and games' 4Gi (27486Mi).
 #   llm-gpu1: all of GPU 1.
 #   llm-gpus: both.
 # GPU 0 = 0000:02:00.0 (host 81:00, slot 7, top card).
@@ -20,7 +20,7 @@ spec:
             count: 1
             capacity:
               requests:
-                memory: 31582Mi
+                memory: 27486Mi
             selectors:
               - cel:
                   expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:02:00.0'
