@@ -97,10 +97,51 @@ helmCharts:
                   memory: 64Mi
                 limits:
                   memory: 512Mi
+            # Eden (Switch) AppImage for ES-DE, whose config.toml entry mounts it as
+            # /usr/local/bin/eden. Optional: a failed fetch keeps the old copy, never blocks Wolf.
+            eden:
+              dependsOn: nvidia-driver
+              image:
+                repository: curlimages/curl
+                tag: 8.22.0
+                pullPolicy: IfNotPresent
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  dst=/etc/wolf/apps/eden
+                  if [ "$(cat "$dst/.version" 2>/dev/null || true)" = "$EDEN_VERSION" ]; then
+                    echo "eden: $EDEN_VERSION ready"
+                    exit 0
+                  fi
+                  mkdir -p "$dst"
+                  url="https://git.eden-emu.dev/eden-emu/eden/releases/download/${EDEN_VERSION}/Eden-Linux-${EDEN_VERSION}-amd64-clang-pgo.AppImage"
+                  if curl -fsSL --retry 5 --retry-all-errors -o "$dst/eden.new" "$url" &&
+                    echo "${EDEN_SHA256}  $dst/eden.new" | sha256sum -c -; then
+                    chmod 0755 "$dst/eden.new"
+                    mv "$dst/eden.new" "$dst/eden"
+                    echo "$EDEN_VERSION" >"$dst/.version"
+                    echo "eden: $EDEN_VERSION ready"
+                  else
+                    rm -f "$dst/eden.new"
+                    echo "eden: fetching $EDEN_VERSION failed, keeping $(cat "$dst/.version" 2>/dev/null || echo none)" >&2
+                  fi
+              env:
+                # renovate: datasource=forgejo-releases depName=eden-emu/eden registryUrl=https://git.eden-emu.dev
+                EDEN_VERSION: v0.2.1
+                # Not bumped by Renovate: update it with the version, or the old copy stays.
+                EDEN_SHA256: 7a28bf988b0648831989722bdbaa90ab31371b403808199813e0ea7c8b25ba6d
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 128Mi
+              securityContext:
+                runAsUser: 0 # The image runs as curl_user; /etc/wolf is root's.
             # Native sidecar: up (and answering) before wolf, stopped after it. App
             # containers live in this container's cgroup, so games count against it.
             dind:
-              dependsOn: nvidia-driver
+              dependsOn: eden
               image:
                 repository: docker
                 tag: 29.9.0-dind
@@ -243,6 +284,8 @@ helmCharts:
                   readOnly: true
               nvidia-driver:
                 - path: /etc/wolf
+              eden:
+                - path: /etc/wolf
               dind:
                 - path: /etc/wolf
         # dind's /var/lib/docker: re-pullable app images, so no kopiur backup.
@@ -304,7 +347,7 @@ helmCharts:
               app:
                 - path: /run/udev
         # Apps see it once their entry in /etc/wolf/cfg/config.toml mounts it,
-        # e.g. "/roms:/home/retro/ROMs:ro" for ES-DE.
+        # e.g. "/roms:/ROMs:ro" for ES-DE (its ROMDirectory; Switch games in /roms/switch).
         roms:
           type: nfs
           server: infra-vm
@@ -332,10 +375,12 @@ helmCharts:
       backup: # Must run as root: Wolf writes as root, apps as 1000.
         extraSpec:
           files:
-            # Re-downloadable: game installs, shader caches, the driver copy.
+            # Re-downloadable: game installs, shader caches, the driver and Eden copies.
             ignoreRules:
               - /lost+found
               - /nvidia-driver/
+              - /apps/eden/
+              - "**/eden/shader/"
               - "**/steamapps/common/"
               - "**/steamapps/downloading/"
               - "**/steamapps/shadercache/"

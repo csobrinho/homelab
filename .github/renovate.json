@@ -66,6 +66,13 @@
       "schedule": ["at any time"],
       "minimumReleaseAge": "0 days",
       "automerge": false
+    },
+    {
+      "description": "Eden: stable releases only, and no automerge, since EDEN_SHA256 needs a manual update",
+      "matchDatasources": ["forgejo-releases"],
+      "matchPackageNames": ["eden-emu/eden"],
+      "allowedVersions": "/^v\\d+\\.\\d+\\.\\d+$/",
+      "automerge": false
     }
   ],
   "customDatasources": {
@@ -108,6 +115,14 @@
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s+[a-zA-Z_]+:\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}docker{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Pinned downloads in the games app (Eden), as env vars under a renovate comment",
+      "managerFilePatterns": ["/kubernetes/apps/games/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) registryUrl=(?<registryUrl>\\S+)\\s+[A-Z_]+:\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
+      ]
     }
   ],
   "automerge": true,
