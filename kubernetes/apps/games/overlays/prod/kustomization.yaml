@@ -7,6 +7,15 @@ kind: Kustomization
 resources:
   - ../../base
 
+# Wolf's apps, one file each (order = name); add/remove a file and its line here. The hash
+# suffix restarts wolf when they change, since it reads its config once.
+configMapGenerator:
+  - name: wolf-config
+    namespace: games
+    files:
+      - wolf/00-profiles.toml # Wolf UI for Moonlight + the 'user' profile the apps below join.
+      - wolf/10-es-de.toml
+
 # Wolf streams on-demand virtual desktops to Moonlight clients. Each app (Steam, ES-DE,
 # RetroArch, ...) is a container Wolf starts through a Docker API, so the pod carries its
 # own dockerd (dind sidecar); Talos has no Docker socket to borrow.
@@ -97,10 +106,56 @@ helmCharts:
                   memory: 64Mi
                 limits:
                   memory: 512Mi
+            # Splices wolf/*.toml over config.toml's profiles, keeping what Wolf writes
+            # (paired_clients) and seeds the app tweaks ES-DE/PCSX2 need. Warns, never blocks wolf.
+            wolf-config:
+              dependsOn: nvidia-driver
+              image:
+                repository: busybox
+                tag: "1.38"
+                pullPolicy: IfNotPresent
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  cfg=/etc/wolf/cfg/config.toml
+                  if [ ! -f "$cfg" ]; then
+                    echo "wolf-config: no $cfg yet; Wolf writes its defaults, merged on the next start"
+                  elif awk '/^\[\[profiles\]\]/ { p = 1; next }
+                      p && /^[[:space:]]*\[/ && !/^[[:space:]]*\[+profiles[].]/ { bad = 1 }
+                      END { exit !bad }' "$cfg"; then
+                    echo "wolf-config: tables other than profiles after [[profiles]] in $cfg, left as is" >&2
+                  else
+                    awk '/^\[\[profiles\]\]/ { exit } { print }' "$cfg" >"$cfg.new"
+                    cat /config/*.toml >>"$cfg.new" # Name order; each file must end in a newline.
+                    if cmp -s "$cfg" "$cfg.new"; then
+                      rm "$cfg.new"
+                      echo "wolf-config: profiles unchanged"
+                    else
+                      cp -p "$cfg" "$cfg.bak-$(date +%Y%m%d%H%M%S)"
+                      mv "$cfg.new" "$cfg"
+                      echo "wolf-config: profiles updated"
+                    fi
+                  fi
+                  # ES-DE finds PCSX2 only as ~/Applications/pcsx2-*.AppImage; GoW ships /Applications.
+                  es=/etc/wolf/profile-data/user/WolfES-DE
+                  if [ -d "$es" ]; then
+                    mkdir -p "$es/Applications"
+                    ln -sfn /Applications/pcsx2-emu.AppImage "$es/Applications/pcsx2-emu.AppImage"
+                    chown -h 1000:1000 "$es/Applications" "$es/Applications/pcsx2-emu.AppImage"
+                    # Default PS2 BIOS only while unset: PCSX2 rewrites the file on exit.
+                    ini="$es/.config/PCSX2/inis/PCSX2.ini"
+                    [ ! -f "$ini" ] || sed -i 's/^BIOS = $/BIOS = scph39001.bin/' "$ini"
+                  fi
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
             # Native sidecar: up (and answering) before wolf, stopped after it. App
             # containers live in this container's cgroup, so games count against it.
             dind:
-              dependsOn: nvidia-driver
+              dependsOn: wolf-config
               image:
                 repository: docker
                 tag: 29.9.0-dind
@@ -243,8 +298,18 @@ helmCharts:
                   readOnly: true
               nvidia-driver:
                 - path: /etc/wolf
+              wolf-config:
+                - path: /etc/wolf
               dind:
                 - path: /etc/wolf
+        wolf-config:
+          type: configMap
+          name: wolf-config
+          advancedMounts:
+            app:
+              wolf-config:
+                - path: /config
+                  readOnly: true
         # dind's /var/lib/docker: re-pullable app images, so no kopiur backup.
         wolf-docker:
           type: persistentVolumeClaim
