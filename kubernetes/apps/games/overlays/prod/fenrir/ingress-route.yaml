@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/traefik.io/ingressroute_v1alpha1.json
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: fenrir-ingress
+  namespace: games
+  annotations:
+    external-dns.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`fenrir.sobrinho.pt`)
+      kind: Rule
+      middlewares:
+        - name: middleware-auth-forward
+          namespace: traefik
+        - name: fenrir-pin-headers
+      services:
+        - name: direwolf-pin
+          port: http
+  tls:
+    secretName: fenrir-cert
+---
+# Overwrites what the client sent; the plugin config resolves urn:k8s:secret from this namespace.
+kind: Middleware
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: fenrir-pin-headers
+  namespace: games
+spec:
+  plugin:
+    htransformation:
+      Rules:
+        - Name: user
+          Header: X-Direwolf-User
+          Value: admin
+          Type: Set
+        - Name: proxy-secret
+          Header: X-Direwolf-Proxy-Secret
+          Value: urn:k8s:secret:direwolf-pin-proxy:secret
+          Type: Set
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: fenrir-cert
+  namespace: games
+spec:
+  secretName: fenrir-cert
+  dnsNames:
+    - fenrir.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

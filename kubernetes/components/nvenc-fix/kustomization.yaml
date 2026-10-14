@@ -22,6 +22,10 @@ patches:
         name: any
       spec:
         template:
+          metadata:
+            annotations:
+              # Skip the NRI nvenc-fix shim; this component injects its own.
+              nvenc-fix.xerktech.com/inject: "false"
           spec:
             initContainers:
               - name: build-nvenc-fix

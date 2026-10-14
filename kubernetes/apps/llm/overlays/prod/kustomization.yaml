@@ -24,6 +24,8 @@ helmCharts:
         vllm:
           strategy: Recreate # One GPU; the new pod can't get a claim until the old one is gone.
           pod:
+            annotations:
+              nvenc-fix.xerktech.com/inject: "false" # CUDA only; no NRI NVENC shim.
             securityContext:
               runAsNonRoot: true
               runAsUser: &uid 568
@@ -167,9 +169,11 @@ helmCharts:
         strata:
           strategy: Recreate
           pod:
+            annotations:
+              nvenc-fix.xerktech.com/inject: "false" # CUDA only; no NRI NVENC shim.
             resourceClaims:
               - name: llm-gpu0
-                resourceClaimTemplateName: llm-gpu0 # GPU 0 minus transcode's 1Gi and games' 4Gi.
+                resourceClaimTemplateName: llm-gpu0 # What the card's other claims leave.
             tolerations:
               - key: nvidia.com/gpu
                 operator: Exists

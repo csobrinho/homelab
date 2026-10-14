@@ -114,3 +114,6 @@ experimental:
     sablier:
       moduleName: "github.com/sablierapp/sablier-traefik-plugin"
       version: "v1.3.0"
+    htransformation:
+      moduleName: "github.com/tomMoulard/htransformation"
+      version: "v0.4.1"

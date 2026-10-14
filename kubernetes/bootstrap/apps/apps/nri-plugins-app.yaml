@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nri-plugins
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-50"
+spec:
+  destination:
+    namespace: nri-plugins
+    name: in-cluster
+  project: default
+  source:
+    path: kubernetes/apps/nri-plugins/overlays/prod
+    repoURL: https://github.com/csobrinho/homelab
+  ignoreDifferences: []

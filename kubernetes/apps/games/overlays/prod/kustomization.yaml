@@ -6,6 +6,10 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - fenrir/app-es-de.yaml
+  - fenrir/ingress-route.yaml
+  - fenrir/user-admin.yaml
+  - secrets/direwolf-pin-proxy-secret-enc.yaml
 
 # Wolf's apps, one file each (order = name). A change restarts wolf.
 configMapGenerator:
@@ -332,6 +336,56 @@ helmCharts:
           path: /mnt/library/roms
           globalMounts:
             - path: /roms
+
+  # Fenrir (xerktech fork): one pod per Moonlight session (Wolf + the app, no dind) on the
+  # session node's host network; Moonlight pairs with that node's IP.
+  - name: direwolf-operator
+    repo: oci://ghcr.io/xerktech/charts
+    releaseName: direwolf
+    version: 0.0.1-38344847042-SNAPSHOT
+    namespace: games
+    includeCRDs: true
+    valuesInline:
+      controllers:
+        direwolf_operator:
+          containers:
+            operator:
+              args:
+                - --session-node-selector=kubernetes.io/hostname=infra4
+                - --session-tolerations=nvidia.com/gpu=present:NoSchedule
+                - --session-port-range=20000-20999
+              env:
+                WOLF_IMAGE: ghcr.io/games-on-whales/wolf:stable@sha256:b0ef253739f9bd49b71eba7e150c955fd05990c0d409e666d89236995351551a
+        moonlight_proxy:
+          pod:
+            nodeSelector:
+              kubernetes.io/hostname: infra4
+          containers:
+            proxy:
+              args:
+                - --tls-cert=/etc/certs/tls.crt
+                - --tls-key=/etc/certs/tls.key
+                - --max-concurrent-sessions=1
+                # Pairing page: only Traefik (pod or node source) with the proxy secret.
+                - --pin-port=47990
+                - --pin-trusted-proxies=10.42.0.0/16,10.10.2.0/24
+                - --pin-proxy-secret-file=/etc/pin/secret
+                - --pin-user-header=X-Direwolf-User
+      service:
+        pin:
+          controller: moonlight_proxy
+          ports:
+            http:
+              port: 47990
+      persistence:
+        pin-proxy:
+          type: secret
+          name: direwolf-pin-proxy
+          advancedMounts:
+            moonlight_proxy:
+              proxy:
+                - path: /etc/pin
+                  readOnly: true
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts

@@ -155,6 +155,9 @@ content: |
     discard_unpacked_layers = false
   [plugins."io.containerd.cri.v1.runtime"]
     device_ownership_from_security_context = true
+  # NRI (Node Resource Interface): lets node plugins adjust containers as they are created.
+  [plugins."io.containerd.nri.v1.nri"]
+    disable = false
 ---
 apiVersion: v1alpha1
 kind: KubeNodeConfig

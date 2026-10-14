@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nri-plugins
+  labels:
+    # hostPath: containerd's NRI socket and nvenc-fix's shim dir.
+    pod-security.kubernetes.io/enforce: privileged
