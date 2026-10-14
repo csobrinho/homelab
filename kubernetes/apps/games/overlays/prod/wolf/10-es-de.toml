@@ -15,7 +15,7 @@
         devices = []
         env = [ 'RUN_SWAY=1', 'MOZ_ENABLE_WAYLAND=1', 'GOW_REQUIRED_DEVICES=/dev/input/* /dev/dri/* /dev/nvidia*' ]
         image = 'ghcr.io/games-on-whales/es-de:edge@sha256:f5d1037e9dd6ff7406e190e00457152d0a9dcb4adbc32fe2132585cb5bbe7829'
-        mounts = [ '/roms:/ROMs:ro' ]
+        mounts = [ '/roms:/ROMs' ]
         name = 'WolfES-DE'
         ports = []
         type = 'docker'

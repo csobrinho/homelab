@@ -325,14 +325,13 @@ helmCharts:
           hostPathType: DirectoryOrCreate
           globalMounts:
             - path: /run/udev
-        # Apps see it once their wolf/*.toml mounts it, e.g. "/roms:/ROMs:ro" for ES-DE.
+        # Apps see it once their wolf/*.toml mounts it, e.g. "/roms:/ROMs" for ES-DE.
         roms:
           type: nfs
           server: infra-vm
           path: /mnt/library/roms
           globalMounts:
             - path: /roms
-              readOnly: true
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
