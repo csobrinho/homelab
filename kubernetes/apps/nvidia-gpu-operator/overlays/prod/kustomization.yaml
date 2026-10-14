@@ -47,7 +47,7 @@ helmCharts:
     namespace: nvidia-gpu-operator
     releaseName: dra-driver-nvidia-gpu
     repo: oci://registry.k8s.io/dra-driver-nvidia/charts
-    version: 0.5.0
+    version: 0.5.1
     includeCRDs: false # Shipped by gpu-operator.
     valuesInline:
       nvidiaDriverRoot: /usr/local # where Talos puts the driver.
