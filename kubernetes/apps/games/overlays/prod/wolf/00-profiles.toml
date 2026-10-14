@@ -1,6 +1,4 @@
-# Wolf's profiles. The wolf-config init container joins every wolf/*.toml in name order and
-# splices the result over config.toml's profiles. This file: Moonlight's list (only Wolf UI) and
-# the 'user' profile header; every app after it is one NN-name.toml, listed in kustomization.yaml.
+# Moonlight shows only Wolf UI; the apps in wolf/NN-*.toml join the 'user' profile.
 
 [[profiles]]
 id = 'moonlight-profile-id'
