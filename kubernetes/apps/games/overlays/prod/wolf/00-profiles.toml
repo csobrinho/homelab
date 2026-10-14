@@ -24,7 +24,7 @@ id = 'moonlight-profile-id'
             'WOLF_UI_AUTOUPDATE=False',
             'LOGLEVEL=INFO'
         ]
-        image = 'ghcr.io/games-on-whales/wolf-ui:main'
+        image = 'ghcr.io/games-on-whales/wolf-ui:main@sha256:cd6de1158b29068e4a4d4ce6312976067517239be97200a391be758a6ddfcf9b'
         mounts = [ '/var/run/wolf/wolf.sock:/var/run/wolf/wolf.sock' ]
         name = 'Wolf-UI'
         ports = []

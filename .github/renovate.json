@@ -108,6 +108,15 @@
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s+[a-zA-Z_]+:\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}docker{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Images Wolf launches, in kubernetes/apps/games/overlays/prod/wolf/*.toml",
+      "managerFilePatterns": ["/kubernetes/apps/games/overlays/prod/wolf/.+\\.toml$/"],
+      "matchStrings": [
+        "image = '(?<depName>[^:']+):(?<currentValue>[^@']+)@(?<currentDigest>sha256:[a-f0-9]+)'"
+      ],
+      "datasourceTemplate": "docker"
     }
   ],
   "automerge": true,
