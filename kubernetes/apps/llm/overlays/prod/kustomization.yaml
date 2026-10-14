@@ -180,7 +180,7 @@ helmCharts:
               # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
                 repository: ghcr.io/csobrinho/strata
-                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
+                tag: v0.1.43.1@sha256:cfe3a8e05004693dbb8f3b7f8ee52864e904ef6a2da5e372c8ec2188ad059328
                 pullPolicy: IfNotPresent
               # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
               # (engine flags + config keys) into the saved config on every start. A REINSTALL
