@@ -274,6 +274,18 @@ helmCharts:
                 - path: /var/run/dind
               app:
                 - path: /var/run/dind
+        # The pod's /dev/shm is 64Mi, which apps (IpcMode host) share; PCSX2 maps the PS2's
+        # memory there and dies with SIGBUS. Shared by wolf and dind, like the one it replaces.
+        shm:
+          type: emptyDir
+          medium: Memory
+          sizeLimit: 2Gi
+          advancedMounts:
+            app:
+              dind:
+                - path: /dev/shm
+              app:
+                - path: /dev/shm
         # Not under /tmp: the dind entrypoint mounts a tmpfs over /tmp, hiding it from dockerd.
         sockets:
           type: emptyDir
