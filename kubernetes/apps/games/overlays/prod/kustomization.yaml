@@ -7,6 +7,14 @@ kind: Kustomization
 resources:
   - ../../base
 
+# Wolf's apps, one file each (order = name). A change restarts wolf.
+configMapGenerator:
+  - name: wolf-config
+    namespace: games
+    files:
+      - wolf/00-profiles.toml
+      - wolf/10-es-de.toml
+
 # Wolf streams on-demand virtual desktops to Moonlight clients. Each app (Steam, ES-DE,
 # RetroArch, ...) is a container Wolf starts through a Docker API, so the pod carries its
 # own dockerd (dind sidecar); Talos has no Docker socket to borrow.
@@ -97,10 +105,30 @@ helmCharts:
                   memory: 64Mi
                 limits:
                   memory: 512Mi
+            # config.toml = what Wolf wrote before its profiles (paired_clients, ...) + wolf/*.toml.
+            wolf-config:
+              dependsOn: nvidia-driver
+              image:
+                repository: busybox
+                tag: "1.38"
+                pullPolicy: IfNotPresent
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  cfg=/etc/wolf/cfg/config.toml
+                  awk '/^\[\[profiles\]\]/ { exit } { print }' "$cfg" >"$cfg.new"
+                  cat /config/*.toml >>"$cfg.new" # Name order; each file must end in a newline.
+                  mv "$cfg.new" "$cfg"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
             # Native sidecar: up (and answering) before wolf, stopped after it. App
             # containers live in this container's cgroup, so games count against it.
             dind:
-              dependsOn: nvidia-driver
+              dependsOn: wolf-config
               image:
                 repository: docker
                 tag: 29.9.0-dind
@@ -234,17 +262,21 @@ helmCharts:
       persistence:
         wolf-state:
           existingClaim: wolf-state
+          globalMounts:
+            - path: /etc/wolf
+          # Only wolf: nvidia-driver copies the driver out of its own /usr/nvidia.
           advancedMounts:
             app:
               app:
-                - path: /etc/wolf
                 - path: /usr/nvidia
                   subPath: nvidia-driver
                   readOnly: true
-              nvidia-driver:
-                - path: /etc/wolf
-              dind:
-                - path: /etc/wolf
+        wolf-config:
+          type: configMap
+          name: wolf-config
+          globalMounts:
+            - path: /config
+              readOnly: true
         # dind's /var/lib/docker: re-pullable app images, so no kopiur backup.
         wolf-docker:
           type: persistentVolumeClaim
@@ -253,48 +285,30 @@ helmCharts:
           accessMode: ReadWriteOnce
           size: 64Gi
           retain: true
-          advancedMounts:
-            app:
-              dind:
-                - path: /var/lib/docker
+          globalMounts:
+            - path: /var/lib/docker
         gpu:
           type: emptyDir
-          advancedMounts:
-            app:
-              gpu-select:
-                - path: /run/gpu
-              app:
-                - path: /run/gpu
-                  readOnly: true
+          globalMounts:
+            - path: /run/gpu
         dind-socket:
           type: emptyDir
-          advancedMounts:
-            app:
-              dind:
-                - path: /var/run/dind
-              app:
-                - path: /var/run/dind
+          globalMounts:
+            - path: /var/run/dind
         # The pod's /dev/shm is 64Mi, which apps (IpcMode host) share; PCSX2 maps the PS2's
-        # memory there and dies with SIGBUS. Shared by wolf and dind, like the one it replaces.
+        # memory there and dies with SIGBUS.
         shm:
           type: emptyDir
           medium: Memory
           sizeLimit: 2Gi
-          advancedMounts:
-            app:
-              dind:
-                - path: /dev/shm
-              app:
-                - path: /dev/shm
+          globalMounts:
+            - path: /dev/shm
         # Not under /tmp: the dind entrypoint mounts a tmpfs over /tmp, hiding it from dockerd.
         sockets:
           type: emptyDir
-          advancedMounts:
-            app:
-              dind:
-                - path: /var/run/wolf
-              app:
-                - path: /var/run/wolf
+          globalMounts:
+            - path: /var/run/wolf
+        # Not in gpu-select: it must see only the claimed GPU's /dev/nvidiaN.
         dev:
           type: hostPath
           hostPath: /dev
@@ -309,23 +323,15 @@ helmCharts:
           type: hostPath
           hostPath: /run/udev
           hostPathType: DirectoryOrCreate
-          advancedMounts:
-            app:
-              dind:
-                - path: /run/udev
-              app:
-                - path: /run/udev
-        # Apps see it once their entry in /etc/wolf/cfg/config.toml mounts it,
-        # e.g. "/roms:/home/retro/ROMs:ro" for ES-DE.
+          globalMounts:
+            - path: /run/udev
+        # Apps see it once their wolf/*.toml mounts it, e.g. "/roms:/ROMs" for ES-DE.
         roms:
           type: nfs
           server: infra-vm
           path: /mnt/library/roms
-          advancedMounts:
-            app:
-              dind:
-                - path: /roms
-                  readOnly: true
+          globalMounts:
+            - path: /roms
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
