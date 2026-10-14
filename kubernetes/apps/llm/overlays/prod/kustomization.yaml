@@ -16,7 +16,7 @@ helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: vllm
-    version: 5.2.1
+    version: 5.3.0
     namespace: llm
     valuesFile: values-empty.yaml
     valuesInline:
@@ -159,7 +159,7 @@ helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: strata
-    version: 5.2.1
+    version: 5.3.0
     namespace: llm
     valuesFile: values-empty.yaml
     valuesInline:
@@ -298,7 +298,7 @@ helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: open-webui
-    version: 5.2.1
+    version: 5.3.0
     namespace: llm
     valuesFile: values-empty.yaml
     valuesInline:

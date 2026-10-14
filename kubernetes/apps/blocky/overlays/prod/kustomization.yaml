@@ -14,7 +14,7 @@ helmCharts:
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: blocky
     namespace: blocky
-    version: 5.2.1
+    version: 5.3.0
     includeCRDs: true
     valuesFile: values.yaml
 

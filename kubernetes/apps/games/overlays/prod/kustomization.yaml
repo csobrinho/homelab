@@ -22,7 +22,7 @@ helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: wolf
-    version: 5.2.1
+    version: 5.3.0
     namespace: games
     valuesFile: values-empty.yaml
     valuesInline:
