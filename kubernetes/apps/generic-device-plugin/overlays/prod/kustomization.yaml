@@ -50,6 +50,13 @@ helmCharts:
                     - paths:
                         - path: /dev/zigbee
                           mountPath: /dev/zigbee
+                - --device
+                # Lets a pod create virtual input devices.
+                - |
+                  name: uinput
+                  groups:
+                    - paths:
+                        - path: /dev/uinput
               securityContext:
                 privileged: true
               resources:

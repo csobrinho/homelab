@@ -1,0 +1,84 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# From https://github.com/xerktech/fenrir (cmd/nri-input, cmd/nri-nvenc-fix)
+# yaml-language-server: $schema=../../../../fixes/kustomization.schema.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# containerd NRI plugins. They act only when a container is created: restart a pod to apply them.
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: nri-plugins
+    version: 5.2.1
+    namespace: nri-plugins
+    valuesFile: values-empty.yaml
+    valuesInline:
+      defaultPodOptions:
+        automountServiceAccountToken: false
+        enableServiceLinks: false
+        nodeSelector:
+          nvidia.com/gpu.present: "true"
+        tolerations:
+          - key: nvidia.com/gpu
+            operator: Equal
+            value: present
+            effect: NoSchedule
+        priorityClassName: system-node-critical
+      controllers:
+        # Gives session pods in --namespaces /dev/uinput and the input devices Wolf creates.
+        nri-input:
+          type: daemonset
+          containers:
+            app:
+              image:
+                repository: ghcr.io/xerktech/fenrir/nri-input
+                tag: main@sha256:0305338ccd1d82e4bdffabf8f896b3fb4403bdf245e54648cf1bc32a02e3060a
+                pullPolicy: IfNotPresent
+              args:
+                - --namespaces=games
+              resources:
+                requests:
+                  cpu: 5m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+        # NVENC/NVDEC fix for containers holding some, not all, GPUs (driver >= 570 bug).
+        # Opt out per pod with annotation nvenc-fix.xerktech.com/inject: "false".
+        nri-nvenc-fix:
+          type: daemonset
+          containers:
+            app:
+              image:
+                repository: ghcr.io/xerktech/fenrir/nri-nvenc-fix
+                tag: main@sha256:0f8183fbe76c39a2de9ed4932e10344643589b84e8d5584e63a86070412e31c1
+                pullPolicy: IfNotPresent
+              args:
+                - --host-dir=/var/lib/nvenc-fix
+              resources:
+                requests:
+                  cpu: 5m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+      persistence:
+        nri-socket:
+          type: hostPath
+          hostPath: /var/run/nri
+          hostPathType: Directory
+          globalMounts:
+            - path: /var/run/nri
+        # Same path on the node: NRI mount sources resolve on the host.
+        nvenc-fix:
+          type: hostPath
+          hostPath: /var/lib/nvenc-fix
+          hostPathType: DirectoryOrCreate
+          advancedMounts:
+            nri-nvenc-fix:
+              app:
+                - path: /var/lib/nvenc-fix
+
+components:
+  - ../../../../components/disable-revision-history

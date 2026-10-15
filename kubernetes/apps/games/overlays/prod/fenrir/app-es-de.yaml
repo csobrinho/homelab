@@ -1,0 +1,58 @@
+apiVersion: direwolf.games-on-whales.github.io/v1alpha1
+kind: App
+metadata:
+  name: es-de
+  namespace: games
+spec:
+  id: 1
+  title: EmulationStation
+  isHDRSupported: false
+  gpu:
+    memory: 2Gi
+  # Home (/home/retro), kept across sessions.
+  volumeClaimTemplate:
+    spec:
+      storageClassName: local-data
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 20Gi
+  template:
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/games-on-whales/es-de:edge@sha256:f5d1037e9dd6ff7406e190e00457152d0a9dcb4adbc32fe2132585cb5bbe7829
+          env:
+            - name: RUN_SWAY
+              value: "1"
+          # The pod isn't Ready until the app runs, so wait for Wolf's sockets first.
+          command:
+            - /bin/bash
+            - -c
+            - |
+              while [ ! -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; do sleep 1; done
+              while [ ! -S "$XDG_RUNTIME_DIR/pulse-socket" ]; do sleep 1; done
+              export PULSE_SINK="$(pactl list sinks short | awk '$2 ~ /^virtual_sink/ {print $2; exit}')"
+              export PULSE_SOURCE="${PULSE_SINK}.monitor"
+              exec /entrypoint.sh
+          resources:
+            requests:
+              cpu: "2"
+              memory: 4Gi
+            limits:
+              memory: 8Gi
+          volumeMounts:
+            - name: roms
+              mountPath: /ROMs
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: roms
+          nfs:
+            server: infra-vm
+            path: /mnt/library/roms
+        # PCSX2 maps the PS2's memory here; the default 64Mi SIGBUSes.
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi

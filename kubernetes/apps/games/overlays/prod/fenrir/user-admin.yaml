@@ -1,0 +1,16 @@
+apiVersion: direwolf.games-on-whales.github.io/v1alpha1
+kind: User
+metadata:
+  name: admin
+  namespace: games
+spec:
+  sidecarPolicies:
+    wolf:
+      resources:
+        requests:
+          devic.es/uinput: "1"
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          devic.es/uinput: "1"
+          memory: 4Gi
