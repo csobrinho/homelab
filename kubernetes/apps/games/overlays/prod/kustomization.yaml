@@ -131,7 +131,7 @@ helmCharts:
               dependsOn: wolf-config
               image:
                 repository: docker
-                tag: 29.9.0-dind
+                tag: 29.9.1-dind
                 pullPolicy: IfNotPresent
               restartPolicy: Always
               args:
