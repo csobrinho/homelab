@@ -280,8 +280,8 @@ helmCharts:
             # Streams the engine log to `kubectl logs -c log`; app only prints its last lines on a crash.
             log:
               image:
-                repository: ghcr.io/csobrinho/strata
-                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
+                repository: busybox
+                tag: "1.38"
                 pullPolicy: IfNotPresent
               command: ["tail", "-n", "+1", "-F", "/tmp/strata-engine.log"]
               resources:
