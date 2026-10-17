@@ -73,7 +73,7 @@ helmCharts:
               image:
                 repository: ghcr.io/csobrinho/wolf-nvidia-driver
                 # Keep in sync with talos/versions.yaml (.version.talos).
-                tag: v1.14.2@sha256:9255e14551dca8f017404f1526833b38ea32bcbbebf4064f81197cb7762a95df
+                tag: v1.14.4@sha256:0ce12a7b62a5c41959efb07f189be11b289f2ed587be65a04d16bda82c49f754
                 pullPolicy: IfNotPresent
               command: ["sh", "-ec"]
               args:
