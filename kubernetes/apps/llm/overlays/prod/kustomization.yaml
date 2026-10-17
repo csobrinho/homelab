@@ -177,11 +177,10 @@ helmCharts:
           containers:
             app:
               # No upstream image: built sm_120-only in github.com/csobrinho/custom-images.
-              # v0.1.43+ builds need AVX-512; this host is AVX2-only.
               # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
                 repository: ghcr.io/csobrinho/strata
-                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
+                tag: v0.1.44.1@sha256:b28350299ef7af7554e7c5ad9ffc910e92995f9c794d067283b7ebab14abd8df
                 pullPolicy: IfNotPresent
               # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
               # (engine flags + config keys) into the saved config on every start. A REINSTALL
