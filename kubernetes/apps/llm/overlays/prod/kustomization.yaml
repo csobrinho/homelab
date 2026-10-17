@@ -180,7 +180,7 @@ helmCharts:
               # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
                 repository: ghcr.io/csobrinho/strata
-                tag: v0.1.43.1@sha256:cfe3a8e05004693dbb8f3b7f8ee52864e904ef6a2da5e372c8ec2188ad059328
+                tag: v0.1.44.1@sha256:b28350299ef7af7554e7c5ad9ffc910e92995f9c794d067283b7ebab14abd8df
                 pullPolicy: IfNotPresent
               # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
               # (engine flags + config keys) into the saved config on every start. A REINSTALL
@@ -227,10 +227,12 @@ helmCharts:
                 # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
                 #   avoids re-reading up to 262K tokens.
                 # - expert profile: start from the learned cache, kept on the volume.
+                # - log: on the shared /tmp, for the `log` sidecar.
                 STRATA_CONFIG_PATCH: >-
                   {"args": {"--vram-reserve-mib": 5796, "--conversation-cache-mib": 12288,
                   "--conversation-cache-slots": 4},
-                  "expert_profile_save": "/data/expert-profile-learned.bin"}
+                  "expert_profile_save": "/data/expert-profile-learned.bin",
+                  "log": "/tmp/strata-engine.log"}
               probes:
                 liveness: &probe-strata
                   enabled: true
@@ -273,6 +275,20 @@ helmCharts:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: false
+            log:
+              image:
+                repository: busybox
+                tag: "1.38"
+                pullPolicy: IfNotPresent
+              command: ["tail", "-n", "+1", "-F", "/tmp/strata-engine.log"]
+              resources:
+                requests:
+                  cpu: 5m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+              securityContext:
+                allowPrivilegeEscalation: false
       service:
         app:
           controller: strata
