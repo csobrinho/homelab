@@ -7,6 +7,12 @@ resources:
   - ../../base
   - ingress-route.yaml
 
+configMapGenerator:
+  - name: home-assistant-fixes
+    namespace: home-assistant
+    files:
+      - fixes/smartbridge.py
+
 helmCharts:
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
@@ -123,6 +129,16 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /tmp
+        home-assistant-fixes:
+          type: configMap
+          name: home-assistant-fixes
+          advancedMounts:
+            app:
+              app:
+                # TODO: drop once https://github.com/gurumitts/pylutron-caseta/pull/218 ships.
+                - path: /usr/local/lib/python3.14/site-packages/pylutron_caseta/smartbridge.py
+                  subPath: smartbridge.py
+                  readOnly: true
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
