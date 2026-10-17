@@ -177,8 +177,7 @@ helmCharts:
           containers:
             app:
               # No upstream image: built sm_120-only in github.com/csobrinho/custom-images.
-              # v0.1.43+ SIGILL here (engine built -march=native on an AVX-512 runner); held at
-              # v0.1.40.1 until custom-images builds with STRATA_PORTABLE=ON.
+              # v0.1.43+ builds need AVX-512; this host is AVX2-only.
               # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
                 repository: ghcr.io/csobrinho/strata
@@ -229,7 +228,7 @@ helmCharts:
                 # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
                 #   avoids re-reading up to 262K tokens.
                 # - expert profile: start from the learned cache, kept on the volume.
-                # - log: the engine log goes to the shared /tmp so the `log` sidecar streams it.
+                # - log: on the shared /tmp, for the `log` sidecar.
                 STRATA_CONFIG_PATCH: >-
                   {"args": {"--vram-reserve-mib": 5796, "--conversation-cache-mib": 12288,
                   "--conversation-cache-slots": 4},
@@ -277,7 +276,6 @@ helmCharts:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: false
-            # Streams the engine log to `kubectl logs -c log`; app only prints its last lines on a crash.
             log:
               image:
                 repository: busybox
