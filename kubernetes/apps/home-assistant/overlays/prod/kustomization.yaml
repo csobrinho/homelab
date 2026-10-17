@@ -20,7 +20,7 @@ helmCharts:
           strategy: Recreate
           containers:
             app:
-              image:
+              image: &ha-image
                 repository: ghcr.io/home-operations/home-assistant
                 tag: 2026.10.2@sha256:0d289f21951f9ecf0bf8888089c6d43f379611c47fe84f13d3302e83daa3c8fa
                 pullPolicy: IfNotPresent
@@ -82,6 +82,44 @@ helmCharts:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
                 capabilities: { drop: ["ALL"] }
+          initContainers:
+            # pylutron-caseta 0.29.0 on Python 3.14.8 builds a check_hostname=True TLS context
+            # but connects with server_hostname="", which now raises "check_hostname requires
+            # server_hostname" (gurumitts/pylutron-caseta#217). Copy the image's own
+            # smartbridge.py, add check_hostname = False (the bridge cert is still verified
+            # against its CA), and mount it over the original. Drop this once a fix ships.
+            patch-lutron:
+              image: *ha-image
+              command: ["python3", "-I", "-c"]
+              args:
+                - |
+                  import importlib.util, pathlib, sys
+                  target, out = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+                  src = pathlib.Path(importlib.util.find_spec("pylutron_caseta").origin).parent / "smartbridge.py"
+                  if src != target:
+                      print(f"WARNING: smartbridge.py is at {src} but the mount targets {target}", file=sys.stderr)
+                  code = src.read_text()
+                  anchor = "        ssl_context.verify_mode = ssl.CERT_REQUIRED\n"
+                  if "check_hostname" in code:
+                      print("upstream already sets check_hostname; mounting the original unchanged")
+                  elif code.count(anchor) != 1:
+                      print("WARNING: patch anchor not found; mounting the original unchanged", file=sys.stderr)
+                  else:
+                      code = code.replace(anchor, anchor + "        ssl_context.check_hostname = False\n")
+                      print(f"patched {src}")
+                  out.write_text(code)
+                - &smartbridge /usr/local/lib/python3.14/site-packages/pylutron_caseta/smartbridge.py
+                - /patch/smartbridge.py
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 128Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
       defaultPodOptions:
         automountServiceAccountToken: false
         enableServiceLinks: false
@@ -123,6 +161,17 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /tmp
+        lutron-patch:
+          type: emptyDir
+          sizeLimit: 1Mi
+          advancedMounts:
+            app:
+              patch-lutron:
+                - path: /patch
+              app:
+                - path: *smartbridge
+                  subPath: smartbridge.py
+                  readOnly: true
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
