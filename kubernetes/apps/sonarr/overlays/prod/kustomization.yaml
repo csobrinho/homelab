@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: sonarr
     namespace: media
-    version: 28.0.0
+    version: 28.0.2
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
