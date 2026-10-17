@@ -177,10 +177,12 @@ helmCharts:
           containers:
             app:
               # No upstream image: built sm_120-only in github.com/csobrinho/custom-images.
+              # v0.1.43+ SIGILL here (engine built -march=native on an AVX-512 runner); held at
+              # v0.1.40.1 until custom-images builds with STRATA_PORTABLE=ON.
               # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
                 repository: ghcr.io/csobrinho/strata
-                tag: v0.1.43.1@sha256:cfe3a8e05004693dbb8f3b7f8ee52864e904ef6a2da5e372c8ec2188ad059328
+                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
                 pullPolicy: IfNotPresent
               # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
               # (engine flags + config keys) into the saved config on every start. A REINSTALL
@@ -227,10 +229,12 @@ helmCharts:
                 # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
                 #   avoids re-reading up to 262K tokens.
                 # - expert profile: start from the learned cache, kept on the volume.
+                # - log: the engine log goes to the shared /tmp so the `log` sidecar streams it.
                 STRATA_CONFIG_PATCH: >-
                   {"args": {"--vram-reserve-mib": 5796, "--conversation-cache-mib": 12288,
                   "--conversation-cache-slots": 4},
-                  "expert_profile_save": "/data/expert-profile-learned.bin"}
+                  "expert_profile_save": "/data/expert-profile-learned.bin",
+                  "log": "/tmp/strata-engine.log"}
               probes:
                 liveness: &probe-strata
                   enabled: true
@@ -273,6 +277,21 @@ helmCharts:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: false
+            # Streams the engine log to `kubectl logs -c log`; app only prints its last lines on a crash.
+            log:
+              image:
+                repository: ghcr.io/csobrinho/strata
+                tag: v0.1.40.1@sha256:1d242382bac3e2f5da752315a0b470e6f3a3644dead039fa0a7692dc3772f579
+                pullPolicy: IfNotPresent
+              command: ["tail", "-n", "+1", "-F", "/tmp/strata-engine.log"]
+              resources:
+                requests:
+                  cpu: 5m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+              securityContext:
+                allowPrivilegeEscalation: false
       service:
         app:
           controller: strata
