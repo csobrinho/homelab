@@ -170,7 +170,7 @@ helmCharts:
           pod:
             resourceClaims:
               - name: llm-gpu0
-                resourceClaimTemplateName: llm-gpu0 # GPU 0 minus transcode's 1Gi and games' 4Gi.
+                resourceClaimTemplateName: llm-gpu0
             tolerations:
               - key: nvidia.com/gpu
                 operator: Exists
@@ -181,11 +181,10 @@ helmCharts:
                 repository: ghcr.io/niko1221/strata
                 tag: 0.2.1-cuda13@sha256:a0398afb7a60253f1442ec149326aa7d80e0137e9f1ffe304bb0e84a6939ee8e
                 pullPolicy: IfNotPresent
-              # Read by the entrypoint (`strata launch`); saved into the "docker" preset on /data.
               env:
                 TZ: America/Los_Angeles
-                MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
-                MODEL_PATH: /data/models/IQ3_S # The 0.1 download; 0.2 only rebuilds the pack.
+                MODEL: IQ3_S
+                MODEL_PATH: /data/models/IQ3_S
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
                 KV: k8v4
                 VISION: "off"
@@ -195,8 +194,6 @@ helmCharts:
                     secretKeyRef:
                       name: strata-secret
                       key: API_KEY
-                # vram-reserve: GPU 0 room for transcode + Wolf (the DRA claims don't enforce it).
-                # conversation cache: Open WebUI's title/tag calls would evict the chat.
                 STRATA_SET: >-
                   vram-reserve-mib=5796 conversation-cache-mib=12288 conversation-cache-slots=4
                   expert-profile-save=/data/expert-profile-learned.bin
@@ -226,14 +223,13 @@ helmCharts:
                     httpGet:
                       path: /health
                       port: *port-strata
-                    # First boot downloads ~70GB and builds the expert pack: allow 2h.
+                    # First start prepares the model pack: allow 2h.
                     periodSeconds: 20
                     timeoutSeconds: 5
                     failureThreshold: 360
               resources:
                 requests:
-                  cpu: "4" # CPU experts (AVX2 on this EPYC) do real work here.
-                  # Pinned arena ~53Gi + 262K KV ~2.4Gi + conversation cache 12Gi.
+                  cpu: "4"
                   memory: 64Gi
                 limits:
                   memory: 84Gi
@@ -266,7 +262,7 @@ helmCharts:
         data:
           type: persistentVolumeClaim
           forceRename: strata-data
-          # Re-downloadable: no kopiur backup. Model ~78GB + packs + presets/state.
+          # Re-downloadable: no kopiur backup.
           storageClass: local-data
           accessMode: ReadWriteOnce
           size: 200Gi
@@ -280,7 +276,7 @@ helmCharts:
         shm:
           type: emptyDir
           medium: Memory
-          sizeLimit: 2Gi # Upstream runs with --shm-size 2g; pods default to 64Mi.
+          sizeLimit: 2Gi
           advancedMounts:
             strata:
               app:
