@@ -25,9 +25,9 @@
       "automerge": false
     },
     {
-      "description": "Strata tags hotfixes as a 4th part (v0.1.40.1); docker versioning won't cross 4 -> 3 parts",
-      "matchPackageNames": ["ghcr.io/csobrinho/strata"],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?$"
+      "description": "Strata tags hotfixes as a 4th part (0.2.1.1-cuda13); docker versioning won't cross 4 -> 3 parts",
+      "matchPackageNames": ["ghcr.io/niko1221/strata"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?-(?<compatibility>cuda13)$"
     },
     {
       "matchPackageNames": ["cilium/cilium", "quay.io/cilium/cilium"],

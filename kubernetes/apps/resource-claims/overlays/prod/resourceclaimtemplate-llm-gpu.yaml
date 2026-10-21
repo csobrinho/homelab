@@ -1,4 +1,4 @@
-# LLM GPU claims (ollama, vllm). RTX 5090 = 32606Mi each.
+# LLM GPU claims. RTX 5090 = 32606Mi each.
 #   llm-gpu0: GPU 0 minus transcode's 1Gi and games' 4Gi (27486Mi).
 #   llm-gpu1: all of GPU 1.
 #   llm-gpus: both.
