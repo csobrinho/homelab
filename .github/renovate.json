@@ -79,14 +79,6 @@
   "helm-values": {
     "managerFilePatterns": ["/\\.ya?ml$/"]
   },
-  "kustomize": {
-    "description": "TEMP: skip supermarket's prod overlay; its local helmChart (no repo) crashes Renovate 44.171.2-44.175.1 in hasUrlCredentials (fixed in 44.175.2, renovatebot/renovate#47256). Drop once Mend runs >= 44.175.2.",
-    "managerFilePatterns": [
-      "kubernetes/!(apps)/**/kustomization.y?(a)ml",
-      "kubernetes/apps/!(supermarket)/**/kustomization.y?(a)ml",
-      "kubernetes/apps/supermarket/base/kustomization.y?(a)ml"
-    ]
-  },
   "kubernetes": {
     "managerFilePatterns": ["/\\.ya?ml$/"]
   },
