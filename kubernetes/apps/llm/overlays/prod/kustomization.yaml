@@ -183,7 +183,7 @@ helmCharts:
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
-                MODEL: IQ3_S
+                MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
                 MODEL_PATH: /data/models/IQ3_S
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
                 KV: k8v4
@@ -223,13 +223,14 @@ helmCharts:
                     httpGet:
                       path: /health
                       port: *port-strata
-                    # First start prepares the model pack: allow 2h.
+                    # First boot downloads ~70GB and builds the expert pack: allow 2h.
                     periodSeconds: 20
                     timeoutSeconds: 5
                     failureThreshold: 360
               resources:
                 requests:
-                  cpu: "4"
+                  cpu: "4" # CPU experts (AVX2 on this EPYC) do real work here.
+                  # Pinned arena ~53Gi + 262K KV ~2.4Gi + conversation cache 12Gi.
                   memory: 64Gi
                 limits:
                   memory: 84Gi
@@ -262,7 +263,7 @@ helmCharts:
         data:
           type: persistentVolumeClaim
           forceRename: strata-data
-          # Re-downloadable: no kopiur backup.
+          # Re-downloadable: no kopiur backup. Model ~70GB + pack + MTP layer (~6GB).
           storageClass: local-data
           accessMode: ReadWriteOnce
           size: 200Gi
