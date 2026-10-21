@@ -10,6 +10,7 @@ resources:
   - ../../base
   - ingress-route-open-webui.yaml
   - ingress-route-strata.yaml
+  - secrets/strata-secret-enc.yaml
 
 helmCharts:
   # OpenAI-compatible API at http://vllm.llm.svc.cluster.local:8000/v1.
@@ -176,63 +177,29 @@ helmCharts:
                 effect: NoSchedule
           containers:
             app:
-              # No upstream image: built sm_120-only in github.com/csobrinho/custom-images.
-              # Runs as root: the entrypoint writes its config symlink into /opt/strata.
               image:
-                repository: ghcr.io/csobrinho/strata
-                tag: v0.1.44.1@sha256:b28350299ef7af7554e7c5ad9ffc910e92995f9c794d067283b7ebab14abd8df
+                repository: ghcr.io/niko1221/strata
+                tag: 0.2.1-cuda13@sha256:a0398afb7a60253f1442ec149326aa7d80e0137e9f1ffe304bb0e84a6939ee8e
                 pullPolicy: IfNotPresent
-              # The entrypoint only forwards a few setup env vars, so merge STRATA_CONFIG_PATCH
-              # (engine flags + config keys) into the saved config on every start. A REINSTALL
-              # start regenerates the config after this runs: the patch lands on the next start.
-              command: ["/bin/sh", "-c"]
-              args:
-                - |
-                  /opt/strata/.venv/bin/python - <<'EOF'
-                  import glob, json, os
-                  patch = json.loads(os.environ.get("STRATA_CONFIG_PATCH") or "{}")
-                  for path in glob.glob("/data/config/strata-*.json"):
-                      cfg = json.load(open(path))
-                      args = cfg.setdefault("args", [])
-                      for flag, value in patch.get("args", {}).items():
-                          if flag in args[:-1]:
-                              args[args.index(flag) + 1] = str(value)
-                          else:
-                              args += [flag, str(value)]
-                      cfg.update({k: v for k, v in patch.items() if k != "args"})
-                      with open(path + ".tmp", "w") as f:
-                          json.dump(cfg, f, indent=1)
-                      os.replace(path + ".tmp", path)
-                      print(f"[patch] {path}: {json.dumps(patch)}", flush=True)
-                  EOF
-                  exec ./docker-entrypoint.sh
-              # Read by docker-entrypoint.sh on first start (setup + ~70GB download).
-              # Change any of these later with REINSTALL=1 for one start.
+              # Read by the entrypoint (`strata launch`); saved into the "docker" preset on /data.
               env:
                 TZ: America/Los_Angeles
                 MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
+                MODEL_PATH: /data/models/IQ3_S # The 0.1 download; 0.2 only rebuilds the pack.
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
                 KV: k8v4
-                VISION: "no"
-                # Experts pinned in RAM. setup reads /proc/meminfo (the node's total, not
-                # our limit), so pin the mode instead of trusting auto.
-                LOW_RAM: "off"
-                HF_HOME: /data/huggingface
-                # Names the dashboard / Open WebUI / in-cluster clients use; without an API
-                # key, Strata rejects any other Host (DNS-rebinding guard).
-                STRATA_ALLOWED_HOSTS: >-
-                  strata.sobrinho.pt,strata.llm.svc.cluster.local,strata.llm,strata
-                # - vram-reserve: keep ~1.4Gi of GPU 0 free for transcode (700 left only ~400Mi),
-                #   plus Wolf's games-gpu claim; the DRA claims don't enforce it.
-                # - conversation cache: Open WebUI's title/tag calls evict the chat; parking
-                #   avoids re-reading up to 262K tokens.
-                # - expert profile: start from the learned cache, kept on the volume.
-                # - log: on the shared /tmp, for the `log` sidecar.
-                STRATA_CONFIG_PATCH: >-
-                  {"args": {"--vram-reserve-mib": 5796, "--conversation-cache-mib": 12288,
-                  "--conversation-cache-slots": 4},
-                  "expert_profile_save": "/data/expert-profile-learned.bin",
-                  "log": "/tmp/strata-engine.log"}
+                VISION: "off"
+                PARALLEL: "1" # One slot, so the conversation cache parks chats.
+                API_KEY:
+                  valueFrom:
+                    secretKeyRef:
+                      name: strata-secret
+                      key: API_KEY
+                # vram-reserve: GPU 0 room for transcode + Wolf (the DRA claims don't enforce it).
+                # conversation cache: Open WebUI's title/tag calls would evict the chat.
+                STRATA_SET: >-
+                  vram-reserve-mib=5796 conversation-cache-mib=12288 conversation-cache-slots=4
+                  expert-profile-save=/data/expert-profile-learned.bin
               probes:
                 liveness: &probe-strata
                   enabled: true
@@ -280,7 +247,7 @@ helmCharts:
                 repository: busybox
                 tag: "1.38"
                 pullPolicy: IfNotPresent
-              command: ["tail", "-n", "+1", "-F", "/tmp/strata-engine.log"]
+              command: ["tail", "-n", "+1", "-F", "/data/state/strata/runtime/launch-docker.server.log"]
               resources:
                 requests:
                   cpu: 5m
@@ -299,7 +266,7 @@ helmCharts:
         data:
           type: persistentVolumeClaim
           forceRename: strata-data
-          # Re-downloadable: no kopiur backup. Model ~70GB + pack + MTP layer (~6GB).
+          # Re-downloadable: no kopiur backup. Model ~78GB + packs + presets/state.
           storageClass: local-data
           accessMode: ReadWriteOnce
           size: 200Gi
@@ -310,6 +277,14 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /tmp
+        shm:
+          type: emptyDir
+          medium: Memory
+          sizeLimit: 2Gi # Upstream runs with --shm-size 2g; pods default to 64Mi.
+          advancedMounts:
+            strata:
+              app:
+                - path: /dev/shm
 
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
