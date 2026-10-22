@@ -80,7 +80,7 @@ helmCharts:
                 key: runners-auth-token
         initContainers:
           - name: task-runners
-            image: ghcr.io/n8n-io/runners:2.44.3@sha256:88124a84b9478d74ce8c026ab888c383ec1c1bfb5565069e9fde4e8d0e4615dd
+            image: ghcr.io/n8n-io/runners:2.45.1@sha256:b31e505e6f41ce11388ce0a7ada5eebfb973d80cd58110ba7e8c087e4c478eee
             restartPolicy: Always
             env:
               - name: N8N_RUNNERS_TASK_BROKER_URI
