@@ -184,7 +184,7 @@ helmCharts:
               env:
                 TZ: America/Los_Angeles
                 MODEL: IQ3_S # Q2_0 | IQ2_XS | IQ3_XXS | IQ3_S; bigger = better, more RAM.
-                MODEL_PATH: /data/models/IQ3_S
+                MODEL_PATH: /data/Strata-data/models/IQ3_S
                 CONTEXT: "262144" # The model's full trained window; past it needs YaRN.
                 KV: k8v4
                 VISION: "off"
