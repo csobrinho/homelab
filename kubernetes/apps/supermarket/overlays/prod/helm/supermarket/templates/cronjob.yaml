@@ -1,0 +1,74 @@
+{{- range $i, $user := .Values.users }}
+{{- $name := printf "supermarket-%s" $user.name }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $name }}
+spec:
+  schedule: {{ $user.schedule | quote }}
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  startingDeadlineSeconds: 60 # 1 min.
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          containers:
+            - name: supermarket
+              image: {{ $.Values.image }}
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  memory: 256Mi
+                  cpu: 200m
+                requests:
+                  memory: 128Mi
+                  cpu: 100m
+              env:
+                - name: TZ
+                  value: America/Los_Angeles
+                - name: USER_AGENT
+                  value: {{ $.Values.userAgent }}
+                - name: CLIP_ALL
+                  value: "true"
+                - name: APP_VERSION
+                  value: {{ $.Values.appVersion | quote }}
+                - name: PROMETHEUS_ENDPOINT
+                  value: "http://infra-prometheus:9091"
+                - name: PROMETHEUS_JOB
+                  value: {{ $name }}
+                - name: CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $.Values.secret }}
+                      key: CLIENT_ID
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $.Values.secret }}
+                      key: API_KEY
+                - name: REFRESH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $.Values.secret }}
+                      key: {{ $user.name | upper }}_REFRESH_TOKEN
+                - name: STORE_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $.Values.secret }}
+                      key: {{ $user.name | upper }}_STORE_ID
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+{{- end }}
