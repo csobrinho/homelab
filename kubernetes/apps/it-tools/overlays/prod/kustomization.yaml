@@ -13,7 +13,7 @@ helmCharts:
     repo: oci://oci.trueforge.org/truecharts
     releaseName: it-tools
     namespace: tools
-    version: 10.0.2
+    version: 10.0.6
     includeCRDs: true
     valuesInline:
       TZ: America/Los_Angeles
