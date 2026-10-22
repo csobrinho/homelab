@@ -14,7 +14,7 @@ helmCharts:
     repo: oci://ghcr.io/home-operations/charts
     releaseName: tuppr
     namespace: system-upgrade
-    version: 0.5.8
+    version: 0.5.10
     includeCRDs: true
     valuesInline:
       replicaCount: 2
