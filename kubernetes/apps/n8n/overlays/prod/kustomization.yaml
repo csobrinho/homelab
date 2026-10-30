@@ -19,7 +19,7 @@ helmCharts:
       image:
         repository: ghcr.io/n8n-io/n8n
         pullPolicy: IfNotPresent
-        tag: 2.45.3
+        tag: 2.46.2
       main:
         replicaCount: 1
         config:
@@ -80,7 +80,7 @@ helmCharts:
                 key: runners-auth-token
         initContainers:
           - name: task-runners
-            image: ghcr.io/n8n-io/runners:2.45.3@sha256:c57f7d17c37e89fc8128c165063874db788b599ed9c5d263c7adc6d3b59a0477
+            image: ghcr.io/n8n-io/runners:2.46.2@sha256:270a45b6471682d45b52ea679774e8ca0cf195a0fe918d870047096566a59118
             restartPolicy: Always
             env:
               - name: N8N_RUNNERS_TASK_BROKER_URI
