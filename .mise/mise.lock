@@ -137,44 +137,51 @@ url = "https://github.com/argoproj/argo-cd/releases/download/v3.5.6/argocd-windo
 url_api = "https://api.github.com/repos/argoproj/argo-cd/releases/assets/660261486"
 
 [[tools.cilium-cli]]
-version = "0.20.1"
+version = "0.20.2"
 backend = "aqua:cilium/cilium-cli"
-specifiers = ["0.20.1"]
+specifiers = ["0.20.2"]
 
 [tools.cilium-cli."platforms.linux-arm64"]
-checksum = "sha256:d237550b882af6f2e01e8985e1e024d57c0774611c0a527c7a20dcee7dc4fd07"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358779"
+checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888468"
 
 [tools.cilium-cli."platforms.linux-arm64-musl"]
-checksum = "sha256:d237550b882af6f2e01e8985e1e024d57c0774611c0a527c7a20dcee7dc4fd07"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358779"
+checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888468"
 
 [tools.cilium-cli."platforms.linux-x64"]
-checksum = "sha256:24e817dcfcc8a12e325ce7547617bcbcf171c5b0b335bb24d2bb1207ba047f61"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-linux-amd64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358772"
+checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888470"
 
 [tools.cilium-cli."platforms.linux-x64-musl"]
-checksum = "sha256:24e817dcfcc8a12e325ce7547617bcbcf171c5b0b335bb24d2bb1207ba047f61"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-linux-amd64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358772"
+checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888470"
 
 [tools.cilium-cli."platforms.macos-arm64"]
-checksum = "sha256:3521cb6af8f621d64dac63c7537fd9aa2ff878fb1f7a6f50e69b31bf45c02cb8"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-darwin-arm64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358773"
+checksum = "sha256:944c388f71b939e0befa405422c93d5fcbd574e4dd12c4bf01244858961d79de"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888463"
 
 [tools.cilium-cli."platforms.macos-x64"]
-checksum = "sha256:b5ac658a9a87c933a3cc662f035d8ab4a3cbfdf67d942526b37566907a0d88ad"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-darwin-amd64.tar.gz"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358780"
+checksum = "sha256:64ab3dd2b37f99319e2e85342725fd66caf7701b9be735704dace3c4ff3bb9ea"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888466"
 
 [tools.cilium-cli."platforms.windows-x64"]
-checksum = "sha256:869bc322c880db7c566995f8e251dd3270e15814f26e4c7c8c13922319a939e3"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-windows-amd64.zip"
-url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358777"
+checksum = "sha256:b72fe6bbef143d2ab5c308a3384c0e97a5e82242b209626721ee0a1e72dddd5d"
+checksum_source = "mise-versions"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-windows-amd64.zip"
+url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/687888457"
 
 [[tools.claude]]
 version = "2.1.312"
