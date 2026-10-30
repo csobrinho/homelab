@@ -179,7 +179,7 @@ helmCharts:
             app:
               image:
                 repository: ghcr.io/niko1221/strata
-                tag: 0.2.3-cuda13@sha256:d39ca9fc583c5085dc66b857fbf3b3e3a9e256f692672d4061322d3bd468433a
+                tag: 0.2.8-cuda13@sha256:27f04a7437c7d2940d067331ead66e3942826c55b57334908c8767625bbdbb04
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
