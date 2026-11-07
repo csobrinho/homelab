@@ -160,7 +160,7 @@ helmCharts:
             app:
               image:
                 repository: ghcr.io/games-on-whales/wolf
-                tag: stable@sha256:b0ef253739f9bd49b71eba7e150c955fd05990c0d409e666d89236995351551a
+                tag: stable@sha256:47ce7a0b67ee6645d2c6fefd8fdda7fee49a00e327c39597a04e84a0cd052910
                 pullPolicy: IfNotPresent
               command: ["/bin/bash", "-ec"]
               args:
