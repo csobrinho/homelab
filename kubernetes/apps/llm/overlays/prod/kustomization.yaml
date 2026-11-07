@@ -179,7 +179,7 @@ helmCharts:
             app:
               image:
                 repository: ghcr.io/niko1221/strata
-                tag: 0.2.9-cuda13@sha256:83e37db8625c67b61c579fd7c0f9068f2d831037a937f139c569502b54290998
+                tag: 0.2.11-cuda13@sha256:871e1e79c063b240184b08075ba0676b6cd2585eac11f76a9d179f4739d2c857
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
@@ -298,7 +298,7 @@ helmCharts:
               # Runs as root: the image's /app is root-owned and it writes there at startup.
               image:
                 repository: ghcr.io/open-webui/open-webui
-                tag: v0.12.5@sha256:03443b8de6b617da9d900edd09b4bf1cb0ddbfdcba6afb42c548336a0b821ded
+                tag: v0.13.0@sha256:2272b0fb7c8783a016bcc179abb467cfa34590c99c5e6560fe0e9155b4820a09
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
