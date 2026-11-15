@@ -19,7 +19,7 @@ helmCharts:
       image:
         repository: ghcr.io/n8n-io/n8n
         pullPolicy: IfNotPresent
-        tag: 3.1.0
+        tag: 3.2.0
       main:
         replicaCount: 1
         config:
