@@ -13,7 +13,7 @@ helmCharts:
     namespace: tools
     version: 0.1.0
     valuesInline:
-      image: ghcr.io/csobrinho/supermarket-api:main@sha256:5cfeee2a4772306d8f9044faa0b8c9a050c17445ef46d7af802065e27c61b168
+      image: ghcr.io/csobrinho/supermarket-api:main@sha256:c2778b57c644f91aaa652f4718d8250027991ea720e6570d23887b80bc4dd7be
       users:
         - name: sobry
           schedule: "0 * * * *"
