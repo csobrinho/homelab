@@ -28,7 +28,7 @@ helmCharts:
     repo: https://valkey.io/valkey-helm/
     releaseName: valkey
     namespace: infra
-    version: 0.12.1
+    version: 1.0.0
     includeCRDs: true
     valuesInline:
       architecture: standalone # Deploy as a single standalone node (no cluster sharding or replication overhead)
@@ -36,11 +36,11 @@ helmCharts:
         requests:
           cpu: 100m
           memory: 80Mi
-      dataStorage:
+      persistence:
         enabled: true
-        requestedSize: 1Gi
-        className: local-data
-        keepPvc: true
+        size: 1Gi
+        storageClass: local-data
+        keepOnUninstall: true
       metrics:
         enabled: true
         serviceMonitor:
@@ -80,8 +80,9 @@ helmCharts:
               for: 1s
               labels:
                 severity: error
-      env:
-        TZ: America/Los_Angeles
+      extraEnv:
+        - name: TZ
+          value: America/Los_Angeles
 
 patches:
   # valkey namespace patch to ensure it is created in the correct namespace.
