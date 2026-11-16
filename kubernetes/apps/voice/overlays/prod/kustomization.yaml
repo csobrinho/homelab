@@ -184,8 +184,8 @@ helmCharts:
             - path: /tmp
 
   # EchoMuse (github.com/wilbowes/EchoMuse): rooted Echo Dots as HA Assist satellites.
-  # Mirrors controller/docker-compose.deploy.yml. Add each Dot in HA as ESPHome at
-  # <node IP>:<device port> (16001+, shown on the dashboard).
+  # From https://github.com/wilbowes/EchoMuse/blob/2d59645ab514e69ed07eaa864f9ed0b490f9ca75/controller/docker-compose.deploy.yml
+  # Add each Dot in HA as ESPHome at <node IP>:<device port> (16001+, shown on the dashboard).
   - name: app-template
     repo: oci://ghcr.io/bjw-s-labs/helm
     releaseName: echomuse
