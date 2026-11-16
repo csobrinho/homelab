@@ -1,0 +1,186 @@
+# Wyoming STT/TTS for HA Assist pipelines.
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+helmCharts:
+  # Wyoming STT for HA Assist: tcp://whisper.home-assistant.svc.cluster.local:10300.
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: whisper
+    version: 5.3.0
+    namespace: home-assistant
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        whisper:
+          strategy: Recreate
+          pod:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: &uid-voice 568
+              runAsGroup: *uid-voice
+              fsGroup: *uid-voice
+              fsGroupChangePolicy: OnRootMismatch
+              supplementalGroups: [*uid-voice]
+              seccompProfile:
+                type: RuntimeDefault
+            resourceClaims:
+              - name: whisper-gpu
+                resourceClaimTemplateName: whisper-gpu
+            tolerations:
+              - key: nvidia.com/gpu
+                operator: Exists
+                effect: NoSchedule
+          containers:
+            app:
+              image:
+                repository: ghcr.io/linuxserver/faster-whisper
+                tag: gpu-v3.8.1-ls75@sha256:526ee69010caf82e44b6977818104b678e54cceb131b50399cc0458cbbca6fd3
+                pullPolicy: IfNotPresent
+              # Upstream's s6 run script minus s6 (needs root), so it runs as 568 read-only.
+              command:
+                - bash
+                - -c
+                - |
+                  export LD_LIBRARY_PATH=$(python3 -c 'import os, nvidia.cublas.lib, nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__path__[0]) + "/lib:" + os.path.dirname(nvidia.cudnn.lib.__path__[0]) + "/lib")')
+                  exec python3 -m wyoming_faster_whisper \
+                    --uri tcp://0.0.0.0:10300 \
+                    --device cuda \
+                    --model distil-large-v3.5 \
+                    --language en \
+                    --data-dir /config \
+                    --download-dir /config
+              env:
+                TZ: America/Los_Angeles
+                TMPDIR: /tmp
+              probes:
+                liveness: &probe-whisper
+                  enabled: true
+                  type: TCP
+                  port: &port-whisper 10300
+                readiness:
+                  <<: *probe-whisper
+                startup:
+                  <<: *probe-whisper
+                  spec:
+                    # First boot downloads the model (~1.5GB).
+                    periodSeconds: 10
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 1Gi
+                limits:
+                  memory: 4Gi
+                claims:
+                  - name: whisper-gpu
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+      service:
+        app:
+          controller: whisper
+          ports:
+            wyoming:
+              port: *port-whisper
+      persistence:
+        models:
+          type: persistentVolumeClaim
+          forceRename: whisper-models
+          # Re-downloadable: no kopiur backup.
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          retain: true
+          globalMounts:
+            - path: /config
+        tmp:
+          type: emptyDir
+          globalMounts:
+            - path: /tmp
+
+  # Wyoming TTS for HA Assist: tcp://piper.home-assistant.svc.cluster.local:10200. CPU only.
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: piper
+    version: 5.3.0
+    namespace: home-assistant
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        piper:
+          strategy: Recreate
+          pod:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: *uid-voice
+              runAsGroup: *uid-voice
+              fsGroup: *uid-voice
+              fsGroupChangePolicy: OnRootMismatch
+              supplementalGroups: [*uid-voice]
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            app:
+              image:
+                repository: rhasspy/wyoming-piper
+                tag: 2.5.3@sha256:0f4598a8f8a984275f67c066d7cd96d26ef2601947d0372b8f32c82ae18fb7cd
+                pullPolicy: IfNotPresent
+              # Default voice; others picked in HA are downloaded on demand into /data.
+              args:
+                - --voice
+                - en_US-lessac-medium
+              env:
+                TZ: America/Los_Angeles
+              probes:
+                liveness: &probe-piper
+                  enabled: true
+                  type: TCP
+                  port: &port-piper 10200
+                readiness:
+                  <<: *probe-piper
+                startup:
+                  <<: *probe-piper
+                  spec:
+                    periodSeconds: 5
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: ["ALL"] }
+      service:
+        app:
+          controller: piper
+          ports:
+            wyoming:
+              port: *port-piper
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          forceRename: piper-data
+          # Re-downloadable voices: no kopiur backup.
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 2Gi
+          retain: true
+          globalMounts:
+            - path: /data
+        tmp:
+          type: emptyDir
+          globalMounts:
+            - path: /tmp
+
+components:
+  - ../../../../components/disable-revision-history
