@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: games
+  annotations:
+    # wolf-state's kopiur mover runs as root: Wolf writes as root, apps as 1000.
+    kopiur.home-operations.com/privileged-movers: "true"
   labels:
     # Wolf + its Docker-in-Docker sidecar are privileged: host /dev for the virtual
     # gamepads (uinput/uhid) and a nested dockerd for the app containers.
