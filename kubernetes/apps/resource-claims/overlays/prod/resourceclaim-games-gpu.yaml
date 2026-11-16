@@ -14,7 +14,7 @@ spec:
           count: 1
           capacity:
             requests:
-              memory: 4Gi
+              memory: 2Gi
           selectors:
             - cel:
                 expression: device.attributes['resource.kubernetes.io'].pciBusID == '0000:02:00.0'

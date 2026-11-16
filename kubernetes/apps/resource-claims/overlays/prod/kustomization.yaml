@@ -8,3 +8,4 @@ resources:
   - resourceclaim-games-gpu.yaml
   - resourceclaim-transcode-gpu.yaml
   - resourceclaimtemplate-llm-gpu.yaml
+  - resourceclaimtemplate-whisper-gpu.yaml
