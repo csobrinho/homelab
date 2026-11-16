@@ -38,6 +38,8 @@ spec:
           containers:
             - name: grafana
               env:
+                - name: GF_SECURITY_ADMIN_USER
+                  value: admin
                 - name: GF_SECURITY_ADMIN_PASSWORD
                   valueFrom:
                     secretKeyRef:
@@ -63,4 +65,6 @@ spec:
             - name: grafana-data
               persistentVolumeClaim:
                 claimName: grafana-data
+  # Operator reads admin creds from the env above instead of its generated secret.
+  disableDefaultAdminSecret: true
   disableDefaultSecurityContext: All
