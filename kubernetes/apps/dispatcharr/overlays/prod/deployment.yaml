@@ -34,7 +34,7 @@ spec:
             ]
       containers:
         - name: dispatcharr
-          image: ghcr.io/dispatcharr/dispatcharr:0.33.0@sha256:96bc548978c68e684677da7895692eeeefb7f0b2edfa38311dac2b702c61d236
+          image: ghcr.io/dispatcharr/dispatcharr:0.34.0@sha256:bcf8dda41864e52b00f30136d882d8b61299a1ca6612d61124850186b2320f60
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -100,7 +100,7 @@ spec:
             periodSeconds: 30
             failureThreshold: 3
         - name: celery
-          image: ghcr.io/dispatcharr/dispatcharr:0.33.0@sha256:96bc548978c68e684677da7895692eeeefb7f0b2edfa38311dac2b702c61d236
+          image: ghcr.io/dispatcharr/dispatcharr:0.34.0@sha256:bcf8dda41864e52b00f30136d882d8b61299a1ca6612d61124850186b2320f60
           command: ["/app/docker/entrypoint.celery.sh"]
           env:
             - name: DISPATCHARR_ENV
