@@ -42,14 +42,28 @@ helmCharts:
               probes:
                 liveness: &probe
                   enabled: true
-                  type: TCP
-                  port: &port 8095
+                  custom: true
+                  spec:
+                    # Served once the core controllers are up; unauthenticated.
+                    httpGet: &probe-http
+                      path: /info
+                      port: &port 8095
+                    periodSeconds: 30
+                    timeoutSeconds: 5
+                    failureThreshold: 5
                 readiness:
                   <<: *probe
+                  spec:
+                    httpGet: *probe-http
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 3
                 startup:
                   <<: *probe
                   spec:
+                    httpGet: *probe-http
                     periodSeconds: 5
+                    timeoutSeconds: 5
                     failureThreshold: 60
               resources:
                 requests:
