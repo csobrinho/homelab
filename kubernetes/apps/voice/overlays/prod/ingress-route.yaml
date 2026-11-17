@@ -1,0 +1,32 @@
+# Internal only: the dashboard holds recordings and transcripts.
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: echomuse-ingress
+  namespace: home-assistant
+  annotations:
+    external-dns.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`echomuse.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: echomuse
+          port: http
+  tls:
+    secretName: echomuse-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: echomuse-cert
+  namespace: home-assistant
+spec:
+  secretName: echomuse-cert
+  dnsNames:
+    - echomuse.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

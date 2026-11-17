@@ -1,4 +1,4 @@
-# Wyoming STT/TTS for HA Assist pipelines.
+# HA Assist voice: Wyoming STT/TTS and the EchoMuse satellite controller.
 # From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -6,6 +6,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ingress-route.yaml
 
 helmCharts:
   # Wyoming STT for HA Assist: tcp://whisper.home-assistant.svc.cluster.local:10300.
@@ -181,6 +182,84 @@ helmCharts:
           type: emptyDir
           globalMounts:
             - path: /tmp
+
+  # EchoMuse (github.com/wilbowes/EchoMuse): rooted Echo Dots as HA Assist satellites.
+  # From https://github.com/wilbowes/EchoMuse/blob/2d59645ab514e69ed07eaa864f9ed0b490f9ca75/controller/docker-compose.deploy.yml
+  # Add each Dot in HA as ESPHome at <node IP>:<device port> (16001+, shown on the dashboard).
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: echomuse
+    version: 5.3.0
+    namespace: home-assistant
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        echomuse:
+          strategy: Recreate
+          pod:
+            # mDNS advertising + one ESPHome port per device; no port mapping.
+            hostNetwork: true
+            dnsPolicy: ClusterFirstWithHostNet
+          containers:
+            app:
+              # Runs as root, like upstream's compose.
+              image:
+                repository: ghcr.io/wilbowes/echomuse-controller
+                tag: 2.27.0@sha256:f0cab64d198bfb9b2fae07b5686f30cb78bc6f5ff525d0d747c2ed21ae6227ac
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+                SERVER_HOST: 0.0.0.0
+                SERVER_PORT: "8767"
+                SERVER_TLS_PORT: "8770"
+                REQUIRE_DEVICE_TLS: "0" # 1 once every device shows "wss (TLS)".
+                API_PORT: "8768"
+                SERVER_IP: "" # Detected from the node's routing table.
+                MDNS_NAME: echomuse
+                ESPHOME_PROJECT_VERSION: 2.27.0
+                EM_ESPHOME_PORT_BASE: "16001"
+                OWW_MODEL: hey_jarvis
+                OWW_THRESHOLD: "0.5"
+                DB_PATH: /app/data/echomuse.db
+                DEVICE_APPROVAL: strict
+                DEBUG: "0"
+              probes:
+                liveness: &probe-echomuse
+                  enabled: true
+                  type: TCP
+                  port: 8768
+                readiness:
+                  <<: *probe-echomuse
+                startup:
+                  <<: *probe-echomuse
+                  spec:
+                    periodSeconds: 5
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 100m # Wake word inference on CPU.
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+      service:
+        app:
+          controller: echomuse
+          ports:
+            http:
+              port: 8768
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          forceRename: echomuse-data
+          # DB + device CA (losing it means re-pairing every Dot).
+          storageClass: local-data
+          accessMode: ReadWriteOnce
+          size: 1Gi
+          retain: true
+          globalMounts:
+            - path: /app/data
 
 components:
   - ../../../../components/disable-revision-history
