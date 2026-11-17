@@ -18,7 +18,7 @@ helmCharts:
     repo: oci://ghcr.io/grafana/helm-charts
     releaseName: grafana-operator
     namespace: o11y
-    version: 5.25.0
+    version: 5.26.0
     includeCRDs: true
     valuesInline:
       dashboard:
