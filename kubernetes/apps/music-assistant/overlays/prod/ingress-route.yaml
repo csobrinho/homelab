@@ -1,0 +1,32 @@
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
+metadata:
+  name: music-assistant-ingress
+  namespace: media
+  annotations:
+    external-dns.kubernetes.io/target: infra-int
+spec:
+  entryPoints:
+    - websecure
+    - websecure-ext
+  routes:
+    - match: Host(`music.sobrinho.pt`)
+      kind: Rule
+      services:
+        - name: music-assistant
+          port: http
+  tls:
+    secretName: music-cert
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: music-cert
+  namespace: media
+spec:
+  secretName: music-cert
+  dnsNames:
+    - music.sobrinho.pt
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

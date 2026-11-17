@@ -61,6 +61,7 @@ resources:
   - apps/mealie-app.yaml
   - apps/mosquitto-app.yaml
   - apps/mqtt-explorer-app.yaml
+  - apps/music-assistant-app.yaml
   - apps/n8n-app.yaml
   - apps/node-red-app.yaml
   - apps/nut-exporter-app.yaml
