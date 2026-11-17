@@ -12,7 +12,7 @@ helmCharts:
     repo: oci://ghcr.io/coredns/charts
     releaseName: coredns
     namespace: kube-system
-    version: 1.50.7
+    version: 1.50.8
     includeCRDs: true
     valuesInline:
       fullnameOverride: coredns
