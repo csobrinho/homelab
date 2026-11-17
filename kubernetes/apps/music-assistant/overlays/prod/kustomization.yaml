@@ -1,0 +1,112 @@
+# From https://bjw-s-labs.github.io/helm-charts/docs/app-template/reference/explorer/
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress-route.yaml
+
+helmCharts:
+  - name: app-template
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    releaseName: music-assistant
+    version: 5.3.0
+    namespace: media
+    valuesFile: values-empty.yaml
+    valuesInline:
+      controllers:
+        music-assistant:
+          strategy: Recreate
+          pod:
+            # Player discovery (mDNS, AirPlay, Chromecast, Sonos, Squeezebox) and streams.
+            hostNetwork: true
+            dnsPolicy: ClusterFirstWithHostNet
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: &uid 568
+              runAsGroup: *uid
+              fsGroup: *uid
+              fsGroupChangePolicy: OnRootMismatch
+              supplementalGroups: [*uid]
+              seccompProfile:
+                type: RuntimeDefault
+          containers:
+            app:
+              image:
+                repository: ghcr.io/music-assistant/server
+                tag: 2.10.12@sha256:7eb272e2e13da9a5d61dcbc4e1fcfc734776222b23f2825a9b5690d4427cfafb
+                pullPolicy: IfNotPresent
+              env:
+                TZ: America/Los_Angeles
+              probes:
+                liveness: &probe
+                  enabled: true
+                  custom: true
+                  spec:
+                    # Served once the core controllers are up; unauthenticated.
+                    httpGet: &probe-http
+                      path: /info
+                      port: &port 8095
+                    periodSeconds: 30
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                readiness:
+                  <<: *probe
+                  spec:
+                    httpGet: *probe-http
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 3
+                startup:
+                  <<: *probe
+                  spec:
+                    httpGet: *probe-http
+                    periodSeconds: 5
+                    timeoutSeconds: 5
+                    failureThreshold: 60
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 512Mi
+                limits:
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities: { drop: ["ALL"] }
+      service:
+        app:
+          controller: music-assistant
+          ports:
+            http:
+              port: *port
+      persistence:
+        data:
+          existingClaim: music-assistant-data
+          globalMounts:
+            - path: /data
+        library:
+          type: nfs
+          server: infra-vm
+          path: /mnt/library/media/music
+          globalMounts:
+            - path: /music
+              readOnly: true
+
+  - name: kopiur-pvc
+    repo: oci://ghcr.io/csobrinho/helm-charts
+    releaseName: music-assistant-kopiur
+    namespace: media
+    version: 0.1.0
+    valuesInline:
+      uid: 568
+      gid: 568
+      persistence:
+        music-assistant-data:
+          retain: true
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          storageClass: local-data
+
+components:
+  - ../../../../components/disable-revision-history
