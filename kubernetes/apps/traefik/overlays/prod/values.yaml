@@ -76,6 +76,8 @@ service:
   labels:
     io.cilium/lb-pool: pool-infra-int
   spec:
+    # Cilium serves the BGP-advertised VIP directly, so per-node NodePorts are never used.
+    allocateLoadBalancerNodePorts: false
     externalTrafficPolicy: Local
 
 ingressRoute:
