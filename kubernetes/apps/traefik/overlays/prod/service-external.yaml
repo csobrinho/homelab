@@ -22,4 +22,6 @@ spec:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
   type: LoadBalancer
+  # Cilium serves the BGP-advertised VIP directly, so per-node NodePorts are never used.
+  allocateLoadBalancerNodePorts: false
   externalTrafficPolicy: Local
