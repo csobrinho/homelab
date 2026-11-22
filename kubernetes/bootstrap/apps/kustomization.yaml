@@ -91,4 +91,5 @@ resources:
 
 components:
   - ../../components/application-sync-policy
+  - ../../components/manifest-generate-paths
   - ../../components/managed-app-sablier

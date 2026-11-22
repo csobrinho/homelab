@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+# Only re-render an app when a commit touches its files.
+# Without this, every commit (mostly Renovate) re-renders all apps.
+# Relative paths resolve against spec.source.path, which is
+# kubernetes/apps/<app>/overlays/prod, so "../.." is kubernetes/apps/<app>
+# (base + overlays). A leading "/" is relative to the repo root.
+# kubernetes/fixes is left out on purpose: apps only point at its schema
+# in yaml-language-server comments, which never reach the build.
+# Add any new shared folder an app references from outside its own folder,
+# or that app will keep stale manifests until a hard refresh.
+# See https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/#manifest-paths-annotation
+patches:
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: Application
+    patch: |-
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: ignored
+        annotations:
+          argocd.argoproj.io/manifest-generate-paths: ../..;/kubernetes/components
