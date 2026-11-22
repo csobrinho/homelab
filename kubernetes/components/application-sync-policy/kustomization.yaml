@@ -10,7 +10,7 @@ patches:
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: irrelevant # ignored.
+        name: ignored
       spec:
         source:
           targetRevision: main
