@@ -24,3 +24,14 @@ spec:
       kind: Restore
       expr: |-
         !(status.phase in ['Resolving', 'Restoring'])
+    # Wait for the shared CNPG cluster to be whole again before the next node.
+    # Its instances sit on node-pinned local-db zvols, so each reboot takes one
+    # offline until it is back and has replayed WAL from the primary.
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: cluster
+      namespace: cnpg-system
+      description: cnpg-system/cluster has all instances ready
+      expr: |-
+        has(status.readyInstances) && status.readyInstances == object.spec.instances &&
+        has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
