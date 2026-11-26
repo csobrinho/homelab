@@ -13,7 +13,7 @@ spec:
     - match: Host(`music.sobrinho.pt`)
       kind: Rule
       services:
-        - name: music-assistant
+        - name: music-assistant-app
           port: http
   tls:
     secretName: music-cert
