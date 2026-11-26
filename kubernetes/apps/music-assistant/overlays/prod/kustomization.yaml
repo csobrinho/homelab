@@ -39,6 +39,8 @@ helmCharts:
                 pullPolicy: IfNotPresent
               env:
                 TZ: America/Los_Angeles
+                # uid 568 has no home, so yt-dlp would cache under /.cache.
+                XDG_CACHE_HOME: /tmp/cache
               probes:
                 liveness: &probe
                   enabled: true
@@ -144,6 +146,12 @@ helmCharts:
               app:
                 - path: /music
                   readOnly: true
+        cache:
+          type: emptyDir
+          advancedMounts:
+            music-assistant:
+              app:
+                - path: /tmp/cache
 
   - name: kopiur-pvc
     repo: oci://ghcr.io/csobrinho/helm-charts
