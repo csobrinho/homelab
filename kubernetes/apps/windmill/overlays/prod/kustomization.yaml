@@ -14,7 +14,7 @@ helmCharts:
     repo: https://windmill-labs.github.io/windmill-helm-charts/
     releaseName: windmill
     namespace: windmill
-    version: 4.0.331
+    version: 4.0.334
     includeCRDs: true
     valuesInline:
       postgresql:
